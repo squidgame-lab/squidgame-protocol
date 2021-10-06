@@ -1,0 +1,87 @@
+[
+    {
+        "call": true,
+        "name": "GameTicket",
+        "functionName": "setupConfig",
+        "contractName": "GameTicket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool1",
+        "functionName": "setupConfig",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool7",
+        "functionName": "setupConfig",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool30",
+        "functionName": "setupConfig",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool1",
+        "functionName": "configure",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GameTicket.address}",
+            "${GameToken.address}",
+            "${GamePool7.address}",
+            20,
+            86400,
+            true
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool7",
+        "functionName": "configure",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GamePool1.address}",
+            "${GameToken.address}",
+            "${GamePool30.address}",
+            20,
+            86400,
+            false
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool30",
+        "functionName": "configure",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GamePool7.address}",
+            "${GameToken.address}",
+            "0x0000000000000000000000000000000000000000",
+            0,
+            86400,
+            true
+        ]
+    }
+]
