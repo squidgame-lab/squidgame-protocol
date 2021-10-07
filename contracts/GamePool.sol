@@ -47,6 +47,16 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         bool claimed;
     }
 
+    struct OrderResult {
+        uint roundNumber;
+        address user;
+        uint ticketAmount;
+        uint winAmount;
+        bool claimed;
+        uint claimWin;
+        uint claimShare;
+    }
+
     Order[] public orders;
     
     mapping (uint => RoundData) public historys;
@@ -156,6 +166,21 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
         return false;
     }
+
+    function queryClaim(uint _orderId) public view returns (uint winAmount, uint share) {
+        if(!canClaim(_orderId)) return (0, 0);
+        Order memory order = orders[_orderId];
+        RoundData memory round = historys[order.roundNumber];
+        
+        if(order.winAmount > 0) {
+            winAmount = order.winAmount.mul(round.rewardTotal).div(round.winTotal);
+        }
+
+        share = order.ticketAmount.mul(rewardRate).div(1e18).div(round.ticketTotal);
+        if(IShareToken(shareToken).take() < share) {
+            share = 0;
+        }
+    }
   
     function _claim(uint _orderId) internal returns (uint winAmount, uint share) {
         Order storage order = orders[_orderId];
@@ -226,18 +251,18 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return userOrders[_user].length;
     }
 
-    function iterateReverseUserOrders(address _user, uint _start, uint _end) external view returns (Order[] memory list){
+    function iterateReverseUserOrders(address _user, uint _start, uint _end) external view returns (OrderResult[] memory list){
         require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
         uint count = countUserOrder(_user);
         if (_start > count) _start = count;
         if (_end > _start) _end = _start;
         count = _start - _end; 
-        list = new Order[](count);
+        list = new OrderResult[](count);
         if (count == 0) return list;
         uint index = 0;
         for(uint i = _end;i < _start; i++) {
             uint j = _start - index -1;
-            list[index] = orders[userOrders[_user][j]];
+            list[index] = getOrderResult(userOrders[_user][j]);
             index++;
         }
         return list;
@@ -247,19 +272,34 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return roundOrders[_round].length;
     }
 
-    function iterateRoundOrders(uint _round, uint _start, uint _end) external view returns (Order[] memory list){
+    function iterateRoundOrders(uint _round, uint _start, uint _end) external view returns (OrderResult[] memory list){
         require(_start <= _end && _start >= 0 && _end >= 0, "invalid param");
         uint count = countRoundOrder(_round);
         if (_end > count) _end = count;
         if (_start > _end) _start = _end;
         count = _end - _start;
-        list = new Order[](count);
+        list = new OrderResult[](count);
         if (count == 0) return list;
         uint index = 0;
         for(uint i = _start; i < _end; i++) {
-            list[index] = orders[roundOrders[_round][i]];
+            list[index] = getOrderResult(roundOrders[_round][i]);
             index++;
         }
         return list;
+    }
+
+    function getOrderResult(uint _orderId) public view returns (OrderResult memory) {
+        Order memory order = orders[_orderId];
+        (uint _win, uint _share) = queryClaim(_orderId);
+        OrderResult memory result = OrderResult({
+            roundNumber: order.roundNumber,
+            user: order.user,
+            ticketAmount: order.ticketAmount,
+            winAmount: order.winAmount,
+            claimed: order.claimed,
+            claimWin: _win,
+            claimShare: _share
+        });
+        return result;
     }
 }
