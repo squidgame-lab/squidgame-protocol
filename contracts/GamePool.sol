@@ -124,7 +124,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
     }
 
-    function uploaded(uint _startTime, uint _ticketTotal, uint _winTotal, uint _rewardTotal) public onlyManager {
+    function uploaded(uint _startTime, uint _ticketTotal, uint _winTotal, uint _rewardTotal) external onlyManager {
         require(_ticketTotal > 0 && _rewardTotal >0, 'zero');
         
         if(totalRound > 0) {
@@ -202,7 +202,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         emit Claimed(msg.sender, _orderId, winAmount, share);
     }
 
-    function claim(uint _orderId) internal returns (uint winAmount, uint share) {
+    function claim(uint _orderId) external returns (uint winAmount, uint share) {
         return _claim(_orderId);
     }
 
