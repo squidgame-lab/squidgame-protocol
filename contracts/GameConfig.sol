@@ -18,6 +18,7 @@ contract GameConfig is Initializable {
         owner = msg.sender;
         dev = msg.sender;
         admin = msg.sender;
+        team = msg.sender;
     }
 
     modifier onlyOwner() {

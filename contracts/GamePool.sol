@@ -66,7 +66,10 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
     event NewRound(uint indexed value);
     event Claimed(address indexed user, uint indexed orderId, uint win, uint share);
-    
+
+    receive() external payable {
+    }
+ 
     function initialize() external initializer {
         owner = msg.sender;
     }
