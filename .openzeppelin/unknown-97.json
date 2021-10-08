@@ -104,6 +104,56 @@
       "address": "0x54Bc0F3d64Baf7DdfDFdd9a765d59a0838B8F7B8",
       "txHash": "0x82c26fdf5780b38ee691324894b2e30dd269dcdb158776d3d76d16e4ee96abe1",
       "kind": "transparent"
+    },
+    {
+      "address": "0x29832973761C0BDE1851B04680FbfdEd99013F8B",
+      "txHash": "0x5d3cad006a5b88ab4d4da558634a25e77c00ba0ce3a748217edf7dca6eda0b46",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xb128816bF599143165b5f540CE6939CfbB8d8f59",
+      "txHash": "0x71e01feb51174a3b4cf9ee0b766ac0bfa6a76d3b537f9c20410c32aa1e9763f0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x5Ca27255f4C7d06990901d69e7eD9724E66c1199",
+      "txHash": "0x15ff233cec877fc8818bacb1678549a24d7666e403892001eae449596dc0238e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xdaEA4D35b9dB9400EA366a5Dbd4e997951aDcFB5",
+      "txHash": "0xb7bdb4ecd909b32816df1db4e71d10a3359bf4a45dd5d324d47e434d0062b8e4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x38832d9C1f9dd6E33EAad1D73Acbe7B6fF8C2e07",
+      "txHash": "0xc75be34d3833b296f041abda100b923667390d25d3cce8dc3b168a8fc4cee3dd",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xF89Eab7c707907F5e4C646D7fE5dE6b52e53FF53",
+      "txHash": "0x36408e4498a52dce8e4b1a1a1a6fcc686108fe85f827efc1b9b2b32987a2825e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xE8843d44c8d62A71C8e4Ff1Dee127FeA3bC34C5B",
+      "txHash": "0x7105370ac1657c323fbec106f49cd11d8d9af1f2375a61382b7db282a5d81772",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x6a446b4698898FD02B2416B4afe0755b4765E21D",
+      "txHash": "0xd7721944ca9f22e3f04a4ba10bb9468d3828308a0608c036f0434356bcc1cded",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xbA3860a74dCa428DEeC55465bCA793406B61439b",
+      "txHash": "0x558e8a92c1617c4920779b4e02f6b24d1588a9657149bdb86b4e3e3838a850d8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xBfAa6aDA938a22e0d6fA776df09e08ff680C58Bf",
+      "txHash": "0xa8581dcf45bc2cf2bfb91f770b6d3c17612df1f45e539560436fb9a2dece5e7c",
+      "kind": "transparent"
     }
   ],
   "impls": {
