@@ -62,7 +62,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (uint => RoundData) public historys;
     mapping (address => uint[]) public userOrders;
     mapping (uint => uint[]) public roundOrders;
-    mapping (address => mapping (uint => uint)) userRoundOrderMap;
+    mapping (address => mapping (uint => uint)) public userRoundOrderMap;
 
     event NewRound(uint indexed value);
     event Claimed(address indexed user, uint indexed orderId, uint win, uint share);
@@ -97,8 +97,19 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint orderId = userRoundOrderMap[data.user][totalRound];
         if(orderId == 0 && orders[orderId].user == address(0)) {
             userRoundOrderMap[data.user][totalRound] = orders.length;
-            userOrders[data.user].push(orders.length);
-            roundOrders[totalRound].push(orders.length);
+            if(userOrders[data.user].length ==0) {
+                userOrders[data.user] = new uint[](1);
+                userOrders[data.user][0] = orders.length;
+            } else {
+                userOrders[data.user].push(orders.length);
+            }
+            if(roundOrders[totalRound].length ==0) {
+                roundOrders[totalRound] = new uint[](1);
+                roundOrders[totalRound][0] = orders.length;
+            } else {
+                roundOrders[totalRound].push(orders.length);
+            }
+            
             orders.push(Order({
                 roundNumber: totalRound,
                 user: data.user,
