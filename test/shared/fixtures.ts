@@ -82,6 +82,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
         60,
         false
     );
+    await gameTicket.setRewardPool(gamePoolDay.address);
 
     return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek };
 }

@@ -27,7 +27,7 @@ describe('GameTicket', async () => {
         await buyToken.mint(wallet.address, OneInDecimals.mul(10000));
     })
 
-    describe('buy', async () => {
+    describe('#buy', async () => {
         beforeEach('approve buyToken to gameTicket', async () => {
             await buyToken.approve(gameTicket.address, OneInDecimals.mul(10000));
         })
@@ -55,7 +55,7 @@ describe('GameTicket', async () => {
         })
     })
 
-    describe('withdraw', async () => {
+    describe('#withdraw', async () => {
         describe('fails cases', async () => {
             it('fails for caller not rewardPool', async () => {
                 await expect(gameTicket.withdraw(0)).to.revertedWith('GameTicket: FORBIDDEN');
