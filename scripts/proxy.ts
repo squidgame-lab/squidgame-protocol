@@ -74,8 +74,8 @@ async function upgradeContract(name: string, value: any) {
   }
   // console.log('upgrade...', data[name].address)
   let contractName = name;
-  if(data[name].hasOwnProperty('name')) {
-    contractName = data[name].name;
+  if(data[name].hasOwnProperty('contractName')) {
+    contractName = data[name].contractName;
   }
   const Factory = await ethers.getContractFactory(contractName);
   const ins = await upgrades.upgradeProxy(data[name].address, Factory);
