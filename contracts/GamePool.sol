@@ -96,11 +96,20 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             require(tickets[data.user].add(data.ticketAmount) <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
         }
         uint orderId = userRoundOrderMap[data.user][totalRound];
-        if(orderId == 0 && userOrders[data.user].length == 0) {
+        bool exist;
+        if(orderId > 0 || (orderId == 0 && totalRound == 0 && userOrders[data.user].length > 0)) {
+            exist = true;
+        }
+
+        if(!exist) {
             userRoundOrderMap[data.user][totalRound] = orders.length;
-            userOrders[data.user] = new uint[](1);
-            userOrders[data.user][0] = orders.length;
-            
+            if(userOrders[data.user].length == 0) {
+                userOrders[data.user] = new uint[](1);
+                userOrders[data.user][0] = orders.length;
+            } else {
+                userOrders[data.user].push(orders.length);
+            }
+
             if(roundOrders[totalRound].length == 0) {
                 roundOrders[totalRound] = new uint[](1);
                 roundOrders[totalRound][0] = orders.length;
