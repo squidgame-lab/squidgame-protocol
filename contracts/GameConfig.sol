@@ -8,17 +8,20 @@ contract GameConfig is Initializable {
     address public dev;
     address public admin;
     address public team;
+    address public uploader;
 
     event OwnerChanged(address indexed _user, address indexed _old, address indexed _new);
     event DevChanged(address indexed _user, address indexed _old, address indexed _new);
     event AdminChanged(address indexed _user, address indexed _old, address indexed _new);
     event TeamChanged(address indexed _user, address indexed _old, address indexed _new);
+    event UploaderChanged(address indexed _user, address indexed _old, address indexed _new);
 
     function initialize() external initializer {
         owner = msg.sender;
         dev = msg.sender;
         admin = msg.sender;
         team = msg.sender;
+        uploader = msg.sender;
     }
 
     modifier onlyOwner() {
@@ -38,6 +41,11 @@ contract GameConfig is Initializable {
         
     modifier onlyTeam() {
         require(msg.sender == team || msg.sender == owner, "GameConfig: FORBIDDEN");
+        _;
+    }
+            
+    modifier onlyUploader() {
+        require(msg.sender == uploader || msg.sender == owner, "GameConfig: FORBIDDEN");
         _;
     }
 
@@ -63,5 +71,11 @@ contract GameConfig is Initializable {
         require(team != _user, 'GameConfig: NO CHANGE');
         emit TeamChanged(msg.sender, team, _user);
         team = _user;
+    }
+
+    function changeUploader(address _user) external onlyUploader {
+        require(uploader != _user, 'GameConfig: NO CHANGE');
+        emit UploaderChanged(msg.sender, uploader, _user);
+        uploader = _user;
     }
 }

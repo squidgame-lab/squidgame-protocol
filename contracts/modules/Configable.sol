@@ -5,6 +5,7 @@ interface IConfig {
     function dev() external view returns (address);
     function admin() external view returns (address);
     function team() external view returns (address);
+    function uploader() external view returns (address);
 }
 
 contract Configable {
@@ -45,6 +46,13 @@ contract Configable {
         return owner;
     }
 
+    function uploader() public view returns(address) {
+        if(config != address(0)) {
+            return IConfig(config).uploader();
+        }
+        return owner;
+    }
+
     function changeOwner(address _user) external onlyOwner {
         require(owner != _user, 'Owner: NO CHANGE');
         emit OwnerChanged(msg.sender, owner, _user);
@@ -57,12 +65,17 @@ contract Configable {
     }
     
     modifier onlyAdmin() {
-        require(msg.sender == admin(), 'admin FORBIDDEN');
+        require(msg.sender == admin() || msg.sender == owner, 'admin FORBIDDEN');
         _;
     }
      
     modifier onlyTeam() {
         require(msg.sender == team() || msg.sender == owner, "team: FORBIDDEN");
+        _;
+    }
+
+    modifier onlyUploader() {
+        require(msg.sender == uploader() || msg.sender == owner, 'uploader FORBIDDEN');
         _;
     }
 
