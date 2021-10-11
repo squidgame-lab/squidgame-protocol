@@ -55,6 +55,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         bool claimed;
         uint claimWin;
         uint claimShare;
+        uint orderId;
     }
 
     Order[] public orders;
@@ -312,7 +313,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             winAmount: order.winAmount,
             claimed: order.claimed,
             claimWin: _win,
-            claimShare: _share
+            claimShare: _share,
+            orderId: _orderId
         });
         return result;
     }
