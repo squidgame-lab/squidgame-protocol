@@ -457,4 +457,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         });
         return result;
     }
+
+    function getTopRates() external view returns (TopRate[] memory) {
+        return topRates;
+    }
 }
