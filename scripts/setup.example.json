@@ -1,6 +1,17 @@
 [
     {
         "call": true,
+        "name": "GameToken",
+        "functionName": "increaseFunds",
+        "contractName": "GameToken",
+        "contractAddr": "",
+        "args": [
+            ["${GamePool1.address}","${GamePool7.address}","${GamePool30.address}"],
+            ["100000000000000000000000000","100000000000000000000000000","100000000000000000000000000"]
+        ]
+    },
+    {
+        "call": true,
         "name": "GameTicket",
         "functionName": "setupConfig",
         "contractName": "GameTicket",
