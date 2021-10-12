@@ -122,19 +122,19 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
     function setTopRate(bool _reset, uint[] calldata _ranks, TopRate[] memory _values) external onlyManager {
         require(_ranks.length == _values.length, 'invalid param');
-        if(_reset && topRates.length > 0) {
-            for(uint i; i<topRates.length; i++) {
-                delete topRates[i];
+        if(_reset) {
+            uint count = topRates.length;
+            for(uint i; i<count; i++) {
+                topRates.pop();
             }
-           // rank from 1 to start
-           topRates.push(TopRate({
+        }
+          
+        for(uint i; i<_ranks.length+1; i++) {
+            topRates.push(TopRate({
                 rate: 0,
                 start: 0,
                 end: 0
             }));
-            for(uint i; i<_ranks.length; i++) {
-                topRates.push(_values[i]);
-            }
         }
         
         for(uint i; i<_ranks.length; i++) {
