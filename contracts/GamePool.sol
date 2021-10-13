@@ -280,7 +280,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         RoundData memory round = historys[order.roundNumber];
         require(order.user == msg.sender || order.user == address(0), 'forbidden');
         require(round.ticketTotal > 0, 'not ready');
-        require(order.ticketAmount > 0, "no participate in this round");
         require(canClaim(_orderId), 'can not claim');
         address to = order.user;
         if(order.user == address(0)) {
