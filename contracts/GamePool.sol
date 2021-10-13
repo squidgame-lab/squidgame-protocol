@@ -42,6 +42,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint scoreTotal;
         uint topScoreTotal;
         uint topStrategySn;
+        uint shareParticipationAmount;
+        uint shareTopAmount;
     }
 
     struct Order {
@@ -233,6 +235,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         currentRound.scoreTotal = _scoreTotal;
         currentRound.topScoreTotal = _topScoreTotal;
         currentRound.topStrategySn = totalTopStrategy;
+        currentRound.shareParticipationAmount = shareParticipationAmount;
+        currentRound.shareTopAmount = shareTopAmount;
 
         (uint reward, ) = IRewardSource(rewardSource).withdraw(_ticketTotal);
         if(nextPoolRate > 0) {
@@ -427,13 +431,13 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
         uint claimShareParticipationAmount;
         if(round.ticketTotal > 0) {
-            claimShareParticipationAmount = order.ticketAmount.mul(shareParticipationAmount).div(round.ticketTotal);
+            claimShareParticipationAmount = order.ticketAmount.mul(round.shareParticipationAmount).div(round.ticketTotal);
         }
 
         uint claimShareTopAmount;
         (uint rate, uint count) = getRankTopRate(round.topStrategySn, order.rank);
         if(topEnd > 0 && count > 0 && order.rank <= topEnd) {
-            claimShareTopAmount = rate.mul(shareTopAmount).div(100).div(count);
+            claimShareTopAmount = rate.mul(round.shareTopAmount).div(100).div(count);
         }
 
         uint canClaimShareTopAmount;
