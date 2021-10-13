@@ -9,6 +9,7 @@ import { Fixture } from 'ethereum-waffle'
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000"
 export const OneInDecimals = BigNumber.from("1000000000000000000")
+export const ZeroOneInDecimals = BigNumber.from("100000000000000000")
 
 interface TestTokensFixture {
     buyToken: TestToken
@@ -50,6 +51,7 @@ interface GameConfigFixture extends GameTicketFixture {
     gameToken: GameToken
     gamePoolDay: GamePool
     gamePoolWeek: GamePool
+    gamePoolMonth: GamePool
 }
 
 export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Promise<GameConfigFixture> {
@@ -64,6 +66,8 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
     await gamePoolDay.initialize();
     const gamePoolWeek = (await gamePoolFactory.deploy()) as GamePool;
     await gamePoolWeek.initialize()
+    const gamePoolMonth = (await gamePoolFactory.deploy()) as GamePool;
+    await gamePoolMonth.initialize()
 
     await gameToken.increaseFunds([gamePoolDay.address, gamePoolWeek.address], [OneInDecimals.mul(100000000), OneInDecimals.mul(100000000)])
     await gamePoolDay.configure(
@@ -71,18 +75,29 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
         gameToken.address,
         gamePoolWeek.address,
         5,
-        30,
+        1,
+        1,
         true
     );
     await gamePoolWeek.configure(
         gamePoolDay.address,
         gameToken.address,
-        zeroAddress,
+        gamePoolMonth.address,
         5,
-        60,
+        2,
+        2,
+        false
+    );
+    await gamePoolMonth.configure(
+        gamePoolWeek.address,
+        gameToken.address,
+        zeroAddress,
+        0,
+        3,
+        3,
         false
     );
     await gameTicket.setRewardPool(gamePoolDay.address);
 
-    return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek };
+    return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth };
 }
