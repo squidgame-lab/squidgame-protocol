@@ -39,18 +39,18 @@
 		"verified": false
 	},
 	"GamePool1": {
-        "contractName": "GamePool",
+		"contractName": "GamePool",
 		"address": "",
 		"constructorArgs": [],
 		"upgradeArgs": [
-        ],
+		],
 		"upgradedAddress": "",
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
 	},
     "GamePool7": {
-        "contractName": "GamePool",
+		"contractName": "GamePool",
 		"address": "",
 		"constructorArgs": [],
 		"upgradeArgs": [],
@@ -60,7 +60,7 @@
 		"verified": false
 	},
     "GamePool30": {
-        "contractName": "GamePool",
+		"contractName": "GamePool",
 		"address": "",
 		"constructorArgs": [],
 		"upgradeArgs": [],
