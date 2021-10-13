@@ -19,13 +19,14 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     address public shareToken;
     address public nextPool;
     uint public nextPoolRate;
+    uint public nextPoolTotal;
     uint public epoch;
     uint public totalRound;
     uint public shareParticipationAmount;
     uint public shareTopAmount;
     uint public shareReleaseEpoch;
     mapping(address => uint) public override tickets;
-    bool public isCheckTicket;
+    bool public isFromTicket;
     
     struct PlayData {
         address user;
@@ -98,7 +99,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         owner = msg.sender;
     }
 
-    function configure(address _rewardSource, address _shareToken, address _nextPool, uint _nextPoolRate, uint _epoch, uint _shareReleaseEpoch, bool _isCheckTicket) external onlyDev {
+    function configure(address _rewardSource, address _shareToken, address _nextPool, uint _nextPoolRate, uint _epoch, uint _shareReleaseEpoch, bool _isFromTicket) external onlyDev {
         if(_shareReleaseEpoch > 0) {
             require(_epoch % _shareReleaseEpoch == 0, 'invalid _epoch and _shareReleaseEpoch');
         }
@@ -109,7 +110,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         nextPoolRate = _nextPoolRate;
         epoch = _epoch;
         shareReleaseEpoch = _shareReleaseEpoch;
-        isCheckTicket = _isCheckTicket;
+        isFromTicket = _isFromTicket;
     }
 
     function setNexPoolRate(uint _nextPoolRate) external onlyManager {
@@ -134,13 +135,10 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             }));
         }
         
+        uint _total;
         for(uint i; i<_levels.length; i++) {
             topStrategies[totalTopStrategy][_levels[i]] = _values[i];
-        }
-
-        uint _total;
-        for(uint i; i<topStrategies[totalTopStrategy].length; i++) {
-            _total = _total.add(topStrategies[totalTopStrategy][i].rate);
+            _total = _total.add(_values[i].rate);
         }
 
         require(_total == 100, 'sum of rate is not 100');
@@ -159,7 +157,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
     function uploadOne(PlayData memory data) public onlyUploader {
         require(data.user != address(0), 'invalid param');
-        if(isCheckTicket) {
+        if(isFromTicket) {
             require(tickets[data.user].add(data.ticketAmount) <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
         }
         uint orderId = userRoundOrderMap[data.user][totalRound];
@@ -197,7 +195,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         } else {
             Order storage order = orders[orderId];
             require(order.claimedWin == 0 && order.claimedShareParticipationAmount == 0 && order.claimedShareTopAmount == 0, 'claimed order does not change');
-            if(isCheckTicket) {
+            if(isFromTicket) {
                 tickets[data.user] = tickets[data.user].sub(order.ticketAmount);
             }
             order.rank = data.rank;
@@ -205,7 +203,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             order.score = data.score;
         }
 
-        if(isCheckTicket) {
+        if(isFromTicket) {
             tickets[data.user] = tickets[data.user].add(data.ticketAmount);
         }
     }
@@ -238,15 +236,17 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         currentRound.shareParticipationAmount = shareParticipationAmount;
         currentRound.shareTopAmount = shareTopAmount;
 
-        (uint reward, ) = IRewardSource(rewardSource).withdraw(_ticketTotal);
+        uint rewardAmount;
+        if(isFromTicket) {
+            rewardAmount = _ticketTotal;
+        } else {
+            rewardAmount = IRewardSource(rewardSource).getBalance();
+        }
+        (uint reward, ) = IRewardSource(rewardSource).withdraw(rewardAmount);
         if(nextPoolRate > 0) {
             uint nextPoolReward = reward.div(nextPoolRate);
             reward = reward.sub(nextPoolReward);
-            if (buyToken == address(0)) {
-                if(nextPoolReward > 0) TransferHelper.safeTransferETH(nextPool, nextPoolReward);
-            } else {
-                if(nextPoolReward > 0) TransferHelper.safeTransfer(buyToken, nextPool, nextPoolReward);
-            }
+            nextPoolTotal = nextPoolTotal.add(nextPoolReward);
         }
         currentRound.rewardTotal = reward;
 
@@ -352,6 +352,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(getBalance() >= _value, 'insufficient balance');
 
         reward = _value;
+        nextPoolTotal = nextPoolTotal.sub(reward);
         if (buyToken == address(0)) {
             if(reward > 0) TransferHelper.safeTransferETH(nextPool, reward);
         } else {
@@ -364,6 +365,9 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint balance = address(this).balance;
         if(buyToken != address(0)) {
             balance = IERC20(buyToken).balanceOf(address(this));
+        }
+        if(balance > nextPoolTotal) {
+            balance = nextPoolTotal;
         }
         return balance;
     }
