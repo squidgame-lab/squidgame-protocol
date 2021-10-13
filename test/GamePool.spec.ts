@@ -146,15 +146,6 @@ describe('GamePool', async () => {
             })).to.reverted
         })
 
-        it('fails for zero user address', async () => {
-            await expect(gamePoolDay.uploadOne({
-                user: zeroAddress,
-                rank: 1,
-                ticketAmount: OneInDecimals.mul(5),
-                score: OneInDecimals.mul(50)
-            })).to.revertedWith('invalid param')
-        })
-
         it('fails for over tickets amount', async () => {
             await expect(gamePoolDay.uploadOne({
                 user: wallet.address,
@@ -162,6 +153,18 @@ describe('GamePool', async () => {
                 ticketAmount: OneInDecimals.mul(15),
                 score: OneInDecimals.mul(50)
             })).to.revertedWith('ticket overflow')
+        })
+
+        it('zero user address', async () => {
+            await gamePoolDay.uploadOne({
+                user: zeroAddress,
+                rank: 1,
+                ticketAmount: OneInDecimals.mul(0),
+                score: OneInDecimals.mul(50)
+            })
+            let order = await gamePoolDay.orders(BigNumber.from(0));
+            expect(order[0]).to.eq(BigNumber.from(0));
+            expect(order[1]).to.eq(zeroAddress);
         })
 
         it('success for case one person upload once', async () => {

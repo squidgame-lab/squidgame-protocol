@@ -156,7 +156,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     }
 
     function uploadOne(PlayData memory data) public onlyUploader {
-        require(data.user != address(0), 'invalid param');
         if(isFromTicket) {
             require(tickets[data.user].add(data.ticketAmount) <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
         }
