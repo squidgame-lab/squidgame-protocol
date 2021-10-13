@@ -396,17 +396,18 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return roundOrders[_round].length;
     }
 
-    function iterateRoundOrders(uint _round, uint _start, uint _end) external view returns (OrderResult[] memory list){
-        require(_start <= _end && _start >= 0 && _end >= 0, "invalid param");
+    function iterateReverseRoundOrders(uint _round, uint _start, uint _end) external view returns (OrderResult[] memory list){
+        require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
         uint count = countRoundOrder(_round);
-        if (_end > count) _end = count;
-        if (_start > _end) _start = _end;
-        count = _end - _start;
+        if (_start > count) _start = count;
+        if (_end > _start) _end = _start;
+        count = _start - _end; 
         list = new OrderResult[](count);
         if (count == 0) return list;
         uint index = 0;
-        for(uint i = _start; i < _end; i++) {
-            list[index] = getOrderResult(roundOrders[_round][i]);
+        for(uint i = _end;i < _start; i++) {
+            uint j = _start - index -1;
+            list[index] = getOrderResult(roundOrders[_round][j]);
             index++;
         }
         return list;
