@@ -13,6 +13,16 @@
     {
         "call": true,
         "name": "GameTicket",
+        "functionName": "setRewardPool",
+        "contractName": "GameTicket",
+        "contractAddr": "",
+        "args": [
+            "${GamePool1.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTicket",
         "functionName": "setupConfig",
         "contractName": "GameTicket",
         "contractAddr": "",

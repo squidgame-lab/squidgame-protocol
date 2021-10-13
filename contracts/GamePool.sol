@@ -121,10 +121,10 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         shareTopAmount = _shareTopAmount;
     }
 
-    function setTopRate(uint[] calldata _ranks, TopRate[] memory _values) external onlyManager {
-        require(_ranks.length > 0  && _ranks.length == _values.length, 'invalid param');
+    function setTopRate(uint[] calldata _levels, TopRate[] memory _values) external onlyManager {
+        require(_levels.length > 0  && _levels.length == _values.length, 'invalid param');
         totalTopStrategy++;
-        for(uint i; i<_ranks.length+1; i++) {
+        for(uint i; i<_levels.length+1; i++) {
             topStrategies[totalTopStrategy].push(TopRate({
                 rate: 0,
                 start: 0,
@@ -132,8 +132,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             }));
         }
         
-        for(uint i; i<_ranks.length; i++) {
-            topStrategies[totalTopStrategy][_ranks[i]] = _values[i];
+        for(uint i; i<_levels.length; i++) {
+            topStrategies[totalTopStrategy][_levels[i]] = _values[i];
         }
 
         uint _total;
