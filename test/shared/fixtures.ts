@@ -7,8 +7,8 @@ import { GamePool } from '../../typechain/GamePool'
 import { GameToken } from '../../typechain/GameToken'
 import { Fixture } from 'ethereum-waffle'
 
-export const OneInDecimals = BigNumber.from("1000000000000000000")
-export const ZeroOneInDecimals = BigNumber.from("100000000000000000")
+export const OneInDecimals = BigNumber.from("1000000000000000000")  // 1e18
+export const ZeroOneInDecimals = BigNumber.from("100000000000000000")  //1e17
 
 interface TestTokensFixture {
     buyToken: TestToken
