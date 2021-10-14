@@ -76,7 +76,8 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
         5,
         1,
         1,
-        true
+        true,
+        false
     );
     await gamePoolWeek.configure(
         gamePoolDay.address,
@@ -85,6 +86,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
         5,
         2,
         2,
+        false,
         false
     );
     await gamePoolMonth.configure(
@@ -94,6 +96,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
         0,
         3,
         3,
+        false,
         false
     );
     await gameTicket.setRewardPool(gamePoolDay.address);
