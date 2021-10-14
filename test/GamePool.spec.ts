@@ -218,7 +218,7 @@ describe('GamePool', async () => {
                 score: OneInDecimals.mul(50)
             })
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(212356);
+            expect(receipt.gasUsed).to.eq(205726);
         })
     })
 
@@ -298,7 +298,7 @@ describe('GamePool', async () => {
                 }
             ])
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(602712)
+            expect(receipt.gasUsed).to.eq(582623)
         })
     })
 
@@ -361,7 +361,7 @@ describe('GamePool', async () => {
                 100,
             );
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(324403)
+            expect(receipt.gasUsed).to.eq(324469)
         })
     })
 
@@ -507,7 +507,7 @@ describe('GamePool', async () => {
             await new Promise(f => setTimeout(f, 1000));
             let tx = await gamePoolDay.claim(0);
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(249945);
+            expect(receipt.gasUsed).to.eq(253167);
         })
     })
 
