@@ -7,8 +7,8 @@ import { GamePool } from '../../typechain/GamePool'
 import { GameToken } from '../../typechain/GameToken'
 import { Fixture } from 'ethereum-waffle'
 
-export const OneInDecimals = BigNumber.from("1000000000000000000")  // 1e18
-export const ZeroOneInDecimals = BigNumber.from("100000000000000000")  //1e17
+export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
+export const bigNumber17 = BigNumber.from("100000000000000000")  //1e17
 
 interface TestTokensFixture {
     buyToken: TestToken
@@ -40,7 +40,7 @@ async function _gameTicketFixture(): Promise<GameTicketFixture> {
     await gameConfig.initialize();
 
     const gameTicket = (await gameTicketFactory.deploy()) as GameTicket;
-    await gameTicket.initialize(buyToken.address, OneInDecimals);
+    await gameTicket.initialize(buyToken.address, bigNumber18);
     await gameTicket.setupConfig(gameConfig.address);
 
     return { buyToken, gameTicket, gameConfig };

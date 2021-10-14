@@ -2,7 +2,7 @@
 pragma solidity >=0.6.6;
 pragma experimental ABIEncoderV2;
 
-import "./libraries/SafeMath.sol";
+import "./libraries/SafeMath128.sol";
 import './libraries/TransferHelper.sol';
 import './modules/ReentrancyGuard.sol';
 import './modules/Pausable.sol';
@@ -13,90 +13,90 @@ import './interfaces/IRewardSource.sol';
 import './interfaces/IShareToken.sol';
 
 contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initializable {
-    using SafeMath for uint;
+    using SafeMath128 for uint128;
     address public rewardSource;
     address public override buyToken;
     address public shareToken;
     address public nextPool;
-    uint public nextPoolRate;
-    uint public nextPoolTotal;
-    uint public epoch;
-    uint public totalRound;
-    uint public shareParticipationAmount;
-    uint public shareTopAmount;
-    uint public shareReleaseEpoch;
+    uint128 public nextPoolRate;
+    uint128 public nextPoolTotal;
+    uint64 public epoch;
+    uint64 public totalRound;
+    uint128 public shareParticipationAmount;
+    uint128 public shareTopAmount;
+    uint64 public shareReleaseEpoch;
     mapping(address => uint) public override tickets;
     bool public isFromTicket;
     
     struct PlayData {
         address user;
-        uint rank;
-        uint ticketAmount;
-        uint score;
+        uint32 rank;
+        uint32 score;
+        uint128 ticketAmount;
     }
     
     struct RoundData {
-        uint startTime;
-        uint ticketTotal;
-        uint winTotal;
-        uint rewardTotal;
-        uint scoreTotal;
-        uint topScoreTotal;
-        uint topStrategySn;
-        uint shareParticipationAmount;
-        uint shareTopAmount;
+        uint128 ticketTotal;
+        uint128 winTotal;
+        uint128 rewardTotal;
+        uint128 scoreTotal;
+        uint128 topScoreTotal;
+        uint128 topStrategySn;
+        uint128 shareParticipationAmount;
+        uint128 shareTopAmount;
+        uint64 startTime;
     }
 
     struct Order {
-        uint roundNumber;
         address user;
-        uint rank;
-        uint ticketAmount;
-        uint score;
+        uint64 roundNumber;
+        uint32 rank;
+        uint32 score;
+        uint128 ticketAmount;
     }
 
     struct OrderResult {
-        uint orderId;
-        uint roundNumber;
-        uint startTime;
         address user;
-        uint rank;
-        uint ticketAmount;
-        uint score;
-        uint claimedWin;
-        uint claimedShareParticipationAmount;
-        uint claimedShareTopAmount;
-        uint claimWin;
-        uint claimShareParticipationAmount;
-        uint claimShareTopAmount;
-        uint claimShareTopAvaliable;
+        uint128 orderId;
+        uint64 roundNumber;
+        uint64 startTime;
+        uint64 rank;
+        uint64 score;
+        uint128 ticketAmount;
+        uint128 claimedWin;
+        uint128 claimedShareParticipationAmount;
+        uint128 claimedShareTopAmount;
+        uint128 claimWin;
+        uint128 claimShareParticipationAmount;
+        uint128 claimShareTopAmount;
+        uint128 claimShareTopAvaliable;
     }
 
     struct TopRate {
-        uint rate;
-        uint start;
-        uint end;
+        uint128 rate;
+        uint64 start;
+        uint64 end;
     }
 
     struct ClaimLog {
-        uint orderId;
-        uint claimedWin;
-        uint claimedShareParticipationAmount;
-        uint claimedShareTopAmount;
+        uint128 orderId;
+        uint128 claimedWin;
+        uint128 claimedShareParticipationAmount;
+        uint128 claimedShareTopAmount;
     }
 
     Order[] public orders;
-    uint public totalTopStrategy;
-    mapping (uint => TopRate[]) public topStrategies;
-    mapping (uint => RoundData) public historys;
-    mapping (address => uint[]) public userOrders;
-    mapping (uint => uint[]) public roundOrders;
-    mapping (address => mapping (uint => uint)) public userRoundOrderMap;
-    mapping (uint => ClaimLog) public claimLogs;
+    uint128 public totalTopStrategy;
+    mapping (uint128 => TopRate[]) public topStrategies;
+    mapping (uint64 => RoundData) public historys;
+    mapping (address => uint128[]) public userOrders;
+    mapping (uint128 => uint128[]) public roundOrders;
+    mapping (address => mapping (uint128 => uint128)) public userRoundOrderMap;
+    mapping (uint128 => ClaimLog) public claimLogs;
     bool public enableRoundOrder;
 
-    event NewRound(uint indexed value);
-    event Claimed(address indexed user, uint indexed orderId, uint winAmount, uint shareAmount);
+    event NewRound(uint128 indexed value);
+    event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
 
     receive() external payable {
     }
@@ -105,7 +105,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         owner = msg.sender;
     }
 
-    function configure(address _rewardSource, address _shareToken, address _nextPool, uint _nextPoolRate, uint _epoch, uint _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
+    function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
         if(_shareReleaseEpoch > 0) {
             require(_epoch % _shareReleaseEpoch == 0, 'invalid _epoch and _shareReleaseEpoch');
         }
@@ -120,21 +120,21 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         enableRoundOrder = _enableRoundOrder;
     }
 
-    function setNexPoolRate(uint _nextPoolRate) external onlyManager {
+    function setNexPoolRate(uint128 _nextPoolRate) external onlyManager {
         require(_nextPoolRate != nextPoolRate, 'no change');
         nextPoolRate = _nextPoolRate;
     }
 
-    function setShareAmount(uint _shareParticipationAmount, uint _shareTopAmount) external onlyManager {
+    function setShareAmount(uint128 _shareParticipationAmount, uint128 _shareTopAmount) external onlyManager {
         require(shareParticipationAmount != _shareParticipationAmount || shareTopAmount != _shareTopAmount, 'no change');
         shareParticipationAmount = _shareParticipationAmount;
         shareTopAmount = _shareTopAmount;
     }
 
-    function setTopRate(uint[] calldata _levels, TopRate[] memory _values) external onlyManager {
+    function setTopRate(uint128[] calldata _levels, TopRate[] memory _values) external onlyManager {
         require(_levels.length > 0  && _levels.length == _values.length, 'invalid param');
         totalTopStrategy++;
-        for(uint i; i<_levels.length+1; i++) {
+        for(uint128 i; i<_levels.length+1; i++) {
             topStrategies[totalTopStrategy].push(TopRate({
                 rate: 0,
                 start: 0,
@@ -142,8 +142,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             }));
         }
         
-        uint _total;
-        for(uint i; i<_levels.length; i++) {
+        uint128 _total;
+        for(uint128 i; i<_levels.length; i++) {
             topStrategies[totalTopStrategy][_levels[i]] = _values[i];
             _total = _total.add(_values[i].rate);
         }
@@ -151,42 +151,43 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(_total == 100, 'sum of rate is not 100');
     }
 
-    function getTopEndInStrategy(uint _sn) public view returns (uint) {
+    function getTopEndInStrategy(uint128 _sn) public view returns (uint128) {
         if(totalTopStrategy > 0 && topStrategies[_sn].length > 0) {
             return topStrategies[_sn][topStrategies[_sn].length -1].end;
         }
         return 0;
     }
 
-    function getTopEnd() external view returns (uint) {
+    function getTopEnd() external view returns (uint128) {
         return getTopEndInStrategy(totalTopStrategy);
     }
 
     function uploadOne(PlayData memory data) public onlyUploader {
         if(isFromTicket) {
-            require(tickets[data.user].add(data.ticketAmount) <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
+            require(tickets[data.user] + data.ticketAmount <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
         }
-        uint orderId = userRoundOrderMap[data.user][totalRound];
+        uint128 orderId = userRoundOrderMap[data.user][totalRound];
         bool exist;
         if(orderId > 0 || (orderId == 0 && totalRound == 0 && userOrders[data.user].length > 0)) {
             exist = true;
         }
 
         if(!exist) {
-            userRoundOrderMap[data.user][totalRound] = orders.length;
+            orderId = uint128(orders.length);
+            userRoundOrderMap[data.user][totalRound] = orderId;
             if(userOrders[data.user].length == 0) {
-                userOrders[data.user] = new uint[](1);
-                userOrders[data.user][0] = orders.length;
+                userOrders[data.user] = new uint128[](1);
+                userOrders[data.user][0] = orderId;
             } else {
-                userOrders[data.user].push(orders.length);
+                userOrders[data.user].push(orderId);
             }
 
             if(enableRoundOrder) {
                 if(roundOrders[totalRound].length == 0) {
-                    roundOrders[totalRound] = new uint[](1);
-                    roundOrders[totalRound][0] = orders.length;
+                    roundOrders[totalRound] = new uint128[](1);
+                    roundOrders[totalRound][0] = orderId;
                 } else {
-                    roundOrders[totalRound].push(orders.length);
+                    roundOrders[totalRound].push(orderId);
                 }
             }
 
@@ -201,7 +202,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             require(claimLogs[orderId].claimedWin == 0 && claimLogs[orderId].claimedShareParticipationAmount == 0 && claimLogs[orderId].claimedShareTopAmount == 0, 'claimed order does not change');
             Order storage order = orders[orderId];
             if(isFromTicket) {
-                tickets[data.user] = tickets[data.user].sub(order.ticketAmount);
+                tickets[data.user] -= order.ticketAmount;
             }
             order.rank = data.rank;
             order.ticketAmount = data.ticketAmount;
@@ -209,25 +210,25 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
 
         if(isFromTicket) {
-            tickets[data.user] = tickets[data.user].add(data.ticketAmount);
+            tickets[data.user] += data.ticketAmount;
         }
     }
 
     function uploadBatch(PlayData[] calldata datas) external onlyUploader {
-        for(uint i; i < datas.length; i++) {
+        for(uint128 i; i < datas.length; i++) {
             uploadOne(datas[i]);
         }
     }
  
-    function uploaded(uint _startTime, uint _ticketTotal, uint _scoreTotal, uint _topScoreTotal) external onlyUploader {
+    function uploaded(uint64 _startTime, uint128 _ticketTotal, uint128 _scoreTotal, uint128 _topScoreTotal) external onlyUploader {
         require(_ticketTotal > 0, 'ticketTotal zero');
         require(block.timestamp > _startTime, 'invalid start time');
         require(epoch > 0, 'epoch zero');
         
         if(totalRound > 0) {
             RoundData memory last = historys[totalRound-1];
-            require(block.timestamp >= last.startTime.add(epoch), 'must be >= interval');
-            require(_startTime >= last.startTime.add(epoch), 'interval time error');
+            require(block.timestamp >= last.startTime + epoch, 'must be >= interval');
+            require(_startTime >= last.startTime + epoch, 'interval time error');
         }
         RoundData storage currentRound = historys[totalRound];
 
@@ -247,9 +248,10 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         } else {
             rewardAmount = IRewardSource(rewardSource).getBalance();
         }
-        (uint reward, ) = IRewardSource(rewardSource).withdraw(rewardAmount);
+        (uint _reward, ) = IRewardSource(rewardSource).withdraw(rewardAmount);
+        uint128 reward = uint128(_reward);
         if(nextPoolRate > 0) {
-            uint nextPoolReward = reward.div(nextPoolRate);
+            uint128 nextPoolReward = reward.div(nextPoolRate);
             reward = reward.sub(nextPoolReward);
             nextPoolTotal = nextPoolTotal.add(nextPoolReward);
         }
@@ -259,7 +261,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         totalRound++;
     }
 
-    function canClaim(uint _orderId) public view returns (bool) {
+    function canClaim(uint128 _orderId) public view returns (bool) {
         OrderResult memory order = getOrderResult(_orderId);
         RoundData memory round = historys[order.roundNumber];
         if(round.ticketTotal == 0) {
@@ -280,7 +282,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return false;
     }
   
-    function _claim(uint _orderId) internal returns (uint winAmount, uint shareAmount) {
+    function _claim(uint128 _orderId) internal returns (uint128 winAmount, uint128 shareAmount) {
         Order memory order = orders[_orderId];
         RoundData memory round = historys[order.roundNumber];
         require(order.user == msg.sender || order.user == address(0), 'forbidden');
@@ -320,22 +322,22 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         emit Claimed(to, _orderId, winAmount, shareAmount);
     }
 
-    function claim(uint _orderId) external returns (uint winAmount, uint shareAmount) {
+    function claim(uint128 _orderId) external returns (uint128 winAmount, uint128 shareAmount) {
         return _claim(_orderId);
     }
 
-    function _claimAll(address _to, uint _start, uint _end) internal returns (uint winAmount, uint shareAmount) {
+    function _claimAll(address _to, uint128 _start, uint128 _end) internal returns (uint128 winAmount, uint128 shareAmount) {
         require(_start <= _end && _start >= 0 && _end >= 0, "invalid param");
-        uint count = countUserOrder(_to);
+        uint128 count = countUserOrder(_to);
         if (_end > count) _end = count;
         if (_start > _end) _start = _end;
         count = _end - _start;
         if (count == 0) return (0,0);
-        uint index = 0;
-        for(uint i = _start; i < _end; i++) {
-            uint orderId = userOrders[_to][i];
+        uint128 index = 0;
+        for(uint128 i = _start; i < _end; i++) {
+            uint128 orderId = userOrders[_to][i];
             if(canClaim(orderId)) {
-                (uint _win, uint _share) = _claim(orderId);
+                (uint128 _win, uint128 _share) = _claim(orderId);
                 winAmount = winAmount.add(_win);
                 shareAmount = shareAmount.add(_share);
             }
@@ -343,11 +345,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
     }
 
-    function claimAll(uint _start, uint _end) external returns (uint winAmount, uint shareAmount) {
+    function claimAll(uint128 _start, uint128 _end) external returns (uint128 winAmount, uint128 shareAmount) {
         return _claimAll(msg.sender, _start, _end);
     }
 
-    function claimAllForZero(uint _start, uint _end) external returns (uint winAmount, uint shareAmount) {
+    function claimAllForZero(uint128 _start, uint128 _end) external returns (uint128 winAmount, uint128 shareAmount) {
         return _claimAll(address(0), _start, _end);
     }
 
@@ -357,7 +359,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(getBalance() >= _value, 'insufficient balance');
 
         reward = _value;
-        nextPoolTotal = nextPoolTotal.sub(reward);
+        nextPoolTotal = nextPoolTotal.sub(uint128(reward));
         if (buyToken == address(0)) {
             if(reward > 0) TransferHelper.safeTransferETH(nextPool, reward);
         } else {
@@ -377,93 +379,93 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return balance;
     }
 
-    function countUserOrder(address _user) public view returns (uint) {
-        return userOrders[_user].length;
+    function countUserOrder(address _user) public view returns (uint128) {
+        return uint128(userOrders[_user].length);
     }
 
-    function iterateReverseUserOrders(address _user, uint _start, uint _end) external view returns (OrderResult[] memory list){
+    function iterateReverseUserOrders(address _user, uint128 _start, uint128 _end) external view returns (OrderResult[] memory list){
         require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
-        uint count = countUserOrder(_user);
+        uint128 count = countUserOrder(_user);
         if (_start > count) _start = count;
         if (_end > _start) _end = _start;
         count = _start - _end; 
         list = new OrderResult[](count);
         if (count == 0) return list;
-        uint index = 0;
-        for(uint i = _end;i < _start; i++) {
-            uint j = _start - index -1;
+        uint128 index = 0;
+        for(uint128 i = _end;i < _start; i++) {
+            uint128 j = _start - index -1;
             list[index] = getOrderResult(userOrders[_user][j]);
             index++;
         }
         return list;
     }
 
-    function countRoundOrder(uint _round) public view returns (uint) {
-        return roundOrders[_round].length;
+    function countRoundOrder(uint128 _round) public view returns (uint128) {
+        return uint128(roundOrders[_round].length);
     }
 
-    function iterateReverseRoundOrders(uint _round, uint _start, uint _end) external view returns (OrderResult[] memory list){
+    function iterateReverseRoundOrders(uint128 _round, uint128 _start, uint128 _end) external view returns (OrderResult[] memory list){
         require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
-        uint count = countRoundOrder(_round);
+        uint128 count = countRoundOrder(_round);
         if (_start > count) _start = count;
         if (_end > _start) _end = _start;
         count = _start - _end; 
         list = new OrderResult[](count);
         if (count == 0) return list;
-        uint index = 0;
-        for(uint i = _end;i < _start; i++) {
-            uint j = _start - index -1;
+        uint128 index = 0;
+        for(uint128 i = _end;i < _start; i++) {
+            uint128 j = _start - index -1;
             list[index] = getOrderResult(roundOrders[_round][j]);
             index++;
         }
         return list;
     }
 
-    function getRankTopRate(uint _strategySn, uint _rank) public view returns (uint rate, uint count) {
-        for(uint i; i<topStrategies[_strategySn].length; i++) {
+    function getRankTopRate(uint128 _strategySn, uint128 _rank) public view returns (uint128 rate, uint128 count) {
+        for(uint128 i; i<topStrategies[_strategySn].length; i++) {
             if(_rank >= topStrategies[_strategySn][i].start && _rank <= topStrategies[_strategySn][i].end) {
                 rate = topStrategies[_strategySn][i].rate;
-                count = topStrategies[_strategySn][i].end.sub(topStrategies[_strategySn][i].start).add(1);
+                count = topStrategies[_strategySn][i].end - topStrategies[_strategySn][i].start + 1;
                 return (rate, count);
             }
         }
         return (rate, count);
     }
 
-    function getOrderResult(uint _orderId) public view returns (OrderResult memory) {
+    function getOrderResult(uint128 _orderId) public view returns (OrderResult memory) {
         Order memory order = orders[_orderId];
         RoundData memory round = historys[order.roundNumber];
         ClaimLog memory clog = claimLogs[_orderId];
-        uint topEnd = getTopEndInStrategy(round.topStrategySn);
-        uint claimWin;
+        uint128 topEnd = getTopEndInStrategy(round.topStrategySn);
+        uint128 claimWin;
         if(round.topScoreTotal > 0 && order.rank <= topEnd) {
-            claimWin = order.score.mul(round.rewardTotal).div(round.topScoreTotal);
+            claimWin = SafeMath128.mulAndDiv(uint128(order.score), round.rewardTotal, round.topScoreTotal);
         }
 
-        uint claimShareParticipationAmount;
+        uint128 claimShareParticipationAmount;
         if(round.ticketTotal > 0) {
-            claimShareParticipationAmount = order.ticketAmount.mul(round.shareParticipationAmount).div(round.ticketTotal);
+            claimShareParticipationAmount = SafeMath128.mulAndDiv(order.ticketAmount, round.shareParticipationAmount, round.ticketTotal);
         }
 
-        uint claimShareTopAmount;
-        (uint rate, uint count) = getRankTopRate(round.topStrategySn, order.rank);
+        uint128 claimShareTopAmount;
+        (uint128 rate, uint128 count) = getRankTopRate(round.topStrategySn, order.rank);
         if(topEnd > 0 && count > 0 && order.rank <= topEnd) {
-            claimShareTopAmount = rate.mul(round.shareTopAmount).div(100).div(count);
+            claimShareTopAmount = SafeMath128.mulAndDiv(rate, round.shareTopAmount, uint128(100*count));
         }
 
-        uint canClaimShareTopAmount;
+        uint128 canClaimShareTopAmount;
         if(shareReleaseEpoch == 0) {
             canClaimShareTopAmount = claimShareTopAmount;
         } else {
-            uint totalDue = epoch.div(shareReleaseEpoch);
-            uint passedDue = block.timestamp.sub(round.startTime).div(shareReleaseEpoch);
+            uint128 totalDue = epoch / shareReleaseEpoch;
+            uint128 passedDue = uint128((block.timestamp - round.startTime) / shareReleaseEpoch);
             if(passedDue > totalDue) {
                 passedDue = totalDue;
             }
-            canClaimShareTopAmount = claimShareTopAmount.mul(passedDue).div(totalDue); 
+            canClaimShareTopAmount = SafeMath128.mulAndDiv(claimShareTopAmount, passedDue, totalDue); 
         }
 
-        uint claimShareTopAvaliable = canClaimShareTopAmount.sub(clog.claimedShareTopAmount);
+        uint128 claimShareTopAvaliable = canClaimShareTopAmount.sub(clog.claimedShareTopAmount);
         
         OrderResult memory result = OrderResult({
             orderId: _orderId,
@@ -484,7 +486,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return result;
     }
 
-    function getTopRates(uint _strategySn) external view returns (TopRate[] memory) {
+    function getTopRates(uint128 _strategySn) external view returns (TopRate[] memory) {
         return topStrategies[_strategySn];
     }
 }
