@@ -179,7 +179,7 @@ describe('GamePool', async () => {
             let totalRound = await gamePoolDay.totalRound();
             expect(await gamePoolDay.userRoundOrderMap(wallet.address, totalRound)).to.eq(BigNumber.from(0))
             expect(await gamePoolDay.userOrders(wallet.address, BigNumber.from(0))).to.eq(BigNumber.from(0));
-            expect(await gamePoolDay.roundOrders(totalRound, BigNumber.from(0))).to.eq(BigNumber.from(0));
+            // expect(await gamePoolDay.roundOrders(totalRound, BigNumber.from(0))).to.eq(BigNumber.from(0));
             let order = await gamePoolDay.orders(BigNumber.from(0));
             expect(order[0]).to.eq(BigNumber.from(0));
             expect(order[1]).to.eq(wallet.address);
@@ -202,12 +202,23 @@ describe('GamePool', async () => {
             let totalRound = await gamePoolDay.totalRound();
             expect(await gamePoolDay.userRoundOrderMap(wallet.address, totalRound)).to.eq(BigNumber.from(0))
             expect(await gamePoolDay.userOrders(wallet.address, BigNumber.from(0))).to.eq(BigNumber.from(0));
-            expect(await gamePoolDay.roundOrders(totalRound, BigNumber.from(0))).to.eq(BigNumber.from(0));
+            // expect(await gamePoolDay.roundOrders(totalRound, BigNumber.from(0))).to.eq(BigNumber.from(0));
             let order = await gamePoolDay.orders(BigNumber.from(0));
             expect(order[0]).to.eq(BigNumber.from(0));
             expect(order[1]).to.eq(wallet.address);
             expect(order[2]).to.eq(2)
             expect(await gamePoolDay.tickets(wallet.address)).to.eq(OneInDecimals.mul(5));
+        })
+
+        it('gas', async () => {
+            let tx = await gamePoolDay.uploadOne({
+                user: wallet.address,
+                rank: 1,
+                ticketAmount: OneInDecimals.mul(5),
+                score: OneInDecimals.mul(50)
+            })
+            let receipt = await tx.wait();
+            expect(receipt.gasUsed).to.eq(212356);
         })
     })
 
@@ -259,10 +270,35 @@ describe('GamePool', async () => {
                     score: OneInDecimals.mul(20)
                 }
             ])
-            let totalRound = await gamePoolDay.totalRound();
-            expect(await gamePoolDay.roundOrders(totalRound, 0)).to.eq(0);
-            expect(await gamePoolDay.roundOrders(totalRound, 1)).to.eq(1);
-            expect(await gamePoolDay.roundOrders(totalRound, 2)).to.eq(2);
+            // let totalRound = await gamePoolDay.totalRound();
+            expect(await gamePoolDay.userOrders(wallet.address, 0)).to.eq(0);
+            expect(await gamePoolDay.userOrders(otherZero.address, 0)).to.eq(1);
+            expect(await gamePoolDay.userOrders(otherOne.address, 0)).to.eq(2);
+        })
+
+        it('gas', async () => {
+            let tx = await gamePoolDay.uploadBatch([
+                {
+                    user: wallet.address,
+                    rank: 1,
+                    ticketAmount: OneInDecimals.mul(5),
+                    score: OneInDecimals.mul(50)
+                },
+                {
+                    user: otherZero.address,
+                    rank: 2,
+                    ticketAmount: OneInDecimals.mul(5),
+                    score: OneInDecimals.mul(30)
+                },
+                {
+                    user: otherOne.address,
+                    rank: 3,
+                    ticketAmount: OneInDecimals.mul(5),
+                    score: OneInDecimals.mul(20)
+                }
+            ])
+            let receipt = await tx.wait();
+            expect(receipt.gasUsed).to.eq(602712)
         })
     })
 
@@ -315,6 +351,17 @@ describe('GamePool', async () => {
             expect(await buyToken.balanceOf(gamePoolWeek.address)).to.eq(ZeroOneInDecimals.mul(24));
             expect(await buyToken.balanceOf(gamePoolMonth.address)).to.eq(ZeroOneInDecimals.mul(6));
             expect(await gamePoolMonth.nextPoolTotal()).to.eq(0)
+        })
+
+        it('gas', async () => {
+            let tx = await gamePoolDay.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                OneInDecimals.mul(15),
+                100,
+                100,
+            );
+            let receipt = await tx.wait();
+            expect(receipt.gasUsed).to.eq(324403)
         })
     })
 
@@ -454,6 +501,13 @@ describe('GamePool', async () => {
             let shareBalanceAfter = await gameToken.balanceOf(wallet.address);
             expect(ticketBalanceAfter.sub(ticketBalanceBefore)).to.eq(ZeroOneInDecimals.mul(3));
             expect(shareBalanceAfter.sub(shareBalanceBefore)).to.eq(OneInDecimals.mul(160));
+        })
+
+        it('success for claim order0', async () => {
+            await new Promise(f => setTimeout(f, 1000));
+            let tx = await gamePoolDay.claim(0);
+            let receipt = await tx.wait();
+            expect(receipt.gasUsed).to.eq(249945);
         })
     })
 
