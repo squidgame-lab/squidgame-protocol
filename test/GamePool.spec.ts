@@ -28,7 +28,7 @@ describe('GamePool', async () => {
         loadFixTure = createFixtureLoader([wallet, otherZero, otherOne])
     })
 
-    beforeEach('deploy GamePool', async () => {
+    beforeEach('mock players', async () => {
         ; ({ buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth } = await loadFixTure(gamePoolFixture));
         await buyToken.mint(wallet.address, OneInDecimals.mul(10000));
 
@@ -454,6 +454,48 @@ describe('GamePool', async () => {
             let shareBalanceAfter = await gameToken.balanceOf(wallet.address);
             expect(ticketBalanceAfter.sub(ticketBalanceBefore)).to.eq(ZeroOneInDecimals.mul(3));
             expect(shareBalanceAfter.sub(shareBalanceBefore)).to.eq(OneInDecimals.mul(160));
+        })
+    })
+
+    describe('#uploaded&&cliam', async () => {
+        beforeEach('mock set and upload', async () => {
+            await mockSet();
+            await mockUpload();
+        })
+
+        it('success', async () => {
+            // gamePoolDay
+            await gamePoolDay.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                OneInDecimals.mul(15),
+                100,
+                100,
+            );
+            expect(await buyToken.balanceOf(gamePoolDay.address)).to.eq(OneInDecimals.mul(15));
+            expect(await gamePoolDay.nextPoolTotal()).to.eq(OneInDecimals.mul(3))
+            await gamePoolDay.claim(0);
+            // gamePoolWeek
+            await gamePoolWeek.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                OneInDecimals.mul(15),
+                100,
+                100,
+            );
+            expect(await gamePoolDay.nextPoolTotal()).to.eq(0);
+            expect(await buyToken.balanceOf(gamePoolWeek.address)).to.eq(OneInDecimals.mul(3));
+            expect(await gamePoolWeek.nextPoolTotal()).to.eq(ZeroOneInDecimals.mul(6))
+            await gamePoolWeek.claim(0)
+            // gamePoolMonth
+            await gamePoolMonth.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                OneInDecimals.mul(15),
+                100,
+                100,
+            );
+            expect(await gamePoolWeek.nextPoolTotal()).to.eq(0);
+            expect(await buyToken.balanceOf(gamePoolMonth.address)).to.eq(ZeroOneInDecimals.mul(6));
+            expect(await gamePoolMonth.nextPoolTotal()).to.eq(0)
+
         })
     })
 
