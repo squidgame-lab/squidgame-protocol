@@ -4,7 +4,7 @@ import { TestToken } from '../typechain/TestToken'
 import { GameTicket } from '../typechain/GameTicket'
 import { GameConfig } from '../typechain/GameConfig'
 import { expect } from './shared/expect'
-import { gameTicketFixture, OneInDecimals } from './shared/fixtures'
+import { gameTicketFixture } from './shared/fixtures'
 
 const createFixtureLoader = waffle.createFixtureLoader
 
@@ -24,12 +24,12 @@ describe('GameTicket', async () => {
 
     beforeEach('deploy GameTicket', async () => {
         ; ({ buyToken, gameTicket, gameConfig } = await loadFixTure(gameTicketFixture));
-        await buyToken.mint(wallet.address, OneInDecimals.mul(10000));
+        await buyToken.mint(wallet.address, ethers.constants.One.mul(10000));
     })
 
     describe('#buy', async () => {
         beforeEach('approve buyToken to gameTicket', async () => {
-            await buyToken.approve(gameTicket.address, OneInDecimals.mul(10000));
+            await buyToken.approve(gameTicket.address, ethers.constants.MaxUint256);
         })
 
         it('fails for zero value', async () => {
@@ -37,21 +37,21 @@ describe('GameTicket', async () => {
         })
 
         it('fails for REMAINDER', async () => {
-            await expect(gameTicket.buy(OneInDecimals.add(1), wallet.address)).to.revertedWith('GameTicket: REMAINDER');
+            await expect(gameTicket.buy(ethers.constants.One.add(1), wallet.address)).to.revertedWith('GameTicket: REMAINDER');
         })
 
         it('fails for INSUFFICIENT_BALANCE', async () => {
-            await expect(gameTicket.connect(other).buy(OneInDecimals, other.address)).to.revertedWith('GameTicket: INSUFFICIENT_BALANCE');
+            await expect(gameTicket.connect(other).buy(ethers.constants.One, other.address)).to.revertedWith('GameTicket: INSUFFICIENT_BALANCE');
         })
 
         it('success for buy', async () => {
-            await gameTicket.buy(OneInDecimals.mul(2), wallet.address);
-            expect(await gameTicket.tickets(wallet.address)).to.eq(OneInDecimals.mul(2));
-            expect(await gameTicket.total()).to.eq(OneInDecimals.mul(2));
+            await gameTicket.buy(ethers.constants.One.mul(2), wallet.address);
+            expect(await gameTicket.tickets(wallet.address)).to.eq(ethers.constants.One.mul(2));
+            expect(await gameTicket.total()).to.eq(ethers.constants.One.mul(2));
         })
 
         it('success for buy event', async () => {
-            expect(await gameTicket.buy(OneInDecimals.mul(2), wallet.address)).to.emit(gameTicket, 'Bought').withArgs(wallet.address, wallet.address, OneInDecimals.mul(2));
+            expect(await gameTicket.buy(ethers.constants.One.mul(2), wallet.address)).to.emit(gameTicket, 'Bought').withArgs(wallet.address, wallet.address, ethers.constants.One.mul(2));
         })
     })
 
@@ -63,27 +63,27 @@ describe('GameTicket', async () => {
 
             it('false for balance not enough', async () => {
                 await gameTicket.setRewardPool(wallet.address);
-                await expect(gameTicket.withdraw(OneInDecimals)).to.revertedWith('GameTicket: INSUFFICIENT_BALANCE');
+                await expect(gameTicket.withdraw(ethers.constants.One)).to.revertedWith('GameTicket: INSUFFICIENT_BALANCE');
             })
         })
 
         describe('success cases', async () => {
             beforeEach('buy', async () => {
                 await gameTicket.setRewardPool(wallet.address);
-                await buyToken.approve(gameTicket.address, OneInDecimals.mul(10000));
-                await gameTicket.buy(OneInDecimals.mul(2), wallet.address);
+                await buyToken.approve(gameTicket.address, ethers.constants.One.mul(10000));
+                await gameTicket.buy(ethers.constants.One.mul(2), wallet.address);
             })
 
             it('success for zero fee', async () => {
-                await gameTicket.withdraw(OneInDecimals.mul(2));
-                expect(await buyToken.balanceOf(wallet.address)).to.eq(OneInDecimals.mul(10000));
+                await gameTicket.withdraw(ethers.constants.One.mul(2));
+                expect(await buyToken.balanceOf(wallet.address)).to.eq(ethers.constants.One.mul(10000));
             })
 
             it('success for 1% feeRate', async () => {
                 await gameTicket.setFeeRate(100);
                 await gameConfig.changeTeam(other.address);
-                await gameTicket.withdraw(OneInDecimals.mul(2));
-                expect(await buyToken.balanceOf(wallet.address)).to.eq(OneInDecimals.mul(10000).sub("20000000000000000"));
+                await gameTicket.withdraw(ethers.constants.One.mul(2));
+                expect(await buyToken.balanceOf(wallet.address)).to.eq(ethers.constants.One.mul(10000).sub("20000000000000000"));
             })
         })
     })

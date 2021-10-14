@@ -6,9 +6,7 @@ import { GameConfig } from '../typechain/GameConfig'
 import { GameToken } from '../typechain/gameToken'
 import { GamePool } from '../typechain/GamePool'
 import { expect } from './shared/expect'
-import { gamePoolFixture, OneInDecimals, ZeroOneInDecimals, zeroAddress } from './shared/fixtures'
-import exp from 'constants'
-import { time } from 'console'
+import { gamePoolFixture, OneInDecimals, ZeroOneInDecimals } from './shared/fixtures'
 
 const createFixtureLoader = waffle.createFixtureLoader
 
@@ -34,15 +32,15 @@ describe('GamePool', async () => {
         ; ({ buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth } = await loadFixTure(gamePoolFixture));
         await buyToken.mint(wallet.address, OneInDecimals.mul(10000));
 
-        await buyToken.approve(gameTicket.address, OneInDecimals.mul('100000000'));
+        await buyToken.approve(gameTicket.address, ethers.constants.MaxUint256);
         await gameTicket.buy(OneInDecimals.mul(10), wallet.address);
 
         await buyToken.transfer(otherZero.address, OneInDecimals.mul(100))
-        await buyToken.connect(otherZero).approve(gameTicket.address, OneInDecimals.mul('100000000'));
+        await buyToken.connect(otherZero).approve(gameTicket.address, ethers.constants.MaxUint256);
         await gameTicket.connect(otherZero).buy(OneInDecimals.mul(10), otherZero.address);
 
         await buyToken.transfer(otherOne.address, OneInDecimals.mul(100))
-        await buyToken.connect(otherOne).approve(gameTicket.address, OneInDecimals.mul('100000000'));
+        await buyToken.connect(otherOne).approve(gameTicket.address, ethers.constants.MaxUint256);
         await gameTicket.connect(otherOne).buy(OneInDecimals.mul(10), otherOne.address);
     })
 
@@ -137,6 +135,10 @@ describe('GamePool', async () => {
     })
 
     describe('#uploadOne', async () => {
+        beforeEach('mock set', async () => {
+            await mockSet();
+        })
+
         it('fails for caller not manager', async () => {
             await expect(gamePoolDay.connect(otherZero).uploadOne({
                 user: wallet.address,
@@ -157,14 +159,14 @@ describe('GamePool', async () => {
 
         it('zero user address', async () => {
             await gamePoolDay.uploadOne({
-                user: zeroAddress,
+                user: ethers.constants.AddressZero,
                 rank: 1,
                 ticketAmount: OneInDecimals.mul(0),
                 score: OneInDecimals.mul(50)
             })
             let order = await gamePoolDay.orders(BigNumber.from(0));
             expect(order[0]).to.eq(BigNumber.from(0));
-            expect(order[1]).to.eq(zeroAddress);
+            expect(order[1]).to.eq(ethers.constants.AddressZero);
         })
 
         it('success for case one person upload once', async () => {
@@ -210,16 +212,20 @@ describe('GamePool', async () => {
     })
 
     describe('#uploadBatch', async () => {
+        beforeEach('mock set', async () => {
+            await mockSet();
+        })
+
         beforeEach('buy tickets', async () => {
-            await buyToken.approve(gameTicket.address, OneInDecimals.mul('100000000'));
+            await buyToken.approve(gameTicket.address, ethers.constants.MaxUint256);
             await gameTicket.buy(OneInDecimals.mul(10), wallet.address);
 
             await buyToken.transfer(otherZero.address, OneInDecimals.mul(100))
-            await buyToken.connect(otherZero).approve(gameTicket.address, OneInDecimals.mul('100000000'));
+            await buyToken.connect(otherZero).approve(gameTicket.address, ethers.constants.MaxUint256);
             await gameTicket.connect(otherZero).buy(OneInDecimals.mul(10), otherZero.address);
 
             await buyToken.transfer(otherOne.address, OneInDecimals.mul(100))
-            await buyToken.connect(otherOne).approve(gameTicket.address, OneInDecimals.mul('100000000'));
+            await buyToken.connect(otherOne).approve(gameTicket.address, ethers.constants.MaxUint256);
             await gameTicket.connect(otherOne).buy(OneInDecimals.mul(10), otherOne.address);
         })
 
@@ -262,6 +268,7 @@ describe('GamePool', async () => {
 
     describe('#uploaded', async () => {
         beforeEach('upload results', async () => {
+            await mockSet();
             await mockUpload();
         })
 
@@ -293,6 +300,7 @@ describe('GamePool', async () => {
             );
             expect(await gamePoolDay.nextPoolTotal()).to.eq(0);
             expect(await gamePoolWeek.totalRound()).to.eq(1);
+            expect(await buyToken.balanceOf(gamePoolDay.address)).to.eq(OneInDecimals.mul(12));
             expect(await buyToken.balanceOf(gamePoolWeek.address)).to.eq(OneInDecimals.mul(3));
             expect(await gamePoolWeek.nextPoolTotal()).to.eq(ZeroOneInDecimals.mul(6))
             // gamePoolMonth
@@ -304,6 +312,7 @@ describe('GamePool', async () => {
             );
             expect(await gamePoolWeek.nextPoolTotal()).to.eq(0);
             expect(await gamePoolMonth.totalRound()).to.eq(1);
+            expect(await buyToken.balanceOf(gamePoolWeek.address)).to.eq(ZeroOneInDecimals.mul(24));
             expect(await buyToken.balanceOf(gamePoolMonth.address)).to.eq(ZeroOneInDecimals.mul(6));
             expect(await gamePoolMonth.nextPoolTotal()).to.eq(0)
         })
@@ -311,6 +320,8 @@ describe('GamePool', async () => {
 
     describe('#getOrderResult', async () => {
         beforeEach('mock uploaded', async () => {
+            await mockSet();
+            await mockUpload();
             await mockUploaded();
         })
 
@@ -376,6 +387,8 @@ describe('GamePool', async () => {
 
     describe('#caim', async () => {
         beforeEach('mock uploaded', async () => {
+            await mockSet();
+            await mockUpload();
             await mockUploaded();
         })
 
@@ -414,9 +427,37 @@ describe('GamePool', async () => {
             expect(ticketBalanceAfter).to.eq(ticketBalanceBefore);
             expect(shareBalanceAfter).to.eq(shareBalanceBefore);
         })
+
+        it('success for claim order0 in gamePoolWeek', async () => {
+            await new Promise(f => setTimeout(f, 1000));
+            await gamePoolDay.claim(0);
+            let ticketBalanceBefore = await buyToken.balanceOf(wallet.address);
+            let shareBalanceBefore = await gameToken.balanceOf(wallet.address);
+            await new Promise(f => setTimeout(f, 1000));
+            await gamePoolWeek.claim(0);
+            let ticketBalanceAfter = await buyToken.balanceOf(wallet.address);
+            let shareBalanceAfter = await gameToken.balanceOf(wallet.address);
+            expect(ticketBalanceAfter.sub(ticketBalanceBefore)).to.eq(ZeroOneInDecimals.mul(12));
+            expect(shareBalanceAfter.sub(shareBalanceBefore)).to.eq(OneInDecimals.mul(80));
+        })
+
+        it('success for claim order0 in gamePoolMonth', async () => {
+            await new Promise(f => setTimeout(f, 1000));
+            await gamePoolDay.claim(0);
+            await new Promise(f => setTimeout(f, 1000));
+            await gamePoolWeek.claim(0);
+            let ticketBalanceBefore = await buyToken.balanceOf(wallet.address);
+            let shareBalanceBefore = await gameToken.balanceOf(wallet.address);
+            await new Promise(f => setTimeout(f, 1000));
+            await gamePoolMonth.claim(0);
+            let ticketBalanceAfter = await buyToken.balanceOf(wallet.address);
+            let shareBalanceAfter = await gameToken.balanceOf(wallet.address);
+            expect(ticketBalanceAfter.sub(ticketBalanceBefore)).to.eq(ZeroOneInDecimals.mul(3));
+            expect(shareBalanceAfter.sub(shareBalanceBefore)).to.eq(OneInDecimals.mul(160));
+        })
     })
 
-    async function mockUpload() {
+    async function mockSet() {
         // gamePoolDay
         await gamePoolDay.setShareAmount(OneInDecimals.mul(30), OneInDecimals.mul(60));
         await gamePoolDay.setTopRate(
@@ -443,26 +484,6 @@ describe('GamePool', async () => {
                 }
             ]
         );
-        await gamePoolDay.uploadBatch([
-            {
-                user: wallet.address,
-                rank: 1,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 50
-            },
-            {
-                user: otherZero.address,
-                rank: 2,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 30
-            },
-            {
-                user: otherOne.address,
-                rank: 3,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 20
-            }
-        ]);
         // gamePoolWeek
         await gamePoolWeek.setShareAmount(OneInDecimals.mul(60), OneInDecimals.mul(120));
         await gamePoolWeek.setTopRate(
@@ -489,28 +510,8 @@ describe('GamePool', async () => {
                 }
             ]
         );
-        await gamePoolWeek.uploadBatch([
-            {
-                user: wallet.address,
-                rank: 1,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 50
-            },
-            {
-                user: otherZero.address,
-                rank: 2,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 30
-            },
-            {
-                user: otherOne.address,
-                rank: 3,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 20
-            }
-        ]);
         // gamePoolMonth
-        await gamePoolWeek.setShareAmount(OneInDecimals.mul(120), OneInDecimals.mul(240));
+        await gamePoolMonth.setShareAmount(OneInDecimals.mul(120), OneInDecimals.mul(240));
         await gamePoolMonth.setTopRate(
             [
                 BigNumber.from(1),
@@ -535,6 +536,52 @@ describe('GamePool', async () => {
                 }
             ]
         );
+    }
+
+    async function mockUpload() {
+        // gamePoolDay
+        await gamePoolDay.uploadBatch([
+            {
+                user: wallet.address,
+                rank: 1,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 50
+            },
+            {
+                user: otherZero.address,
+                rank: 2,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 30
+            },
+            {
+                user: otherOne.address,
+                rank: 3,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 20
+            }
+        ]);
+        // gamePoolWeek
+        await gamePoolWeek.uploadBatch([
+            {
+                user: wallet.address,
+                rank: 1,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 50
+            },
+            {
+                user: otherZero.address,
+                rank: 2,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 30
+            },
+            {
+                user: otherOne.address,
+                rank: 3,
+                ticketAmount: OneInDecimals.mul(5),
+                score: 20
+            }
+        ]);
+        // gamePoolMonth
         await gamePoolMonth.uploadBatch([
             {
                 user: wallet.address,
@@ -558,56 +605,26 @@ describe('GamePool', async () => {
     }
 
     async function mockUploaded() {
-        await gamePoolDay.setShareAmount(OneInDecimals.mul(30), OneInDecimals.mul(60));
-        await gamePoolDay.setTopRate(
-            [
-                BigNumber.from(1),
-                BigNumber.from(2),
-                BigNumber.from(3)
-            ],
-            [
-                {
-                    rate: BigNumber.from(50),
-                    start: BigNumber.from(1),
-                    end: BigNumber.from(1)
-                },
-                {
-                    rate: BigNumber.from(30),
-                    start: BigNumber.from(2),
-                    end: BigNumber.from(2)
-                },
-                {
-                    rate: BigNumber.from(20),
-                    start: BigNumber.from(3),
-                    end: BigNumber.from(3)
-                }
-            ]
-        );
-        await gamePoolDay.uploadBatch([
-            {
-                user: wallet.address,
-                rank: 1,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 50
-            },
-            {
-                user: otherZero.address,
-                rank: 2,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 30
-            },
-            {
-                user: otherOne.address,
-                rank: 3,
-                ticketAmount: OneInDecimals.mul(5),
-                score: 20
-            }
-        ]);
+        // gamePoolDay
         await gamePoolDay.uploaded(
             BigNumber.from(Date.now().toString()).div(1000),
             OneInDecimals.mul(15),
             100,
             100,
-        )
+        );
+        // gamePoolWeek
+        await gamePoolWeek.uploaded(
+            BigNumber.from(Date.now().toString()).div(1000),
+            OneInDecimals.mul(15),
+            100,
+            100,
+        );
+        // gamePoolMonth
+        await gamePoolMonth.uploaded(
+            BigNumber.from(Date.now().toString()).div(1000),
+            OneInDecimals.mul(15),
+            100,
+            100,
+        );
     }
 })

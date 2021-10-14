@@ -7,7 +7,6 @@ import { GamePool } from '../../typechain/GamePool'
 import { GameToken } from '../../typechain/GameToken'
 import { Fixture } from 'ethereum-waffle'
 
-export const zeroAddress = "0x0000000000000000000000000000000000000000"
 export const OneInDecimals = BigNumber.from("1000000000000000000")
 export const ZeroOneInDecimals = BigNumber.from("100000000000000000")
 
@@ -69,7 +68,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
     const gamePoolMonth = (await gamePoolFactory.deploy()) as GamePool;
     await gamePoolMonth.initialize()
 
-    await gameToken.increaseFunds([gamePoolDay.address, gamePoolWeek.address], [OneInDecimals.mul(100000000), OneInDecimals.mul(100000000)])
+    await gameToken.increaseFunds([gamePoolDay.address, gamePoolWeek.address, gamePoolMonth.address], [ethers.constants.MaxUint256, ethers.constants.MaxUint256, ethers.constants.MaxUint256])
     await gamePoolDay.configure(
         gameTicket.address,
         gameToken.address,
@@ -91,7 +90,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
     await gamePoolMonth.configure(
         gamePoolWeek.address,
         gameToken.address,
-        zeroAddress,
+        ethers.constants.AddressZero,
         0,
         3,
         3,
