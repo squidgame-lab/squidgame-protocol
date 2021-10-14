@@ -88,6 +88,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (address => uint[]) public userOrders;
     mapping (uint => uint[]) public roundOrders;
     mapping (address => mapping (uint => uint)) public userRoundOrderMap;
+    bool public enableRoundOrder;
 
     event NewRound(uint indexed value);
     event Claimed(address indexed user, uint indexed orderId, uint winAmount, uint shareAmount);
@@ -99,7 +100,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         owner = msg.sender;
     }
 
-    function configure(address _rewardSource, address _shareToken, address _nextPool, uint _nextPoolRate, uint _epoch, uint _shareReleaseEpoch, bool _isFromTicket) external onlyDev {
+    function configure(address _rewardSource, address _shareToken, address _nextPool, uint _nextPoolRate, uint _epoch, uint _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
         if(_shareReleaseEpoch > 0) {
             require(_epoch % _shareReleaseEpoch == 0, 'invalid _epoch and _shareReleaseEpoch');
         }
@@ -111,6 +112,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         epoch = _epoch;
         shareReleaseEpoch = _shareReleaseEpoch;
         isFromTicket = _isFromTicket;
+        enableRoundOrder = _enableRoundOrder;
     }
 
     function setNexPoolRate(uint _nextPoolRate) external onlyManager {
@@ -174,11 +176,13 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
                 userOrders[data.user].push(orders.length);
             }
 
-            if(roundOrders[totalRound].length == 0) {
-                roundOrders[totalRound] = new uint[](1);
-                roundOrders[totalRound][0] = orders.length;
-            } else {
-                roundOrders[totalRound].push(orders.length);
+            if(enableRoundOrder) {
+                if(roundOrders[totalRound].length == 0) {
+                    roundOrders[totalRound] = new uint[](1);
+                    roundOrders[totalRound][0] = orders.length;
+                } else {
+                    roundOrders[totalRound].push(orders.length);
+                }
             }
 
             orders.push(Order({
