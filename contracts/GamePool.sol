@@ -53,9 +53,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint rank;
         uint ticketAmount;
         uint score;
-        uint claimedWin;
-        uint claimedShareParticipationAmount;
-        uint claimedShareTopAmount;
     }
 
     struct OrderResult {
@@ -81,6 +78,13 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint end;
     }
 
+    struct ClaimLog {
+        uint orderId;
+        uint claimedWin;
+        uint claimedShareParticipationAmount;
+        uint claimedShareTopAmount;
+    }
+
     Order[] public orders;
     uint public totalTopStrategy;
     mapping (uint => TopRate[]) public topStrategies;
@@ -88,6 +92,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (address => uint[]) public userOrders;
     mapping (uint => uint[]) public roundOrders;
     mapping (address => mapping (uint => uint)) public userRoundOrderMap;
+    mapping (uint => ClaimLog) public claimLogs;
     bool public enableRoundOrder;
 
     event NewRound(uint indexed value);
@@ -190,14 +195,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
                 user: data.user,
                 rank: data.rank,
                 ticketAmount: data.ticketAmount,
-                score: data.score,
-                claimedWin: 0,
-                claimedShareParticipationAmount: 0,
-                claimedShareTopAmount: 0
+                score: data.score
             }));
         } else {
+            require(claimLogs[orderId].claimedWin == 0 && claimLogs[orderId].claimedShareParticipationAmount == 0 && claimLogs[orderId].claimedShareTopAmount == 0, 'claimed order does not change');
             Order storage order = orders[orderId];
-            require(order.claimedWin == 0 && order.claimedShareParticipationAmount == 0 && order.claimedShareTopAmount == 0, 'claimed order does not change');
             if(isFromTicket) {
                 tickets[data.user] = tickets[data.user].sub(order.ticketAmount);
             }
@@ -279,34 +281,35 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     }
   
     function _claim(uint _orderId) internal returns (uint winAmount, uint shareAmount) {
-        Order storage order = orders[_orderId];
+        Order memory order = orders[_orderId];
         RoundData memory round = historys[order.roundNumber];
         require(order.user == msg.sender || order.user == address(0), 'forbidden');
         require(round.ticketTotal > 0, 'not ready');
         require(canClaim(_orderId), 'can not claim');
+        ClaimLog storage clog = claimLogs[_orderId];
         address to = order.user;
         if(order.user == address(0)) {
             to = team();
         }
         OrderResult memory result = getOrderResult(_orderId);
-        if(result.claimWin > 0 && order.claimedWin == 0) {
+        if(result.claimWin > 0 && clog.claimedWin == 0) {
             if(buyToken == address(0)) {
                 TransferHelper.safeTransferETH(to, result.claimWin);
             } else {
                 TransferHelper.safeTransfer(buyToken, to, result.claimWin);
             }
-            order.claimedWin = result.claimWin;
+            clog.claimedWin = result.claimWin;
             winAmount = result.claimWin;
         }
 
-        if(result.claimShareParticipationAmount > 0 && order.claimedShareParticipationAmount == 0) {
+        if(result.claimShareParticipationAmount > 0 && clog.claimedShareParticipationAmount == 0) {
             shareAmount = shareAmount.add(result.claimShareParticipationAmount);
-            order.claimedShareParticipationAmount = result.claimShareParticipationAmount;
+            clog.claimedShareParticipationAmount = result.claimShareParticipationAmount;
         }
 
-        if(result.claimShareTopAvaliable > 0 && order.claimedShareTopAmount.add(result.claimShareTopAvaliable) <= result.claimShareTopAmount) {
+        if(result.claimShareTopAvaliable > 0 && clog.claimedShareTopAmount.add(result.claimShareTopAvaliable) <= result.claimShareTopAmount) {
             shareAmount = shareAmount.add(result.claimShareTopAvaliable);
-            order.claimedShareTopAmount = order.claimedShareTopAmount.add(result.claimShareTopAvaliable);
+            clog.claimedShareTopAmount = clog.claimedShareTopAmount.add(result.claimShareTopAvaliable);
         }
 
         if(shareAmount > 0) {
@@ -430,6 +433,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     function getOrderResult(uint _orderId) public view returns (OrderResult memory) {
         Order memory order = orders[_orderId];
         RoundData memory round = historys[order.roundNumber];
+        ClaimLog memory clog = claimLogs[_orderId];
         uint topEnd = getTopEndInStrategy(round.topStrategySn);
         uint claimWin;
         if(round.topScoreTotal > 0 && order.rank <= topEnd) {
@@ -459,7 +463,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             canClaimShareTopAmount = claimShareTopAmount.mul(passedDue).div(totalDue); 
         }
 
-        uint claimShareTopAvaliable = canClaimShareTopAmount.sub(order.claimedShareTopAmount);
+        uint claimShareTopAvaliable = canClaimShareTopAmount.sub(clog.claimedShareTopAmount);
         
         OrderResult memory result = OrderResult({
             orderId: _orderId,
@@ -469,9 +473,9 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             rank: order.rank,
             ticketAmount: order.ticketAmount,
             score: order.score,
-            claimedWin: order.claimedWin,
-            claimedShareParticipationAmount: order.claimedShareParticipationAmount,
-            claimedShareTopAmount: order.claimedShareTopAmount,
+            claimedWin: clog.claimedWin,
+            claimedShareParticipationAmount: clog.claimedShareParticipationAmount,
+            claimedShareTopAmount: clog.claimedShareTopAmount,
             claimWin: claimWin,
             claimShareParticipationAmount: claimShareParticipationAmount,
             claimShareTopAmount: claimShareTopAmount,
