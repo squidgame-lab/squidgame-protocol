@@ -1,10 +1,10 @@
 {
   "manifestVersion": "3.2",
   "admin": {
-    "address": "0xD3951c36d6507dE14d0fAD97f0d842c7db76B802",
-    "txHash": "0xb9db03ddd1e940396087791ec12ef64fa017537d0aec59a7bc7cf3b28845572e",
+    "address": "0x539cD1f59F7E0a9591E818573DdC6c765F3485e7",
+    "txHash": "0x062aafbd0d7092ac4e45be3fb0888f603cc522820cd63bb53583cf4d8b958d61",
     "deployTransaction": {
-      "hash": "0xb9db03ddd1e940396087791ec12ef64fa017537d0aec59a7bc7cf3b28845572e",
+      "hash": "0x062aafbd0d7092ac4e45be3fb0888f603cc522820cd63bb53583cf4d8b958d61",
       "type": 0,
       "accessList": null,
       "blockHash": null,
@@ -25,56 +25,51 @@
         "type": "BigNumber",
         "hex": "0x00"
       },
-      "nonce": 198,
+      "nonce": 233,
       "data": "0x608060405234801561001057600080fd5b50600080546001600160a01b031916339081178255604051909182917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a350610759806100616000396000f3fe60806040526004361061007b5760003560e01c80639623609d1161004e5780639623609d1461011157806399a88ec414610124578063f2fde38b14610144578063f3b7dead146101645761007b565b8063204e1c7a14610080578063715018a6146100bc5780637eff275e146100d35780638da5cb5b146100f3575b600080fd5b34801561008c57600080fd5b506100a061009b366004610515565b610184565b6040516001600160a01b03909116815260200160405180910390f35b3480156100c857600080fd5b506100d1610215565b005b3480156100df57600080fd5b506100d16100ee366004610554565b610292565b3480156100ff57600080fd5b506000546001600160a01b03166100a0565b6100d161011f36600461058c565b61031c565b34801561013057600080fd5b506100d161013f366004610554565b6103ad565b34801561015057600080fd5b506100d161015f366004610515565b610405565b34801561017057600080fd5b506100a061017f366004610515565b6104ef565b6000806000836001600160a01b03166040516101aa90635c60da1b60e01b815260040190565b600060405180830381855afa9150503d80600081146101e5576040519150601f19603f3d011682016040523d82523d6000602084013e6101ea565b606091505b5091509150816101f957600080fd5b8080602001905181019061020d9190610538565b949350505050565b6000546001600160a01b031633146102485760405162461bcd60e51b815260040161023f906106c0565b60405180910390fd5b600080546040516001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908390a3600080546001600160a01b0319169055565b6000546001600160a01b031633146102bc5760405162461bcd60e51b815260040161023f906106c0565b6040516308f2839760e41b81526001600160a01b038281166004830152831690638f283970906024015b600060405180830381600087803b15801561030057600080fd5b505af1158015610314573d6000803e3d6000fd5b505050505050565b6000546001600160a01b031633146103465760405162461bcd60e51b815260040161023f906106c0565b60405163278f794360e11b81526001600160a01b03841690634f1ef286903490610376908690869060040161065d565b6000604051808303818588803b15801561038f57600080fd5b505af11580156103a3573d6000803e3d6000fd5b5050505050505050565b6000546001600160a01b031633146103d75760405162461bcd60e51b815260040161023f906106c0565b604051631b2ce7f360e11b81526001600160a01b038281166004830152831690633659cfe6906024016102e6565b6000546001600160a01b0316331461042f5760405162461bcd60e51b815260040161023f906106c0565b6001600160a01b0381166104945760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b606482015260840161023f565b600080546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a3600080546001600160a01b0319166001600160a01b0392909216919091179055565b6000806000836001600160a01b03166040516101aa906303e1469160e61b815260040190565b600060208284031215610526578081fd5b81356105318161070b565b9392505050565b600060208284031215610549578081fd5b81516105318161070b565b60008060408385031215610566578081fd5b82356105718161070b565b915060208301356105818161070b565b809150509250929050565b6000806000606084860312156105a0578081fd5b83356105ab8161070b565b925060208401356105bb8161070b565b9150604084013567ffffffffffffffff808211156105d7578283fd5b818601915086601f8301126105ea578283fd5b8135818111156105fc576105fc6106f5565b604051601f8201601f19908116603f01168101908382118183101715610624576106246106f5565b8160405282815289602084870101111561063c578586fd5b82602086016020830137856020848301015280955050505050509250925092565b600060018060a01b038416825260206040818401528351806040850152825b818110156106985785810183015185820160600152820161067c565b818111156106a95783606083870101525b50601f01601f191692909201606001949350505050565b6020808252818101527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604082015260600190565b634e487b7160e01b600052604160045260246000fd5b6001600160a01b038116811461072057600080fd5b5056fea2646970667358221220d849f96f3086b9f82cdcf665adb8c697ace05638da1c7c16ab2d26293717af6764736f6c63430008020033",
-      "r": "0x03e98df54abe02af91d1b904e478dd6ce69d5b6954be7dc33452de5056f7f7e9",
-      "s": "0x0ecfb2dc310ee0b48e3b69591f3c58493d7aca50885e273356a0c190d720b1cd",
-      "v": 229,
-      "creates": "0xD3951c36d6507dE14d0fAD97f0d842c7db76B802",
+      "r": "0x5de5449829ca9603f5829817ea1ecec03dabc97912a2f353f002200c889377c4",
+      "s": "0x5a9a6c3f2812f4f938b01a12c6ca18805e768c8f2537c12e3159376b86692abc",
+      "v": 230,
+      "creates": "0x539cD1f59F7E0a9591E818573DdC6c765F3485e7",
       "chainId": 97
     }
   },
   "proxies": [
     {
-      "address": "0x74b5Cbb296C6f73F095f82837d8C390446bf7A2e",
-      "txHash": "0x3ee074b9c4d2efc93066e8fe13427ae0b6e24fe5216b3fb4203f11cb1e453c1b",
+      "address": "0x50eAd2c13D9aD38De6FB6d0FF78601A8cDB540aB",
+      "txHash": "0x92552d7811e6d8f5c7f77672295e65dd4519b4948cb03e26e819b9689bbac048",
       "kind": "transparent"
     },
     {
-      "address": "0xf1A0F554408D587BEB1Cd4203a51720d636170E2",
-      "txHash": "0x82ad7551dd0e1e32e9864ab585b165f275c7dc1681704ccce506dad284128771",
+      "address": "0x76ff33Ea5868b965A4ee764d68ae91952e9d59d4",
+      "txHash": "0x450b4af82c5e46a772df62421e33a7f9e911609d721697e437cac545cfce9e7e",
       "kind": "transparent"
     },
     {
-      "address": "0xBe231BC2929419A9ca264Cf633f2a7BaD32D2e53",
-      "txHash": "0x7df92a09f047299602eb15fe9f2bc77bb74dcfc290c8639d36d3f20debff024b",
+      "address": "0xB4c0C32785eE421067Cf51F09F6ffb99Cc012156",
+      "txHash": "0x015aed59b3b354e2b9c77d963b1763e5de56f2ab3614c5c689ef4154e4e907dd",
       "kind": "transparent"
     },
     {
-      "address": "0x0fd76A337F0793C5Ff07900Cb497a7Ea8a614a5a",
-      "txHash": "0x30158f6142b386a0c9178c5e0f372322531cac2fb98cc06ac770c943f3ec7dd1",
+      "address": "0x8E3Fd2004B204Dda770cE30D7A443Cf488063715",
+      "txHash": "0xe1eb705644c99a8799670d0b07f4068953553e6a0cf218b32501eec94b4d1a4c",
       "kind": "transparent"
     },
     {
-      "address": "0x9d854ebbec4ADcecdA20075223C05199DD80B723",
-      "txHash": "0x3d7b907f9974de984a00a718ae1ae0fedbec2787be648e2301d1132a0ecbd996",
+      "address": "0x1b06c2c3b57A4A9Ceb695E419335235F95204Bb6",
+      "txHash": "0xdddf5598a01609eb72d5635d492829343fcac5fd9d4fa6bdb68850b97e1075b8",
       "kind": "transparent"
     },
     {
-      "address": "0x2fC866C337fc900cAF32157db9e1b330722845b1",
-      "txHash": "0x33e23375783dc4c499cfc5a9e43061709b89971097a02029463f027d526967c0",
-      "kind": "transparent"
-    },
-    {
-      "address": "0x3BaF8fD257fDEE537EbcF3BBB390001347C2FF0A",
-      "txHash": "0x5da2f1058413d5c33483c80b854594d487b7b889bff5d72e0feddc9322c375ce",
+      "address": "0x44D837c5Cb1cAF5768eE6c0a7ef489195eFD2Bda",
+      "txHash": "0x6bb6652bbc34434ac2bfa6c2438528e32bbf1ae95bb0c977a7efc36b4763cc0e",
       "kind": "transparent"
     }
   ],
   "impls": {
     "562fcbeabae6c5985deb23a5b130df660161660a0ad5b9f3dc8b02581b01458d": {
-      "address": "0xbc84AC3476E4dB71b448c577a74A52aEa877aC0D",
-      "txHash": "0x6d72414bb1080fdbc85a1967ac1eb9d6005410262169e3c35996cd3067332ddd",
+      "address": "0x03CC14dC0FA7933bEad0ba1e37eDef23d00542A8",
+      "txHash": "0x6574aae55c0637ef216cdbce8f294cd1dda1e7f46fcf7ae237d68b7113a59a5b",
       "layout": {
         "storage": [
           {
@@ -191,8 +186,8 @@
       }
     },
     "1643a4fd9b1b8ac9ba6807bbd6ce4b7cb1203a88dcf9d18191c47e1915a903b1": {
-      "address": "0x799Fc280777A18A3Ce18f9f9590a182EF7b7cF80",
-      "txHash": "0x551e408298113f09a189d829550f90623a36a89ffd0f78d6efcb2db5b4a60886",
+      "address": "0xF54041DFD3Cc6c67Ab816FC07e3abf8E00672F90",
+      "txHash": "0xa239d50d67411ced9a05491ba0390b1f7ab9ee3ed183bd45dbe341fb6ccf1ef1",
       "layout": {
         "storage": [
           {
@@ -261,8 +256,8 @@
       }
     },
     "3bed2f1f278f47b071109e2a375afd745976bc398e513e61234cbdfd75ea0819": {
-      "address": "0xfab76bdfEaC9F05478580a897230fdbe6d814162",
-      "txHash": "0x02e2bebb6ba7dde795b5135b60377be126ea41b1fafb2199fbe2c49c6de55bcb",
+      "address": "0x52027a4Da7A8bBCc9c628F86b5019E94b30e8524",
+      "txHash": "0x0a914014534abd210bfe14b903ab6816a500fbea9eb677c9d92b773f5e1bf28a",
       "layout": {
         "storage": [
           {
@@ -363,9 +358,9 @@
         }
       }
     },
-    "3f95d5adb35f66066b75d1ab1d5f0ea2a3cca042ac21a2468b5327c0c85f6a3d": {
-      "address": "0x20FcE58Db1D94b6f3e612006198953ba4Ae23342",
-      "txHash": "0x6a1de1a49d4bfedea249a8ff447f2fc11bb0d53189ba275c65aed005e43ac7ef",
+    "bdb573b747be6bdee9058aa9d78df75fb6decfc59abef2bbf71455bcadfc2833": {
+      "address": "0x420b9d3c29b3cFf1a3aea224456Ca6F66be999dB",
+      "txHash": "0xfc98249f2170baf7169b6562fe7a583a2712acc8019b58f4a10986140d6b1850",
       "layout": {
         "storage": [
           {
@@ -437,43 +432,43 @@
           {
             "contract": "GamePool",
             "label": "nextPoolRate",
-            "type": "t_uint256",
+            "type": "t_uint128",
             "src": "contracts/GamePool.sol:21"
           },
           {
             "contract": "GamePool",
             "label": "nextPoolTotal",
-            "type": "t_uint256",
+            "type": "t_uint128",
             "src": "contracts/GamePool.sol:22"
           },
           {
             "contract": "GamePool",
             "label": "epoch",
-            "type": "t_uint256",
+            "type": "t_uint64",
             "src": "contracts/GamePool.sol:23"
           },
           {
             "contract": "GamePool",
             "label": "totalRound",
-            "type": "t_uint256",
+            "type": "t_uint64",
             "src": "contracts/GamePool.sol:24"
           },
           {
             "contract": "GamePool",
             "label": "shareParticipationAmount",
-            "type": "t_uint256",
+            "type": "t_uint128",
             "src": "contracts/GamePool.sol:25"
           },
           {
             "contract": "GamePool",
             "label": "shareTopAmount",
-            "type": "t_uint256",
+            "type": "t_uint128",
             "src": "contracts/GamePool.sol:26"
           },
           {
             "contract": "GamePool",
             "label": "shareReleaseEpoch",
-            "type": "t_uint256",
+            "type": "t_uint64",
             "src": "contracts/GamePool.sol:27"
           },
           {
@@ -491,804 +486,213 @@
           {
             "contract": "GamePool",
             "label": "orders",
-            "type": "t_array(t_struct(Order)396_storage)dyn_storage",
-            "src": "contracts/GamePool.sol:84"
-          },
-          {
-            "contract": "GamePool",
-            "label": "totalTopStrategy",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:85"
-          },
-          {
-            "contract": "GamePool",
-            "label": "topStrategies",
-            "type": "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)",
-            "src": "contracts/GamePool.sol:86"
-          },
-          {
-            "contract": "GamePool",
-            "label": "historys",
-            "type": "t_mapping(t_uint256,t_struct(RoundData)379_storage)",
-            "src": "contracts/GamePool.sol:87"
-          },
-          {
-            "contract": "GamePool",
-            "label": "userOrders",
-            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
+            "type": "t_array(t_struct(Order)390_storage)dyn_storage",
             "src": "contracts/GamePool.sol:88"
           },
           {
             "contract": "GamePool",
-            "label": "roundOrders",
-            "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-            "src": "contracts/GamePool.sol:89"
-          },
-          {
-            "contract": "GamePool",
-            "label": "userRoundOrderMap",
-            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
-            "src": "contracts/GamePool.sol:90"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_mapping(t_address,t_uint256)": {
-            "label": "mapping(address => uint256)"
-          },
-          "t_bool": {
-            "label": "bool"
-          },
-          "t_array(t_struct(Order)396_storage)dyn_storage": {
-            "label": "struct GamePool.Order[]"
-          },
-          "t_struct(Order)396_storage": {
-            "label": "struct GamePool.Order",
-            "members": [
-              {
-                "label": "roundNumber",
-                "type": "t_uint256"
-              },
-              {
-                "label": "user",
-                "type": "t_address"
-              },
-              {
-                "label": "rank",
-                "type": "t_uint256"
-              },
-              {
-                "label": "ticketAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "score",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedWin",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareParticipationAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareTopAmount",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)": {
-            "label": "mapping(uint256 => struct GamePool.TopRate[])"
-          },
-          "t_array(t_struct(TopRate)432_storage)dyn_storage": {
-            "label": "struct GamePool.TopRate[]"
-          },
-          "t_struct(TopRate)432_storage": {
-            "label": "struct GamePool.TopRate",
-            "members": [
-              {
-                "label": "rate",
-                "type": "t_uint256"
-              },
-              {
-                "label": "start",
-                "type": "t_uint256"
-              },
-              {
-                "label": "end",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_uint256,t_struct(RoundData)379_storage)": {
-            "label": "mapping(uint256 => struct GamePool.RoundData)"
-          },
-          "t_struct(RoundData)379_storage": {
-            "label": "struct GamePool.RoundData",
-            "members": [
-              {
-                "label": "startTime",
-                "type": "t_uint256"
-              },
-              {
-                "label": "ticketTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "winTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "rewardTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "scoreTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "topScoreTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "topStrategySn",
-                "type": "t_uint256"
-              },
-              {
-                "label": "shareParticipationAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "shareTopAmount",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(address => uint256[])"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]"
-          },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])"
-          },
-          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
-            "label": "mapping(address => mapping(uint256 => uint256))"
-          },
-          "t_mapping(t_uint256,t_uint256)": {
-            "label": "mapping(uint256 => uint256)"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          }
-        }
-      }
-    },
-    "c92be006255db2be6e07c76aac800be8cdf0f70873e732effa5d297e6e49e7c3": {
-      "address": "0xD8a79B7927e313bA2335baD74b238177086FC804",
-      "txHash": "0x8d2f163a02ae57d5b8872de38d49659e474594e8f7d0a090eb2a3f81bce7208f",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Configable",
-            "label": "config",
-            "type": "t_address",
-            "src": "contracts/modules/Configable.sol:12"
-          },
-          {
-            "contract": "Configable",
-            "label": "owner",
-            "type": "t_address",
-            "src": "contracts/modules/Configable.sol:13"
-          },
-          {
-            "contract": "Pausable",
-            "label": "_paused",
-            "type": "t_bool",
-            "src": "contracts/modules/Pausable.sol:24"
-          },
-          {
-            "contract": "ReentrancyGuard",
-            "label": "_status",
-            "type": "t_uint256",
-            "src": "contracts/modules/ReentrancyGuard.sol:36"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initialized",
-            "type": "t_bool",
-            "src": "contracts/modules/Initializable.sol:23"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initializing",
-            "type": "t_bool",
-            "src": "contracts/modules/Initializable.sol:28"
-          },
-          {
-            "contract": "Initializable",
-            "label": "______gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "contracts/modules/Initializable.sol:63"
-          },
-          {
-            "contract": "GamePool",
-            "label": "rewardSource",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:17"
-          },
-          {
-            "contract": "GamePool",
-            "label": "buyToken",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:18"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareToken",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:19"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPool",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:20"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPoolRate",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:21"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPoolTotal",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:22"
-          },
-          {
-            "contract": "GamePool",
-            "label": "epoch",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:23"
-          },
-          {
-            "contract": "GamePool",
-            "label": "totalRound",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:24"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareParticipationAmount",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:25"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareTopAmount",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:26"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareReleaseEpoch",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:27"
-          },
-          {
-            "contract": "GamePool",
-            "label": "tickets",
-            "type": "t_mapping(t_address,t_uint256)",
-            "src": "contracts/GamePool.sol:28"
-          },
-          {
-            "contract": "GamePool",
-            "label": "isFromTicket",
-            "type": "t_bool",
-            "src": "contracts/GamePool.sol:29"
-          },
-          {
-            "contract": "GamePool",
-            "label": "orders",
-            "type": "t_array(t_struct(Order)396_storage)dyn_storage",
-            "src": "contracts/GamePool.sol:84"
-          },
-          {
-            "contract": "GamePool",
             "label": "totalTopStrategy",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:85"
+            "type": "t_uint128",
+            "src": "contracts/GamePool.sol:89"
           },
           {
             "contract": "GamePool",
             "label": "topStrategies",
-            "type": "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)",
-            "src": "contracts/GamePool.sol:86"
+            "type": "t_mapping(t_uint128,t_array(t_struct(TopRate)426_storage)dyn_storage)",
+            "src": "contracts/GamePool.sol:90"
           },
           {
             "contract": "GamePool",
             "label": "historys",
-            "type": "t_mapping(t_uint256,t_struct(RoundData)379_storage)",
-            "src": "contracts/GamePool.sol:87"
+            "type": "t_mapping(t_uint64,t_struct(RoundData)379_storage)",
+            "src": "contracts/GamePool.sol:91"
           },
           {
             "contract": "GamePool",
             "label": "userOrders",
-            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
-            "src": "contracts/GamePool.sol:88"
+            "type": "t_mapping(t_address,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePool.sol:92"
           },
           {
             "contract": "GamePool",
             "label": "roundOrders",
-            "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-            "src": "contracts/GamePool.sol:89"
+            "type": "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePool.sol:93"
           },
           {
             "contract": "GamePool",
             "label": "userRoundOrderMap",
-            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
-            "src": "contracts/GamePool.sol:90"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address"
-          },
-          "t_uint256": {
-            "label": "uint256"
-          },
-          "t_mapping(t_address,t_uint256)": {
-            "label": "mapping(address => uint256)"
-          },
-          "t_bool": {
-            "label": "bool"
-          },
-          "t_array(t_struct(Order)396_storage)dyn_storage": {
-            "label": "struct GamePool.Order[]"
-          },
-          "t_struct(Order)396_storage": {
-            "label": "struct GamePool.Order",
-            "members": [
-              {
-                "label": "roundNumber",
-                "type": "t_uint256"
-              },
-              {
-                "label": "user",
-                "type": "t_address"
-              },
-              {
-                "label": "rank",
-                "type": "t_uint256"
-              },
-              {
-                "label": "ticketAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "score",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedWin",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareParticipationAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareTopAmount",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)": {
-            "label": "mapping(uint256 => struct GamePool.TopRate[])"
-          },
-          "t_array(t_struct(TopRate)432_storage)dyn_storage": {
-            "label": "struct GamePool.TopRate[]"
-          },
-          "t_struct(TopRate)432_storage": {
-            "label": "struct GamePool.TopRate",
-            "members": [
-              {
-                "label": "rate",
-                "type": "t_uint256"
-              },
-              {
-                "label": "start",
-                "type": "t_uint256"
-              },
-              {
-                "label": "end",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_uint256,t_struct(RoundData)379_storage)": {
-            "label": "mapping(uint256 => struct GamePool.RoundData)"
-          },
-          "t_struct(RoundData)379_storage": {
-            "label": "struct GamePool.RoundData",
-            "members": [
-              {
-                "label": "startTime",
-                "type": "t_uint256"
-              },
-              {
-                "label": "ticketTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "winTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "rewardTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "scoreTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "topScoreTotal",
-                "type": "t_uint256"
-              },
-              {
-                "label": "topStrategySn",
-                "type": "t_uint256"
-              },
-              {
-                "label": "shareParticipationAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "shareTopAmount",
-                "type": "t_uint256"
-              }
-            ]
-          },
-          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(address => uint256[])"
-          },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]"
-          },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])"
-          },
-          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
-            "label": "mapping(address => mapping(uint256 => uint256))"
-          },
-          "t_mapping(t_uint256,t_uint256)": {
-            "label": "mapping(uint256 => uint256)"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]"
-          }
-        }
-      }
-    },
-    "bce10b28d8e26ca93a3ba9ec644f8a80cfa048bed1bfef073911ed1612840c08": {
-      "address": "0x3d9e6D36C140F3F1146Ba31aB5A751ce1eA0bCC1",
-      "txHash": "0x818268025f3c01e8dc420f934571708a8d20d4650c05b50933d108d0255547d9",
-      "layout": {
-        "storage": [
-          {
-            "contract": "Configable",
-            "label": "config",
-            "type": "t_address",
-            "src": "contracts/modules/Configable.sol:12"
-          },
-          {
-            "contract": "Configable",
-            "label": "owner",
-            "type": "t_address",
-            "src": "contracts/modules/Configable.sol:13"
-          },
-          {
-            "contract": "Pausable",
-            "label": "_paused",
-            "type": "t_bool",
-            "src": "contracts/modules/Pausable.sol:24"
-          },
-          {
-            "contract": "ReentrancyGuard",
-            "label": "_status",
-            "type": "t_uint256",
-            "src": "contracts/modules/ReentrancyGuard.sol:36"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initialized",
-            "type": "t_bool",
-            "src": "contracts/modules/Initializable.sol:23"
-          },
-          {
-            "contract": "Initializable",
-            "label": "initializing",
-            "type": "t_bool",
-            "src": "contracts/modules/Initializable.sol:28"
-          },
-          {
-            "contract": "Initializable",
-            "label": "______gap",
-            "type": "t_array(t_uint256)50_storage",
-            "src": "contracts/modules/Initializable.sol:63"
+            "type": "t_mapping(t_address,t_mapping(t_uint128,t_uint128))",
+            "src": "contracts/GamePool.sol:94"
           },
           {
             "contract": "GamePool",
-            "label": "rewardSource",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:17"
-          },
-          {
-            "contract": "GamePool",
-            "label": "buyToken",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:18"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareToken",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:19"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPool",
-            "type": "t_address",
-            "src": "contracts/GamePool.sol:20"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPoolRate",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:21"
-          },
-          {
-            "contract": "GamePool",
-            "label": "nextPoolTotal",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:22"
-          },
-          {
-            "contract": "GamePool",
-            "label": "epoch",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:23"
-          },
-          {
-            "contract": "GamePool",
-            "label": "totalRound",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:24"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareParticipationAmount",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:25"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareTopAmount",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:26"
-          },
-          {
-            "contract": "GamePool",
-            "label": "shareReleaseEpoch",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:27"
-          },
-          {
-            "contract": "GamePool",
-            "label": "tickets",
-            "type": "t_mapping(t_address,t_uint256)",
-            "src": "contracts/GamePool.sol:28"
-          },
-          {
-            "contract": "GamePool",
-            "label": "isFromTicket",
-            "type": "t_bool",
-            "src": "contracts/GamePool.sol:29"
-          },
-          {
-            "contract": "GamePool",
-            "label": "orders",
-            "type": "t_array(t_struct(Order)396_storage)dyn_storage",
-            "src": "contracts/GamePool.sol:84"
-          },
-          {
-            "contract": "GamePool",
-            "label": "totalTopStrategy",
-            "type": "t_uint256",
-            "src": "contracts/GamePool.sol:85"
-          },
-          {
-            "contract": "GamePool",
-            "label": "topStrategies",
-            "type": "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)",
-            "src": "contracts/GamePool.sol:86"
-          },
-          {
-            "contract": "GamePool",
-            "label": "historys",
-            "type": "t_mapping(t_uint256,t_struct(RoundData)379_storage)",
-            "src": "contracts/GamePool.sol:87"
-          },
-          {
-            "contract": "GamePool",
-            "label": "userOrders",
-            "type": "t_mapping(t_address,t_array(t_uint256)dyn_storage)",
-            "src": "contracts/GamePool.sol:88"
-          },
-          {
-            "contract": "GamePool",
-            "label": "roundOrders",
-            "type": "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)",
-            "src": "contracts/GamePool.sol:89"
-          },
-          {
-            "contract": "GamePool",
-            "label": "userRoundOrderMap",
-            "type": "t_mapping(t_address,t_mapping(t_uint256,t_uint256))",
-            "src": "contracts/GamePool.sol:90"
+            "label": "claimLogs",
+            "type": "t_mapping(t_uint128,t_struct(ClaimLog)435_storage)",
+            "src": "contracts/GamePool.sol:95"
           },
           {
             "contract": "GamePool",
             "label": "enableRoundOrder",
             "type": "t_bool",
-            "src": "contracts/GamePool.sol:91"
+            "src": "contracts/GamePool.sol:96"
           }
         ],
         "types": {
           "t_address": {
             "label": "address"
           },
-          "t_uint256": {
-            "label": "uint256"
+          "t_uint128": {
+            "label": "uint128"
+          },
+          "t_uint64": {
+            "label": "uint64"
           },
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)"
           },
+          "t_uint256": {
+            "label": "uint256"
+          },
           "t_bool": {
             "label": "bool"
           },
-          "t_array(t_struct(Order)396_storage)dyn_storage": {
+          "t_array(t_struct(Order)390_storage)dyn_storage": {
             "label": "struct GamePool.Order[]"
           },
-          "t_struct(Order)396_storage": {
+          "t_struct(Order)390_storage": {
             "label": "struct GamePool.Order",
             "members": [
-              {
-                "label": "roundNumber",
-                "type": "t_uint256"
-              },
               {
                 "label": "user",
                 "type": "t_address"
               },
               {
-                "label": "rank",
-                "type": "t_uint256"
+                "label": "roundNumber",
+                "type": "t_uint64"
               },
               {
-                "label": "ticketAmount",
-                "type": "t_uint256"
+                "label": "rank",
+                "type": "t_uint32"
               },
               {
                 "label": "score",
-                "type": "t_uint256"
+                "type": "t_uint32"
               },
               {
-                "label": "claimedWin",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareParticipationAmount",
-                "type": "t_uint256"
-              },
-              {
-                "label": "claimedShareTopAmount",
-                "type": "t_uint256"
+                "label": "ticketAmount",
+                "type": "t_uint128"
               }
             ]
           },
-          "t_mapping(t_uint256,t_array(t_struct(TopRate)432_storage)dyn_storage)": {
-            "label": "mapping(uint256 => struct GamePool.TopRate[])"
+          "t_uint32": {
+            "label": "uint32"
           },
-          "t_array(t_struct(TopRate)432_storage)dyn_storage": {
+          "t_mapping(t_uint128,t_array(t_struct(TopRate)426_storage)dyn_storage)": {
+            "label": "mapping(uint128 => struct GamePool.TopRate[])"
+          },
+          "t_array(t_struct(TopRate)426_storage)dyn_storage": {
             "label": "struct GamePool.TopRate[]"
           },
-          "t_struct(TopRate)432_storage": {
+          "t_struct(TopRate)426_storage": {
             "label": "struct GamePool.TopRate",
             "members": [
               {
                 "label": "rate",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "start",
-                "type": "t_uint256"
+                "type": "t_uint64"
               },
               {
                 "label": "end",
-                "type": "t_uint256"
+                "type": "t_uint64"
               }
             ]
           },
-          "t_mapping(t_uint256,t_struct(RoundData)379_storage)": {
-            "label": "mapping(uint256 => struct GamePool.RoundData)"
+          "t_mapping(t_uint64,t_struct(RoundData)379_storage)": {
+            "label": "mapping(uint64 => struct GamePool.RoundData)"
           },
           "t_struct(RoundData)379_storage": {
             "label": "struct GamePool.RoundData",
             "members": [
               {
-                "label": "startTime",
-                "type": "t_uint256"
-              },
-              {
                 "label": "ticketTotal",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "winTotal",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "rewardTotal",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "scoreTotal",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "topScoreTotal",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "topStrategySn",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "shareParticipationAmount",
-                "type": "t_uint256"
+                "type": "t_uint128"
               },
               {
                 "label": "shareTopAmount",
-                "type": "t_uint256"
+                "type": "t_uint128"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint64"
               }
             ]
           },
-          "t_mapping(t_address,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(address => uint256[])"
+          "t_mapping(t_address,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(address => uint128[])"
           },
-          "t_array(t_uint256)dyn_storage": {
-            "label": "uint256[]"
+          "t_array(t_uint128)dyn_storage": {
+            "label": "uint128[]"
           },
-          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
-            "label": "mapping(uint256 => uint256[])"
+          "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(uint128 => uint128[])"
           },
-          "t_mapping(t_address,t_mapping(t_uint256,t_uint256))": {
-            "label": "mapping(address => mapping(uint256 => uint256))"
+          "t_mapping(t_address,t_mapping(t_uint128,t_uint128))": {
+            "label": "mapping(address => mapping(uint128 => uint128))"
           },
-          "t_mapping(t_uint256,t_uint256)": {
-            "label": "mapping(uint256 => uint256)"
+          "t_mapping(t_uint128,t_uint128)": {
+            "label": "mapping(uint128 => uint128)"
+          },
+          "t_mapping(t_uint128,t_struct(ClaimLog)435_storage)": {
+            "label": "mapping(uint128 => struct GamePool.ClaimLog)"
+          },
+          "t_struct(ClaimLog)435_storage": {
+            "label": "struct GamePool.ClaimLog",
+            "members": [
+              {
+                "label": "orderId",
+                "type": "t_uint128"
+              },
+              {
+                "label": "claimedWin",
+                "type": "t_uint128"
+              },
+              {
+                "label": "claimedShareParticipationAmount",
+                "type": "t_uint128"
+              },
+              {
+                "label": "claimedShareTopAmount",
+                "type": "t_uint128"
+              }
+            ]
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"
