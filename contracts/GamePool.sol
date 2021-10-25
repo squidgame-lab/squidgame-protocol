@@ -359,9 +359,9 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         reward = _value;
         nextPoolTotal = nextPoolTotal.sub(uint128(reward));
         if (buyToken == address(0)) {
-            if(reward > 0) TransferHelper.safeTransferETH(nextPool, reward);
+            TransferHelper.safeTransferETH(nextPool, reward);
         } else {
-            if(reward > 0) TransferHelper.safeTransfer(buyToken, nextPool, reward);
+            TransferHelper.safeTransfer(buyToken, nextPool, reward);
         }
         emit Withdrawed(nextPool, reward, team(), fee);
     }
