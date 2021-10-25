@@ -333,7 +333,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         if (_start > _end) _start = _end;
         count = _end - _start;
         if (count == 0) return (0,0);
-        uint128 index = 0;
         for(uint128 i = _start; i < _end; i++) {
             uint128 orderId = userOrders[_to][i];
             if(canClaim(orderId)) {
@@ -341,7 +340,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
                 winAmount = winAmount.add(_win);
                 shareAmount = shareAmount.add(_share);
             }
-            index++;
         }
     }
 
