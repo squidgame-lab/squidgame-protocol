@@ -95,6 +95,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (uint128 => ClaimLog) public claimLogs;
     bool public enableRoundOrder;
     uint128 public feeRate;
+    uint128 private ticketTotal;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
@@ -183,6 +184,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
 
         if(!exist) {
+            ticketTotal = ticketTotal.add(data.ticketAmount);
             orderId = uint128(orders.length);
             userRoundOrderMap[data.user][totalRound] = orderId;
             if(userOrders[data.user].length == 0) {
@@ -211,6 +213,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         } else {
             require(claimLogs[orderId].claimedWin == 0 && claimLogs[orderId].claimedShareParticipationAmount == 0 && claimLogs[orderId].claimedShareTopAmount == 0, 'claimed order does not change');
             Order storage order = orders[orderId];
+            ticketTotal = ticketTotal.sub(order.ticketAmount).add(data.ticketAmount);
             if(isFromTicket) {
                 tickets[data.user] -= order.ticketAmount;
             }
@@ -232,6 +235,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
  
     function uploaded(uint64 _startTime, uint128 _ticketTotal, uint128 _scoreTotal, uint128 _topScoreTotal) external onlyUploader {
         require(_ticketTotal > 0, 'ticketTotal zero');
+        require(ticketTotal == _ticketTotal, 'invalid ticketTotal');
         require(block.timestamp > _startTime, 'invalid start time');
         require(epoch > 0, 'epoch zero');
         
@@ -271,7 +275,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             nextPoolTotal = nextPoolTotal.add(nextPoolReward);
         }
         currentRound.rewardTotal = reward;
-
+        ticketTotal = 0;
         emit NewRound(totalRound); 
         totalRound++;
     }

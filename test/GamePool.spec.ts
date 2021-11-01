@@ -218,7 +218,7 @@ describe('GamePool', async () => {
                 score: 50
             })
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(160380);
+            expect(receipt.gasUsed).to.eq(182793);
         })
     })
 
@@ -298,7 +298,7 @@ describe('GamePool', async () => {
                 }
             ])
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(446855)
+            expect(receipt.gasUsed).to.eq(470294)
         })
     })
 
@@ -312,8 +312,8 @@ describe('GamePool', async () => {
             await expect(gamePoolDay.uploaded(BigNumber.from(0), BigNumber.from(0), bigNumber18, bigNumber18)).to.revertedWith('ticketTotal zero');
         })
 
-        it('fails for over starttime', async () => {
-            await expect(gamePoolDay.uploaded(BigNumber.from(Date.now().toString()).div(1000).add(86400), bigNumber18, bigNumber18, bigNumber18)).to.revertedWith('invalid start time');
+        it('fails for invalid ticketTotal', async () => {
+            await expect(gamePoolDay.uploaded(BigNumber.from(Date.now().toString()).div(1000).add(86400), bigNumber18, bigNumber18, bigNumber18)).to.revertedWith('invalid ticketTotal');
         })
 
         it('success', async () => {
@@ -361,7 +361,7 @@ describe('GamePool', async () => {
                 100,
             );
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(219995)
+            expect(receipt.gasUsed).to.eq(220372)
         })
     })
 
