@@ -24,7 +24,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     uint64 public totalRound;
     uint128 public shareParticipationAmount;
     uint128 public shareTopAmount;
-    uint64 public shareReleaseEpoch;
+    uint64 public shareReleaseEpoch; // block number
     mapping(address => uint) public override tickets;
     bool public isFromTicket;
     
@@ -45,6 +45,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint128 shareParticipationAmount;
         uint128 shareTopAmount;
         uint64 startTime;
+        uint64 releaseBlockStart;
+        uint64 releaseBlockEnd;
     }
 
     struct Order {
@@ -109,9 +111,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     }
 
     function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
-        if(_shareReleaseEpoch > 0) {
-            require(_epoch % _shareReleaseEpoch == 0, 'invalid _epoch and _shareReleaseEpoch');
-        }
         rewardSource = _rewardSource;
         buyToken = IRewardSource(_rewardSource).buyToken();
         shareToken = _shareToken;
@@ -238,6 +237,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(ticketTotal == _ticketTotal, 'invalid ticketTotal');
         require(block.timestamp > _startTime, 'invalid start time');
         require(epoch > 0, 'epoch zero');
+        require(block.number <= type(uint64).max, 'stop');
         
         if(totalRound > 0) {
             RoundData memory last = historys[totalRound-1];
@@ -255,6 +255,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         currentRound.topStrategySn = totalTopStrategy;
         currentRound.shareParticipationAmount = shareParticipationAmount;
         currentRound.shareTopAmount = shareTopAmount;
+        currentRound.releaseBlockStart = uint64(block.number);
+        currentRound.releaseBlockEnd = currentRound.releaseBlockStart + shareReleaseEpoch;
 
         uint rewardAmount;
         if(isFromTicket) {
@@ -480,11 +482,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
 
         uint128 canClaimShareTopAmount;
-        if(shareReleaseEpoch == 0) {
+        if(shareReleaseEpoch == 0 || round.releaseBlockEnd == 0) {
             canClaimShareTopAmount = claimShareTopAmount;
         } else {
-            uint128 totalDue = epoch / shareReleaseEpoch;
-            uint128 passedDue = uint128((block.timestamp - round.startTime) / shareReleaseEpoch);
+            uint128 totalDue = uint128(round.releaseBlockEnd - round.releaseBlockStart);
+            uint128 passedDue = uint128(block.number - round.releaseBlockStart);
             if(passedDue > totalDue) {
                 passedDue = totalDue;
             }
