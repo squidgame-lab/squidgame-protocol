@@ -248,8 +248,13 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         } else {
             rewardAmount = IRewardSource(rewardSource).getBalance();
         }
-        (uint _reward, ) = IRewardSource(rewardSource).withdraw(rewardAmount);
-        uint128 reward = uint128(_reward);
+
+        uint128 reward;
+        if(rewardAmount > 0) {
+            (uint _reward, ) = IRewardSource(rewardSource).withdraw(rewardAmount);
+            reward = uint128(_reward);
+        }
+        
         if(nextPoolRate > 0) {
             uint128 nextPoolReward = reward.div(nextPoolRate);
             reward = reward.sub(nextPoolReward);

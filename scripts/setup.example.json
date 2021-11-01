@@ -62,6 +62,16 @@
     },
     {
         "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setupConfig",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
         "name": "GamePool1",
         "functionName": "configure",
         "contractName": "GamePool",
@@ -103,6 +113,23 @@
         "args": [
             "${GamePool7.address}",
             "${GameToken.address}",
+            "${GamePoolCS.address}",
+            0,
+            2592000,
+            86400,
+            false,
+            false
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "configure",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "${GamePool30.address}",
+            "${GameToken.address}",
             "0x0000000000000000000000000000000000000000",
             0,
             2592000,
@@ -118,8 +145,8 @@
         "contractName": "GamePool",
         "contractAddr": "",
         "args": [
-            "10000000000000000000000",
-            "10000000000000000000000"
+            "50000000000000000000000",
+            "50000000000000000000000"
         ]
     },
     {
@@ -129,8 +156,8 @@
         "contractName": "GamePool",
         "contractAddr": "",
         "args": [
-            "10000000000000000000000",
-            "10000000000000000000000"
+            "0",
+            "100000000000000000000000"
         ]
     },
     {
@@ -140,8 +167,19 @@
         "contractName": "GamePool",
         "contractAddr": "",
         "args": [
-            "10000000000000000000000",
-            "10000000000000000000000"
+            "0",
+            "1500000000000000000000000"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setShareAmount",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            "0",
+            "0"
         ]
     },
     {

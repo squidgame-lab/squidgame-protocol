@@ -68,5 +68,15 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GamePoolCS": {
+	  "contractName": "GamePool",
+	  "address": "",
+	  "constructorArgs": [],
+	  "upgradeArgs": [],
+	  "upgradedAddress": "",
+	  "deployed": false,
+	  "upgraded": false,
+	  "verified": false
 	}
 }
