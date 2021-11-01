@@ -218,7 +218,7 @@ describe('GamePool', async () => {
                 score: 50
             })
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(160376);
+            expect(receipt.gasUsed).to.eq(160380);
         })
     })
 
@@ -298,7 +298,7 @@ describe('GamePool', async () => {
                 }
             ])
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(446887)
+            expect(receipt.gasUsed).to.eq(446855)
         })
     })
 
@@ -361,7 +361,7 @@ describe('GamePool', async () => {
                 100,
             );
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(219752)
+            expect(receipt.gasUsed).to.eq(219995)
         })
     })
 
@@ -507,7 +507,7 @@ describe('GamePool', async () => {
             await new Promise(f => setTimeout(f, 1000));
             let tx = await gamePoolDay.claim(0);
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(209005);
+            expect(receipt.gasUsed).to.eq(211217);
         })
     })
 
