@@ -94,9 +94,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (address => mapping (uint128 => uint128)) public userRoundOrderMap;
     mapping (uint128 => ClaimLog) public claimLogs;
     bool public enableRoundOrder;
+    uint128 public feeRate;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
+    event FeeRateChanged(uint indexed _old, uint indexed _new);
 
     receive() external payable {
     }
@@ -120,8 +122,16 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         enableRoundOrder = _enableRoundOrder;
     }
 
+    function setFeeRate(uint128 _rate) external onlyManager {
+        require(_rate != feeRate, 'no change');
+        require(_rate <= 10000, 'invalid param');
+        emit FeeRateChanged(feeRate, _rate);
+        feeRate = _rate;
+    }
+
     function setNexPoolRate(uint128 _nextPoolRate) external onlyManager {
         require(_nextPoolRate != nextPoolRate, 'no change');
+        require(_nextPoolRate <= 10000, 'invalid param');
         nextPoolRate = _nextPoolRate;
     }
 
@@ -256,7 +266,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
         
         if(nextPoolRate > 0) {
-            uint128 nextPoolReward = reward.div(nextPoolRate);
+            uint128 nextPoolReward = reward.mul(nextPoolRate).div(10000);
             reward = reward.sub(nextPoolReward);
             nextPoolTotal = nextPoolTotal.add(nextPoolReward);
         }
@@ -300,10 +310,19 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
         OrderResult memory result = getOrderResult(_orderId);
         if(result.claimWin > 0 && clog.claimedWin == 0) {
+            uint128 fee;
+            uint128 reward = result.claimWin;
+            if(feeRate > 0) {
+                fee = reward.mul(feeRate).div(10000);
+                reward = reward.sub(fee);
+            }
+
             if(buyToken == address(0)) {
-                TransferHelper.safeTransferETH(to, result.claimWin);
+                if(fee > 0) TransferHelper.safeTransferETH(team(), fee);
+                if(reward > 0) TransferHelper.safeTransferETH(to, reward);
             } else {
-                TransferHelper.safeTransfer(buyToken, to, result.claimWin);
+                if(fee > 0) TransferHelper.safeTransfer(buyToken, team(), fee);
+                if(reward > 0) TransferHelper.safeTransfer(buyToken, to, reward);
             }
             clog.claimedWin = result.claimWin;
             winAmount = result.claimWin;

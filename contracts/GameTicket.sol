@@ -42,6 +42,7 @@ contract GameTicket is IRewardSource, Configable, Pausable, ReentrancyGuard, Ini
 
     function setFeeRate(uint _rate) external onlyAdmin {
         require(_rate != feeRate, 'GameTicket: NO_CHANGE');
+        require(_rate <= 10000, 'GameTicket: INVALID_VALUE');
         emit FeeRateChanged(feeRate, _rate);
         feeRate = _rate;
     }
@@ -75,7 +76,7 @@ contract GameTicket is IRewardSource, Configable, Pausable, ReentrancyGuard, Ini
 
         reward = _value;
         if(feeRate > 0) {
-            fee = _value.div(feeRate);
+            fee = _value.mul(feeRate).div(10000);
             reward = _value.sub(fee);
         }
         if (buyToken == address(0)) {
