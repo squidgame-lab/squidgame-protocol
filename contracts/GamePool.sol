@@ -98,6 +98,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     bool public enableRoundOrder;
     uint128 public feeRate;
     uint128 private ticketTotal;
+    uint128 private scoreTotal;
+    uint128 private topScoreTotal;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
@@ -184,6 +186,10 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
         if(!exist) {
             ticketTotal = ticketTotal.add(data.ticketAmount);
+            scoreTotal = scoreTotal.add(data.score);
+            if(data.rank <= getTopEndInStrategy(totalTopStrategy)) {
+                topScoreTotal = topScoreTotal.add(data.score);
+            }
             orderId = uint128(orders.length);
             userRoundOrderMap[data.user][totalRound] = orderId;
             if(userOrders[data.user].length == 0) {
@@ -213,6 +219,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             require(claimLogs[orderId].claimedWin == 0 && claimLogs[orderId].claimedShareParticipationAmount == 0 && claimLogs[orderId].claimedShareTopAmount == 0, 'claimed order does not change');
             Order storage order = orders[orderId];
             ticketTotal = ticketTotal.sub(order.ticketAmount).add(data.ticketAmount);
+            scoreTotal = scoreTotal.sub(order.score).add(data.score);
+            topScoreTotal = topScoreTotal.sub(order.score);
+            if(data.rank <= getTopEndInStrategy(totalTopStrategy)) {
+                topScoreTotal = topScoreTotal.add(data.score);
+            }
             if(isFromTicket) {
                 tickets[data.user] -= order.ticketAmount;
             }
@@ -235,6 +246,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     function uploaded(uint64 _startTime, uint128 _ticketTotal, uint128 _scoreTotal, uint128 _topScoreTotal) external onlyUploader {
         require(_ticketTotal > 0, 'ticketTotal zero');
         require(ticketTotal == _ticketTotal, 'invalid ticketTotal');
+        require(scoreTotal == _scoreTotal, 'invalid scoreTotal');
+        require(topScoreTotal == _topScoreTotal, 'invalid topScoreTotal');
         require(block.timestamp > _startTime, 'invalid start time');
         require(epoch > 0, 'epoch zero');
         require(block.number <= type(uint64).max, 'stop');
@@ -278,6 +291,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
         currentRound.rewardTotal = reward;
         ticketTotal = 0;
+        scoreTotal = 0;
+        topScoreTotal = 0;
         emit NewRound(totalRound); 
         totalRound++;
     }

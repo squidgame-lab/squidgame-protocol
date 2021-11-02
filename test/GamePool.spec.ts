@@ -6,7 +6,7 @@ import { GameConfig } from '../typechain/GameConfig'
 import { GameToken } from '../typechain/gameToken'
 import { GamePool } from '../typechain/GamePool'
 import { expect } from './shared/expect'
-import { gamePoolFixture, bigNumber18, bigNumber17 } from './shared/fixtures'
+import { gamePoolFixture, bigNumber18, bigNumber17, getBlockNumber } from './shared/fixtures'
 
 const createFixtureLoader = waffle.createFixtureLoader
 
@@ -218,7 +218,7 @@ describe('GamePool', async () => {
                 score: 50
             })
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(182793);
+            expect(receipt.gasUsed).to.eq(212588);
         })
     })
 
@@ -298,7 +298,7 @@ describe('GamePool', async () => {
                 }
             ])
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(470294)
+            expect(receipt.gasUsed).to.eq(503867)
         })
     })
 
@@ -361,18 +361,20 @@ describe('GamePool', async () => {
                 100,
             );
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(220372)
+            expect(receipt.gasUsed).to.eq(221208)
         })
     })
 
     describe('#getOrderResult', async () => {
         beforeEach('mock uploaded', async () => {
+            await getBlockNumber();
             await mockSet();
             await mockUpload();
             await mockUploaded();
         })
 
         it('success', async () => {
+            await getBlockNumber();
             let orderResult0 = await gamePoolDay.getOrderResult(0);
             let orderResult1 = await gamePoolDay.getOrderResult(1);
             let orderResult2 = await gamePoolDay.getOrderResult(2);
@@ -425,10 +427,12 @@ describe('GamePool', async () => {
             expect(orderResult1.claimShareTopAmount).to.eq(bigNumber18.mul(18))
             expect(orderResult2.claimShareTopAmount).to.eq(bigNumber18.mul(12))
             // claimShareTopAvaliable
+            await getBlockNumber();
             await new Promise(f => setTimeout(f, 1000));
             expect(orderResult0.claimShareTopAvaliable).to.eq(bigNumber18.mul(30));
             expect(orderResult1.claimShareTopAvaliable).to.eq(bigNumber18.mul(18));
             expect(orderResult2.claimShareTopAvaliable).to.eq(bigNumber18.mul(12));
+            await getBlockNumber();
         })
     })
 
@@ -507,7 +511,7 @@ describe('GamePool', async () => {
             await new Promise(f => setTimeout(f, 1000));
             let tx = await gamePoolDay.claim(0);
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(211217);
+            expect(receipt.gasUsed).to.eq(208259);
         })
     })
 

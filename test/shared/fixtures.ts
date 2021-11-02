@@ -10,6 +10,12 @@ import { Fixture } from 'ethereum-waffle'
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
 export const bigNumber17 = BigNumber.from("100000000000000000")  //1e17
 
+export async function getBlockNumber() {
+    const blockNumber = await ethers.provider.getBlockNumber()
+    console.debug("Current block number: " + blockNumber);
+    return blockNumber;
+}
+
 interface TestTokensFixture {
     buyToken: TestToken
 }
