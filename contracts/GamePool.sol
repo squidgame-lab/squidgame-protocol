@@ -372,19 +372,22 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     }
 
     function _claimAll(address _to, uint128 _start, uint128 _end) internal returns (uint128 winAmount, uint128 shareAmount) {
-        require(_start <= _end && _start >= 0 && _end >= 0, "invalid param");
+        require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
         uint128 count = countUserOrder(_to);
-        if (_end > count) _end = count;
-        if (_start > _end) _start = _end;
-        count = _end - _start;
+        if (_start > count) _start = count;
+        if (_end > _start) _end = _start;
+        count = _start - _end; 
         if (count == 0) return (0,0);
-        for(uint128 i = _start; i < _end; i++) {
-            uint128 orderId = userOrders[_to][i];
+        uint128 index = 0;
+        for(uint128 i = _end;i < _start; i++) {
+            uint128 j = _start - index -1;
+            uint128 orderId = userOrders[_to][j];
             if(canClaim(orderId)) {
                 (uint128 _win, uint128 _share) = _claim(orderId);
                 winAmount = winAmount.add(_win);
                 shareAmount = shareAmount.add(_share);
             }
+            index++;
         }
     }
 
