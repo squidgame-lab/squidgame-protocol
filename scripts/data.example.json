@@ -70,13 +70,25 @@
 		"verified": false
 	},
 	"GamePoolCS": {
-	  "contractName": "GamePool",
-	  "address": "",
-	  "constructorArgs": [],
-	  "upgradeArgs": [],
-	  "upgradedAddress": "",
-	  "deployed": false,
-	  "upgraded": false,
-	  "verified": false
+		"contractName": "GamePool",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
+	"GameTeam": {
+		"contractName": "GameTeam",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }
