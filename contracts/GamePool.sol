@@ -100,7 +100,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     uint128 private ticketTotal;
     uint128 private scoreTotal;
     uint128 private topScoreTotal;
-    uint128 private testup;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
