@@ -483,6 +483,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         uint128 claimWin;
         if(round.topScoreTotal > 0 && order.rank <= topEnd) {
             claimWin = SafeMath128.mulAndDiv(uint128(order.score), round.rewardTotal, round.topScoreTotal);
+            claimWin = getBuyTokenBalance(claimWin);
         }
 
         uint128 claimShareParticipationAmount;
@@ -531,5 +532,16 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
     function getTopRates(uint128 _strategySn) external view returns (TopRate[] memory) {
         return topStrategies[_strategySn];
+    }
+
+    function getBuyTokenBalance(uint128 _amount) public view returns (uint128) {
+        uint128 balance = uint128(address(this).balance);
+        if(buyToken != address(0)) {
+            balance = uint128(IERC20(buyToken).balanceOf(address(this)));
+        }
+        if(_amount > balance) {
+            _amount = balance;
+        }
+        return _amount;
     }
 }
