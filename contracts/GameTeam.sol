@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.12;
 
 import './interfaces/IERC20.sol';
@@ -16,11 +17,12 @@ contract GameTeam is Configable, Initializable {
 
     function setRate(address[] calldata _users, uint[] calldata _values) external onlyManager {
         require(_users.length > 0  && _users.length == _values.length, 'invalid param');
-        for(uint i; i<users.length; i++) {
+        uint count = users.length;
+        for(uint i; i<count; i++) {
             users.pop();
         }
         uint _total;
-        for(uint128 i; i<_users.length+1; i++) {
+        for(uint i; i<_users.length; i++) {
             _total += _values[i];
             rates[_users[i]] = _values[i];
             users.push(_users[i]);
