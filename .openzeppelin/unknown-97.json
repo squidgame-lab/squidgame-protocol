@@ -4654,6 +4654,418 @@
           }
         }
       }
+    },
+    "e4cbb68d4b1542b06e6a7f9faee3afb0597e6920f01bd44f41f54bfc34b010b6": {
+      "address": "0x32AE541f99c770d4AaEFf516D6b74B479a111e57",
+      "txHash": "0x6808c224c7952b81da99d4d81031ad4ed3ebc3e4dfebaf2fb884921540e13b59",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Pausable",
+            "label": "_paused",
+            "type": "t_bool",
+            "src": "contracts/modules/Pausable.sol:24"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "buyToken",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:17"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:18"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "feeRate",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:19"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "unit",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:20"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "total",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:21"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "tickets",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTicket.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "74f0ed1c40dc969d7a12bf863b81e30fdecb331430830e593f3ebeb2c65fe543": {
+      "address": "0xa15b1B3c462E65a6F4335AFa8ad5F36aCD19ce24",
+      "txHash": "0x44cba526b6446c0105f22ffdcfa9cfeb77dc594234564f1340a666fd00ff7dab",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Pausable",
+            "label": "_paused",
+            "type": "t_bool",
+            "src": "contracts/modules/Pausable.sol:24"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "buyToken",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:17"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:18"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "feeRate",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:19"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "unit",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:20"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "total",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:21"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "tickets",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTicket.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "7285bcc11da2c6db85d4516e5f6ed06f9134e9b4abeab3b3cbaab50d90fc5abc": {
+      "address": "0xd0acD54bC109C0EF0e677196e903D16634F5C626",
+      "txHash": "0x1dd8ec0379a52b31d79ac72ee1371b93c8db588486d1a6363d938129948e2ec3",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Pausable",
+            "label": "_paused",
+            "type": "t_bool",
+            "src": "contracts/modules/Pausable.sol:24"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "buyToken",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:17"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:18"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "feeRate",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:19"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "unit",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:20"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "total",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:21"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "tickets",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTicket.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "9af82d2a268568b165d6f278eb9978b540f16eb53b21097cd5f83f37bb2997bf": {
+      "address": "0xB2db36513D63bbcBF48a7ED7bAfDCf920da6F081",
+      "txHash": "0xae9428061c6ca39078c77b1a46a28a0ba0d86e05a79362c7a453f6f8efaeea0d",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Pausable",
+            "label": "_paused",
+            "type": "t_bool",
+            "src": "contracts/modules/Pausable.sol:24"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "buyToken",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:17"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GameTicket.sol:18"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "feeRate",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:19"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "unit",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:20"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "total",
+            "type": "t_uint256",
+            "src": "contracts/GameTicket.sol:21"
+          },
+          {
+            "contract": "GameTicket",
+            "label": "tickets",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTicket.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }
