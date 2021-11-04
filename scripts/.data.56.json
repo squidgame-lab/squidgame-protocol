@@ -15,7 +15,7 @@
     "upgradedAddress": "0x3E76AB5952dca3e4a9EB273561068072E043454A",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GameConfig": {
     "address": "0x4Ef1Fee888a517293F6b43af38C85D9314BFB2ce",
@@ -24,7 +24,7 @@
     "upgradedAddress": "0x7f7690E97eD6A46705eeA8CbaCBA588f191a5e02",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GameTicket": {
     "address": "0xADA799c67fC43c020c05c29E4304eB17273168c7",
@@ -33,10 +33,10 @@
       "0x55d398326f99059fF775485246999027B3197955",
       "1000000000000000000"
     ],
-    "upgradedAddress": "0x225B092e006Dc6Ea6B25f9CC839dF2369bb2944f",
+    "upgradedAddress": "0xcb8bd518Db01929E7628595d792cF3CFA7eF754F",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool1": {
     "contractName": "GamePool",
@@ -46,7 +46,7 @@
     "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool7": {
     "contractName": "GamePool",
@@ -56,7 +56,7 @@
     "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool30": {
     "contractName": "GamePool",
@@ -66,7 +66,7 @@
     "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePoolCS": {
     "contractName": "GamePool",
@@ -76,7 +76,7 @@
     "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GameTeam": {
     "contractName": "GameTeam",
@@ -88,6 +88,6 @@
     "upgradedAddress": "0x76Ffa6d8fC0EeBf117FD77728bec47EdD6c29B5C",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   }
 }
