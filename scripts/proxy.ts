@@ -83,7 +83,6 @@ async function upgradeContract(name: string, value: any) {
   data[name].deployed = true;
   data[name].upgraded = true;
   data[name].verified = false;
-  data[name].upgradedAddress = ins.address
   console.log(`Upgrade contract ${name} : ${ins.address}`)
 }
 

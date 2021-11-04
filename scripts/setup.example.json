@@ -6,8 +6,8 @@
         "contractName": "GameToken",
         "contractAddr": "",
         "args": [
-            ["${GamePool1.address}","${GamePool7.address}","${GamePool30.address}"],
-            ["100000000000000000000000000","100000000000000000000000000","100000000000000000000000000"]
+            ["${GamePool1.address}","${GamePool7.address}","${GamePool30.address}","${GamePoolCS.address}"],
+            ["1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000"]
         ]
     },
     {
@@ -72,6 +72,16 @@
     },
     {
         "call": true,
+        "name": "GameTeam",
+        "functionName": "setupConfig",
+        "contractName": "GameTeam",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
         "name": "GamePool1",
         "functionName": "configure",
         "contractName": "GamePool",
@@ -80,7 +90,7 @@
             "${GameTicket.address}",
             "${GameToken.address}",
             "${GamePool7.address}",
-            5,
+            2500,
             86400,
             86400,
             true,
@@ -97,7 +107,7 @@
             "${GamePool1.address}",
             "${GameToken.address}",
             "${GamePool30.address}",
-            5,
+            4000,
             604800,
             86400,
             false,
@@ -114,7 +124,7 @@
             "${GamePool7.address}",
             "${GameToken.address}",
             "${GamePoolCS.address}",
-            0,
+            5000,
             2592000,
             86400,
             false,
@@ -169,17 +179,6 @@
         "args": [
             "0",
             "1500000000000000000000000"
-        ]
-    },
-    {
-        "call": true,
-        "name": "GamePoolCS",
-        "functionName": "setShareAmount",
-        "contractName": "GamePool",
-        "contractAddr": "",
-        "args": [
-            "0",
-            "0"
         ]
     },
     {
@@ -240,6 +239,46 @@
                 [20,101,200],
                 [30,201,500]
             ]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool1",
+        "functionName": "setFeeRate",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            1000
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool7",
+        "functionName": "setFeeRate",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            1000
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePool30",
+        "functionName": "setFeeRate",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            1000
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setFeeRate",
+        "contractName": "GamePool",
+        "contractAddr": "",
+        "args": [
+            1000
         ]
     }
 ]

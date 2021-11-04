@@ -16,8 +16,15 @@ async function main() {
         if(data[ele].verified){
             continue;
         }
+        let addr = data[ele].address
+        if(data[ele].upgraded) {
+            addr = data[ele].upgradedAddress
+        }
+        if(!addr){
+            continue;
+        }
         await hre.run("verify:verify", {
-            address: data[ele].address,
+            address: addr,
             constructorArguments: data[ele].constructorArgs,
         })
         data[ele].verified = true
