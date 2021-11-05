@@ -97,9 +97,9 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     mapping (uint128 => ClaimLog) public claimLogs;
     bool public enableRoundOrder;
     uint128 public feeRate;
-    uint128 private ticketTotal;
-    uint128 private scoreTotal;
-    uint128 private topScoreTotal;
+    uint128 public ticketTotal;
+    uint128 public scoreTotal;
+    uint128 public topScoreTotal;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
