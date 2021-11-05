@@ -11,7 +11,7 @@ import "./libraries/SafeMath.sol";
 import "./libraries/Address.sol";
 import "./libraries/TransferHelper.sol";
 
-contract SwitchVotingEscrow is IGameSchedualPool, ReentrancyGuard, Configable, Initializable {
+contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Initializable {
     using SafeMath for uint256;
 
     event LockCreated(address indexed account, uint256 amount, uint256 unlockTime, uint256 lockWeeks);
@@ -110,10 +110,7 @@ contract SwitchVotingEscrow is IGameSchedualPool, ReentrancyGuard, Configable, I
         uint256[] memory lockWeeksArr,
         uint256[] memory weightArr
     ) external onlyDev {
-        require(
-            lockWeeksArr.length == weightArr.length,
-            "Arguments length wrong"
-        );
+        require(lockWeeksArr.length == weightArr.length, "Arguments length wrong");
         for (uint256 i = 0; i < lockWeeksArr.length; i++) {
             updateLockWeights(lockWeeksArr[i], weightArr[i]);
         }
