@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.12;
-
+pragma experimental ABIEncoderV2;
 import './interfaces/IERC20.sol';
 import './modules/Configable.sol';
 import './modules/Initializable.sol';
@@ -9,6 +9,11 @@ contract GameTeam is Configable, Initializable {
     address public shareToken;
     address[] public users;
     mapping (address => uint) public rates;
+
+    struct UserRate {
+        address user;
+        uint rate;
+    }
 
     function initialize(address _shareToken) external initializer {
         owner = msg.sender;
@@ -53,6 +58,17 @@ contract GameTeam is Configable, Initializable {
             if(users[i] == msg.sender) return true;
         }
         return false;
+    }
+
+    function getUserRates() external view returns (UserRate[] memory list) {
+        if(users.length == 0) return list;
+        list = new UserRate[](users.length);
+        for(uint i; i<users.length; i++) {
+            list[i] = UserRate({
+                user: users[i],
+                rate: rates[users[i]]
+            });
+        }
     }
 
 }
