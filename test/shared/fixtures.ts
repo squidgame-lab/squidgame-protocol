@@ -1,10 +1,11 @@
-import { BigNumber } from 'ethers'
+import { BigNumber, Wallet } from 'ethers'
 import { ethers } from 'hardhat'
 import { TestToken } from '../../typechain/TestToken'
 import { GameTicket } from '../../typechain/GameTicket'
 import { GameConfig } from '../../typechain/GameConfig'
 import { GamePool } from '../../typechain/GamePool'
 import { GameToken } from '../../typechain/GameToken'
+import { GameSchedualPool } from '../../typechain/GameSchedualPool'
 import { Fixture } from 'ethereum-waffle'
 
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
@@ -26,6 +27,7 @@ async function testTokensFixture(): Promise<TestTokensFixture> {
     await buyToken.initialize();
     return { buyToken }
 }
+
 
 interface GameTicketFixture extends TestTokensFixture {
     gameTicket: GameTicket
@@ -51,6 +53,7 @@ async function _gameTicketFixture(): Promise<GameTicketFixture> {
 
     return { buyToken, gameTicket, gameConfig };
 }
+
 
 interface GameConfigFixture extends GameTicketFixture {
     gameToken: GameToken
@@ -108,4 +111,35 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
     await gameTicket.setRewardPool(gamePoolDay.address);
 
     return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth };
+}
+
+interface GameSchedualPoolFixture {
+    depositToken: TestToken
+    rewardToken: GameToken
+    pool: GameSchedualPool
+}
+
+export const gameSchedualPoolFixture: Fixture<GameSchedualPoolFixture> = async function ([wallet, other]: Wallet[]): Promise<GameSchedualPoolFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let depositToken = (await testTokenFactory.deploy()) as TestToken
+    await depositToken.initialize();
+    await depositToken.mint(wallet.address, bigNumber18.mul(10000));
+
+    let rewardTokenFactory = await ethers.getContractFactory('GameToken');
+    let rewardToken = (await rewardTokenFactory.deploy()) as GameToken;
+    await rewardToken.initialize();
+
+
+    let poolFactory = await ethers.getContractFactory('GameSchedualPool');
+    let pool = (await poolFactory.deploy()) as GameSchedualPool
+    await pool.initialize(
+        depositToken.address,
+        rewardToken.address,
+        BigNumber.from('1640966400'),
+        bigNumber18.mul(10),
+        0
+    );
+    await rewardToken.increaseFund(pool.address, ethers.constants.MaxUint256);
+
+    return { depositToken, rewardToken, pool };
 }
