@@ -64,7 +64,7 @@ contract GameAirdrop is Configable, ReentrancyGuard, Initializable {
         endTime = _endTime;
     }
 
-    function setAllowanceLists(address[] calldata _users, uint[] calldata _values) external onlyAdmin {
+    function batchSetAllowanceList(address[] calldata _users, uint[] calldata _values) external onlyAdmin {
         require(_users.length == _values.length, 'GameAirdrop: INVALID_PARAMS');
         for (uint i=0; i < _users.length; i++){
             setAllowanceList(_users[i], _values[i]);
