@@ -177,7 +177,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     // Return reward multiplier over the given _from to _to block.
-    function getMultiplier(uint _from, uint _to) public view returns (uint) {
+    function getMultiplier(uint _from, uint _to) public pure returns (uint) {
         return _to.sub(_from).mul(BONUS_MULTIPLIER);
     }
 
@@ -297,7 +297,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         return amount;
     }
 
-    function harvest(uint _pid, address _to) external validatePoolByPid(_pid) whenNotPaused nonReentrant  returns (uint reward, uint earn) {
+    function harvest(uint _pid, address _to) external validatePoolByPid(_pid) whenNotPaused nonReentrant  returns (uint reward) {
         PoolInfo memory pool = poolInfo[_pid];
         require(pool.paused == false, "GameFarm: POOL_PAUSED");
         updatePool(_pid);
