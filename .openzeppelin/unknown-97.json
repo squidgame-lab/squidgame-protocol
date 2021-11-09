@@ -129,6 +129,11 @@
       "address": "0x669e05cbED82E9E098621cFDB80b38a5E4f1fFfC",
       "txHash": "0xdd186552138baa46c9ea36bea1a8c5618a1c00c9d94b2ca47d61318b4f651db8",
       "kind": "transparent"
+    },
+    {
+      "address": "0x5d972EB458975b5c7c3f1134be7DFB349E519736",
+      "txHash": "0x3fcf2607b0112e4d9f19fb2c59db16b40695bc3087b8ee75b808bbf3f6027ee1",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -5909,6 +5914,140 @@
                 "type": "t_uint128"
               }
             ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "1883393ec7f1137876078b1a6c1e929fa5844c6d5067a48bfa8621c8c834a86c": {
+      "address": "0x3Ba77D869017BD32212E24bD472c52d23A4AF027",
+      "txHash": "0x25b771bcfa9b55dafc51656072fb7a5fe6d9ab414d968f6e70f9b5869393a87d",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "token",
+            "type": "t_address",
+            "src": "contracts/GameAirdrop.sol:15"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "total",
+            "type": "t_uint256",
+            "src": "contracts/GameAirdrop.sol:16"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "balance",
+            "type": "t_uint256",
+            "src": "contracts/GameAirdrop.sol:17"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "startTime",
+            "type": "t_uint256",
+            "src": "contracts/GameAirdrop.sol:18"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "endTime",
+            "type": "t_uint256",
+            "src": "contracts/GameAirdrop.sol:19"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "allowanceList",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameAirdrop.sol:21"
+          },
+          {
+            "contract": "GameAirdrop",
+            "label": "claimedUser",
+            "type": "t_struct(AddressSet)8277_storage",
+            "src": "contracts/GameAirdrop.sol:22"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_struct(AddressSet)8277_storage": {
+            "label": "struct EnumerableSet.AddressSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)7990_storage"
+              }
+            ]
+          },
+          "t_struct(Set)7990_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage"
+              },
+              {
+                "label": "_indexes",
+                "type": "t_mapping(t_bytes32,t_uint256)"
+              }
+            ]
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

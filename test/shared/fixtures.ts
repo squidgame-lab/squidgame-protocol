@@ -6,10 +6,12 @@ import { GameConfig } from '../../typechain/GameConfig'
 import { GamePool } from '../../typechain/GamePool'
 import { GameToken } from '../../typechain/GameToken'
 import { GameSchedualPool } from '../../typechain/GameSchedualPool'
+import { GameAirdrop } from '../../typechain/GameAirdrop'
 import { Fixture } from 'ethereum-waffle'
 
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
 export const bigNumber17 = BigNumber.from("100000000000000000")  //1e17
+export const dateNow = BigNumber.from("1636429275") // 2021-11-09 11:41:15
 
 export async function getBlockNumber() {
     const blockNumber = await ethers.provider.getBlockNumber()
@@ -55,14 +57,14 @@ async function _gameTicketFixture(): Promise<GameTicketFixture> {
 }
 
 
-interface GameConfigFixture extends GameTicketFixture {
+interface GamePoolFixture extends GameTicketFixture {
     gameToken: GameToken
     gamePoolDay: GamePool
     gamePoolWeek: GamePool
     gamePoolMonth: GamePool
 }
 
-export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Promise<GameConfigFixture> {
+export const gamePoolFixture: Fixture<GamePoolFixture> = async function (): Promise<GamePoolFixture> {
     const { buyToken, gameTicket, gameConfig } = await _gameTicketFixture();
 
     const gameTokenFactory = await ethers.getContractFactory('GameToken');
@@ -113,6 +115,7 @@ export const gamePoolFixture: Fixture<GameConfigFixture> = async function (): Pr
     return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth };
 }
 
+
 interface GameSchedualPoolFixture {
     depositToken: TestToken
     rewardToken: GameToken
@@ -142,4 +145,31 @@ export const gameSchedualPoolFixture: Fixture<GameSchedualPoolFixture> = async f
     await rewardToken.increaseFund(pool.address, ethers.constants.MaxUint256);
 
     return { depositToken, rewardToken, pool };
+}
+
+interface GameAirdropFixture {
+    gameToken: GameToken
+    gameAirdrop: GameAirdrop
+}
+
+export const gameAirdropFixture: Fixture<GameAirdropFixture> = async function (): Promise<GameAirdropFixture> {
+    let gameTokenFactory = await ethers.getContractFactory('GameToken');
+    let gameToken = (await gameTokenFactory.deploy()) as GameToken;
+    await gameToken.initialize();
+
+
+    let airdropFactory = await ethers.getContractFactory('GameAirdrop');
+    let gameAirdrop = (await airdropFactory.deploy()) as GameAirdrop;
+
+
+    await gameAirdrop.initialize(
+        gameToken.address,
+        bigNumber18.mul(100),
+        BigNumber.from(dateNow),
+        BigNumber.from(dateNow).add(86400)
+    )
+
+    await gameToken.increaseFund(gameAirdrop.address, bigNumber18.mul(1000));
+
+    return { gameToken, gameAirdrop }
 }

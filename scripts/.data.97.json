@@ -89,5 +89,20 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameAirdrop": {
+    "contractName": "GameAirdrop",
+    "address": "0x5d972EB458975b5c7c3f1134be7DFB349E519736",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "10000000000000000000000",
+      "1636429275",
+      "1640966400"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
   }
 }

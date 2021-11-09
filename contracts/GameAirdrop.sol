@@ -29,7 +29,7 @@ contract GameAirdrop is Configable, ReentrancyGuard, Initializable {
     modifier check(address _user) {
         require(block.timestamp >= startTime && block.timestamp <= endTime, 'GameAirdrop: WRONG_TIME');
         require(!claimedUser.contains(_user), 'GameAirdrop: DUPLICATION_CLAIM');
-        require(IShareToken(token).take() >= balance, 'GameAirdrop: INSUFFICIENT_BALANCE');
+        require(IShareToken(token).take() >= balance && balance > 0, 'GameAirdrop: INSUFFICIENT_BALANCE');
         _;
     }
 
@@ -42,6 +42,10 @@ contract GameAirdrop is Configable, ReentrancyGuard, Initializable {
 
     function claimedCount() external view returns(uint count) {
         return claimedUser.length();
+    }
+
+    function claimed(address _user) external view returns(bool) {
+        return claimedUser.contains(_user);
     }
 
     function setToken(address _token) external onlyAdmin {
@@ -68,6 +72,12 @@ contract GameAirdrop is Configable, ReentrancyGuard, Initializable {
         require(_users.length == _values.length, 'GameAirdrop: INVALID_PARAMS');
         for (uint i=0; i < _users.length; i++){
             setAllowanceList(_users[i], _values[i]);
+        }
+    }
+
+    function batchSetAllowanceListSame(address[] calldata _users, uint _value) external onlyAdmin {
+        for (uint i=0; i < _users.length; i++){
+            setAllowanceList(_users[i], _value);
         }
     }
     
