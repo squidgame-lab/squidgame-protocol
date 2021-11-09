@@ -175,9 +175,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     }
 
     function uploadOne(PlayData memory data) public onlyUploader {
-        if(isFromTicket) {
-            require(tickets[data.user] + data.ticketAmount <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
-        }
         uint128 orderId = userRoundOrderMap[data.user][totalRound];
         bool exist;
         if(orderId > 0 || (orderId == 0 && totalRound == 0 && userOrders[data.user].length > 0)) {
@@ -185,6 +182,9 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
 
         if(!exist) {
+            if(isFromTicket) {
+                require(tickets[data.user] + data.ticketAmount <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
+            }
             ticketTotal = ticketTotal.add(data.ticketAmount);
             scoreTotal = scoreTotal.add(data.score);
             if(data.rank <= getTopEndInStrategy(totalTopStrategy)) {
@@ -226,6 +226,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
             }
             if(isFromTicket) {
                 tickets[data.user] -= order.ticketAmount;
+                require(tickets[data.user] + data.ticketAmount <= IRewardSource(rewardSource).tickets(data.user), 'ticket overflow');
             }
             order.rank = data.rank;
             order.ticketAmount = data.ticketAmount;
