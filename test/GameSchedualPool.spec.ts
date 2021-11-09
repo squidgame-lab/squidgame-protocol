@@ -45,7 +45,7 @@ describe('GameTicket', async () => {
             expect(await pool.createLock(bigNumber18.mul(100), BigNumber.from(1))).to.emit(pool, 'LockCreated')
         })
     })
-
+ 
     describe('#increaseAmount', async () => {
 
     })

@@ -159,27 +159,24 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         emit LockCreated(msg.sender, amount, unlockTime, weeksCount);
     }
 
-    function increaseAmount(address account, uint256 amount) external nonReentrant {
-        LockedBalance memory lockedBalance = locked[account];
+    function increaseAmount(uint256 amount) external nonReentrant {
+        LockedBalance memory lockedBalance = locked[msg.sender];
 
         require(amount > 0, "Zero value");
         require(lockedBalance.unlockTime > block.timestamp, "Cannot add to expired lock");
 
         _update();
+        _harvestRewardToken(msg.sender);
 
         scheduledUnlock[lockedBalance.unlockTime] = scheduledUnlock[lockedBalance.unlockTime].add(amount);
-        locked[account].amount = lockedBalance.amount.add(amount);
-        locked[account].rewardDebt = locked[account].rewardDebt.add(
-            amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100).mul(accRewardPerShare).div(1e18)
-        );
+        locked[msg.sender].amount = lockedBalance.amount.add(amount);
+        locked[msg.sender].rewardDebt = locked[msg.sender].amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100).mul(accRewardPerShare).div(1e18);
 
         TransferHelper.safeTransferFrom(depositToken, msg.sender, address(this), amount);
         depositTokenSupply = depositTokenSupply.add(amount);
-        depositTokenSupply = depositTotalPower.add(
-            amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100)
-        );
+        depositTotalPower = depositTotalPower.add(amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100));
 
-        emit AmountIncreased(account, amount);
+        emit AmountIncreased(msg.sender, amount);
     }
 
     function increaseUnlockTime(uint256 weeksCount) external nonReentrant {
@@ -192,19 +189,16 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         require(unlockTime <= block.timestamp + maxTime, "Lock cannot exceed max lock time");
 
         _update();
+        _harvestRewardToken(msg.sender);
 
-        scheduledUnlock[lockedBalance.unlockTime] = scheduledUnlock[
-            lockedBalance.unlockTime
-        ].sub(lockedBalance.amount);
-        scheduledUnlock[unlockTime] = scheduledUnlock[unlockTime].add(
-            lockedBalance.amount
-        );
+        scheduledUnlock[lockedBalance.unlockTime] = scheduledUnlock[lockedBalance.unlockTime].sub(lockedBalance.amount);
+        scheduledUnlock[unlockTime] = scheduledUnlock[unlockTime].add(lockedBalance.amount);
+        locked[msg.sender].rewardDebt = locked[msg.sender].amount.mul(lockWeights[weeksCount]).div(100).mul(accRewardPerShare).div(1e18);
 
-        depositTotalPower = depositTotalPower.sub(
-            lockedBalance.amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100)
-        );
         depositTotalPower = depositTotalPower.add(
-            lockedBalance.amount.mul(lockWeights[weeksCount]).div(100)
+            lockedBalance.amount.mul(
+                lockWeights[weeksCount].sub(lockWeights[lockedBalance.lockWeeks])
+            ).div(100)
         );
         locked[msg.sender].unlockTime = unlockTime;
         locked[msg.sender].lockWeeks = weeksCount;
@@ -222,16 +216,14 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
 
         TransferHelper.safeTransfer(depositToken, msg.sender, amount);
 
+        depositTokenSupply = depositTokenSupply.sub(amount);
+        depositTotalPower = depositTotalPower.sub(
+            lockedBalance.amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100)
+        );
+
         lockedBalance.unlockTime = 0;
         lockedBalance.amount = 0;
         lockedBalance.rewardDebt = 0;
-
-        depositTokenSupply = depositTokenSupply.sub(amount);
-        depositTotalPower = depositTotalPower.sub(
-            lockedBalance.amount.mul(lockWeights[lockedBalance.lockWeeks]).div(
-                100
-            )
-        );
 
         emit Withdraw(msg.sender, amount);
     }
