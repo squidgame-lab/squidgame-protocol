@@ -105,5 +105,21 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GameSchedualPool": {
+		"contractName": "GameSchedualPool",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}",
+			"${GameToken.address}",
+			"1000000000000000000",
+			"1640966400",
+			"0"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }

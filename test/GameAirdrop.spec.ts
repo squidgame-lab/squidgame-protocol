@@ -1,5 +1,5 @@
 import { Wallet, BigNumber } from 'ethers'
-import { ethers, waffle } from 'hardhat'
+import { ethers, network, waffle } from 'hardhat'
 import { GameToken } from '../typechain/GameToken'
 import { GameAirdrop } from '../typechain/GameAirdrop'
 import { expect } from './shared/expect'
@@ -34,7 +34,7 @@ describe('GameAirdrop', async () => {
         expect(await gameAirdrop.total()).to.eq(bigNumber18.mul(100))
         expect(await gameAirdrop.balance()).to.eq(bigNumber18.mul(100))
         expect(await gameAirdrop.startTime()).to.eq(dateNow)
-        expect(await gameAirdrop.endTime()).to.eq(dateNow.add(86400))
+        expect(await gameAirdrop.endTime()).to.eq(dateNow.add(259200))
     })
 
     describe('#batchSetAllowanceList', async () => {
@@ -147,6 +147,11 @@ describe('GameAirdrop', async () => {
             await gameAirdrop.setAllowanceList(user1.address, bigNumber18.mul(110));
             await gameAirdrop.connect(user1).claim();
             await expect(gameAirdrop.connect(user2).claim()).to.revertedWith('GameAirdrop: INSUFFICIENT_BALANCE');
+        })
+
+        it('fails for over time', async () => {
+            await network.provider.send('evm_setNextBlockTimestamp', [dateNow.add(259201).toNumber()])
+            await expect(gameAirdrop.connect(user1).claim()).to.revertedWith('GameAirdrop: WRONG_TIME')
         })
     })
 })

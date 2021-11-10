@@ -166,7 +166,7 @@ export const gameAirdropFixture: Fixture<GameAirdropFixture> = async function ()
         gameToken.address,
         bigNumber18.mul(100),
         BigNumber.from(dateNow),
-        BigNumber.from(dateNow).add(86400)
+        BigNumber.from(dateNow).add(259200) // 3 days
     )
 
     await gameToken.increaseFund(gameAirdrop.address, bigNumber18.mul(1000));
