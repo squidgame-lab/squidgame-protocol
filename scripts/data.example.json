@@ -90,5 +90,36 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GameAirdrop": {
+		"contractName": "GameAirdrop",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}",
+			"10000000000000000000000",
+			"1636429275",
+			"1640966400"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
+	"GameSchedualPool": {
+		"contractName": "GameSchedualPool",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}",
+			"${GameToken.address}",
+			"1000000000000000000",
+			"1640966400",
+			"0"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }
