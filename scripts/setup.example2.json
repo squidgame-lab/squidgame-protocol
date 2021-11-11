@@ -14,7 +14,7 @@
         "call": true,
         "name": "GameTicket2",
         "functionName": "setRewardPool",
-        "contractName": "GameTicket",
+        "contractName": "GameTicket2",
         "contractAddr": "",
         "args": [
             "${GamePool21.address}"
@@ -24,7 +24,7 @@
         "call": true,
         "name": "GameTicket2",
         "functionName": "setupConfig",
-        "contractName": "GameTicket",
+        "contractName": "GameTicket2",
         "contractAddr": "",
         "args": [
             "${GameConfig.address}"

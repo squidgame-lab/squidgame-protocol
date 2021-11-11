@@ -27,12 +27,15 @@
     "verified": false
   },
   "GameTicket2": {
-    "contractName": "GameTicket",
+    "contractName": "GameTicket2",
     "address": "",
     "constructorArgs": [],
     "upgradeArgs": [
       "${TestToken.address}",
-      "1000000000000000000"
+      "${GameToken.address}",
+      "1000000000000000000",
+      "10000000000000000000",
+      "100000000000000000000"
     ],
     "upgradedAddress": "",
     "deployed": false,
