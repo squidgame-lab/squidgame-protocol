@@ -2,8 +2,11 @@ import { BigNumber, Wallet } from 'ethers'
 import { ethers } from 'hardhat'
 import { TestToken } from '../../typechain/TestToken'
 import { GameTicket } from '../../typechain/GameTicket'
+import { GameTicket2 } from '../../typechain/GameTicket2'
 import { GameConfig } from '../../typechain/GameConfig'
 import { GamePool } from '../../typechain/GamePool'
+import { GamePoolActivity } from '../../typechain/GamePoolActivity'
+import { GamePoolCS } from '../../typechain/GamePoolCS'
 import { GameToken } from '../../typechain/GameToken'
 import { GameSchedualPool } from '../../typechain/GameSchedualPool'
 import { GameAirdrop } from '../../typechain/GameAirdrop'
@@ -172,4 +175,88 @@ export const gameAirdropFixture: Fixture<GameAirdropFixture> = async function ()
     await gameToken.increaseFund(gameAirdrop.address, bigNumber18.mul(1000));
 
     return { gameToken, gameAirdrop }
+}
+
+interface GamePoolsFixture {
+    buyToken: TestToken
+    gameToken: GameToken
+    gameTicket: GameTicket
+    gameTicket2: GameTicket2
+    gamePool: GamePool
+    gamePoolActivity: GamePoolActivity
+    gamePoolCS: GamePoolCS
+}
+
+export const gamePoolsFixture: Fixture<GamePoolsFixture> = async function ([wallet, other]: Wallet[]): Promise<GamePoolsFixture> {
+    const gameTicketFactory = await ethers.getContractFactory('GameTicket');
+    const gameTicket2Factory = await ethers.getContractFactory('GameTicket2');
+    const gamePoolFactory = await ethers.getContractFactory('GamePool');
+    const gamePoolActivityFactory = await ethers.getContractFactory('GamePoolActivity');
+    const gamePoolCSFactory = await ethers.getContractFactory('GamePoolCS');
+    const gameTokenFactory = await ethers.getContractFactory('GameToken');
+    const testTokenFactory = await ethers.getContractFactory('TestToken')
+    const gameConfigFactory = await ethers.getContractFactory('GameConfig');
+
+    const gameConfig = (await gameConfigFactory.deploy()) as GameConfig;
+    await gameConfig.initialize();
+
+    let buyToken = (await testTokenFactory.deploy()) as TestToken
+    await buyToken.initialize();
+
+    let gameToken = (await gameTokenFactory.deploy()) as GameToken;
+    await gameToken.initialize();
+    await gameToken.increaseFund(wallet.address,ethers.constants.MaxUint256);
+
+    let gameTicket = (await gameTicketFactory.deploy()) as GameTicket;
+    await gameTicket.initialize(buyToken.address, bigNumber18);
+    await gameTicket.setupConfig(gameConfig.address);
+    
+    let gameTicket2 = (await gameTicket2Factory.deploy()) as GameTicket2;
+    await gameTicket2.initialize(buyToken.address, gameToken.address, bigNumber18, bigNumber18.mul(10), bigNumber18.mul(100));
+    await gameTicket2.setupConfig(gameConfig.address);
+   
+
+    let gamePool = (await gamePoolFactory.deploy()) as GamePool;
+    await gamePool.initialize();
+    await gamePool.setupConfig(gameConfig.address);
+    let gamePoolActivity = (await gamePoolActivityFactory.deploy()) as GamePoolActivity;
+    await gamePoolActivity.initialize();
+    await gamePoolActivity.setupConfig(gameConfig.address);
+    let gamePoolCS = (await gamePoolCSFactory.deploy()) as GamePoolCS;
+    await gamePoolCS.initialize();
+    await gamePoolCS.setupConfig(gameConfig.address);
+
+    await gamePool.configure(
+        gameTicket.address,
+        gameToken.address,
+        gamePoolCS.address,
+        2000,
+        1,
+        1,
+        true,
+        false
+    );
+
+    await gamePoolActivity.configure(
+        gameTicket2.address,
+        gameToken.address,
+        gamePoolCS.address,
+        1,
+        0,
+        true,
+        false
+    );
+
+    await gamePoolCS.configure(
+        buyToken.address,
+        gameToken.address,
+        1,
+        0,
+        false
+    );
+
+    await gameTicket.setRewardPool(gamePool.address);
+    await gameTicket2.setRewardPool(gamePoolActivity.address);
+
+    return { buyToken, gameToken, gameTicket, gameTicket2, gamePool, gamePoolActivity, gamePoolCS }
 }
