@@ -159,6 +159,11 @@
       "address": "0xf99cd27065AE5b955Ab8c59D3Cb09cDAd8293950",
       "txHash": "0xeed645d98b13ba07fc49e9da9e9103699b403064c0a829da7e05892d3d693e4a",
       "kind": "transparent"
+    },
+    {
+      "address": "0x71579596Da46eF613f9CB28EE11E1440a8eEc8D2",
+      "txHash": "0xff887224e14983630c5345ffd20d4a7f38a6f8111541ff279ce440ecd6329ad0",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -6577,6 +6582,157 @@
                 "type": "t_uint128"
               }
             ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "08267df880537b2cf80349e261204b4e61dfa9a6773a6a012e871dfab2131e1a": {
+      "address": "0x4481F963997f80d67A7D8101640c9fF66a679946",
+      "txHash": "0xf0725e9c229087ab14780d5e707b73aff27ce267f0deb7673b9fc072db6f0e02",
+      "layout": {
+        "storage": [
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "maxTime",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:24"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "depositToken",
+            "type": "t_address",
+            "src": "contracts/GameSchedualPool.sol:25"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "rewardToken",
+            "type": "t_address",
+            "src": "contracts/GameSchedualPool.sol:26"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "mintPerBlock",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:29"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "lastBlock",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:30"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "accRewardPerShare",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:31"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "depositTokenSupply",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:32"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "depositTotalPower",
+            "type": "t_uint256",
+            "src": "contracts/GameSchedualPool.sol:33"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "locked",
+            "type": "t_mapping(t_address,t_struct(LockedBalance)12762_storage)",
+            "src": "contracts/GameSchedualPool.sol:35"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "scheduledUnlock",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts/GameSchedualPool.sol:37"
+          },
+          {
+            "contract": "GameSchedualPool",
+            "label": "lockWeights",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "src": "contracts/GameSchedualPool.sol:39"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_address,t_struct(LockedBalance)12762_storage)": {
+            "label": "mapping(address => struct IGameSchedualPool.LockedBalance)"
+          },
+          "t_struct(LockedBalance)12762_storage": {
+            "label": "struct IGameSchedualPool.LockedBalance",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "unlockTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "lockWeeks",
+                "type": "t_uint256"
+              },
+              {
+                "label": "rewardDebt",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_bool": {
+            "label": "bool"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

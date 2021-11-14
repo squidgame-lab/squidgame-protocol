@@ -280,5 +280,26 @@
         "args": [
             1000
         ]
+    },
+    {
+        "call": true,
+        "name": "GameSchedualPool",
+        "functionName": "setupConfig",
+        "contractName": "GameSchedualPool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameSchedualPool",
+        "functionName": "batchUpdateLockWeights",
+        "contractName": "GameSchedualPool",
+        "contractAddr": "",
+        "args": [
+            [1, 2, 3, 4],
+            [10, 20, 30, 40]
+        ]
     }
 ]
