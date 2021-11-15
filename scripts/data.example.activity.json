@@ -26,44 +26,24 @@
     "upgraded": true,
     "verified": false
   },
-  "GameTicket2": {
+  "GameTicketActivity": {
     "contractName": "GameTicket2",
     "address": "",
     "constructorArgs": [],
     "upgradeArgs": [
       "${TestToken.address}",
       "${GameToken.address}",
-      "1000000000000000000",
       "10000000000000000000",
-      "100000000000000000000"
+      "0",
+      "0"
     ],
     "upgradedAddress": "",
     "deployed": false,
     "upgraded": false,
     "verified": false
   },
-  "GamePool21": {
-    "contractName": "GamePool",
-    "address": "",
-    "constructorArgs": [],
-    "upgradeArgs": [],
-    "upgradedAddress": "",
-    "deployed": false,
-    "upgraded": false,
-    "verified": false
-  },
-  "GamePool27": {
-    "contractName": "GamePool",
-    "address": "",
-    "constructorArgs": [],
-    "upgradeArgs": [],
-    "upgradedAddress": "",
-    "deployed": false,
-    "upgraded": false,
-    "verified": false
-  },
-  "GamePool230": {
-    "contractName": "GamePool",
+  "GamePoolActivity": {
+    "contractName": "GamePoolActivity",
     "address": "",
     "constructorArgs": [],
     "upgradeArgs": [],

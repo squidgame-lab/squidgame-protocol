@@ -68,16 +68,6 @@
     "upgraded": true,
     "verified": false
   },
-  "GamePoolCS": {
-    "contractName": "GamePool",
-    "address": "0x07833F4E593571A20e1a6bCFB5131479aE146CC1",
-    "constructorArgs": [],
-    "upgradeArgs": [],
-    "upgradedAddress": "0x07833F4E593571A20e1a6bCFB5131479aE146CC1",
-    "deployed": true,
-    "upgraded": true,
-    "verified": false
-  },
   "GameTeam": {
     "contractName": "GameTeam",
     "address": "0xbf4645239b0efF34d26e6C8646Ca85e7FD4F6390",
@@ -105,20 +95,102 @@
     "upgraded": true,
     "verified": false
   },
-	"GameSchedualPool": {
-		"contractName": "GameSchedualPool",
-		"address": "",
-		"constructorArgs": [],
-		"upgradeArgs": [
-			"${GameToken.address}",
-			"${GameToken.address}",
-			"1000000000000000000",
-			"1640966400",
-			"0"
-		],
-		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
-	}
+  "GameSchedualPool": {
+    "contractName": "GameSchedualPool",
+    "address": "0x3027860bBb7DC096560BF92A0e6Ff7433ee8B7d7",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "1000000000000000000",
+      "1640966400",
+      "0"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GameTicket2": {
+    "contractName": "GameTicket2",
+    "address": "0xf99cd27065AE5b955Ab8c59D3Cb09cDAd8293950",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "1000000000000000000",
+      "10000000000000000000",
+      "100000000000000000000"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool21": {
+    "contractName": "GamePool",
+    "address": "0x341e301A69312FFB9D8C0098f41a2139186Fb93E",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool27": {
+    "contractName": "GamePool",
+    "address": "0x9Fc0ca1ea0ed399CcFB1bB43709808F7C63da141",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool230": {
+    "contractName": "GamePool",
+    "address": "0xacA013327f3554e639F97d947e6e468D7d1119aA",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GameTicketActivity": {
+    "contractName": "GameTicket2",
+    "address": "0xC378FCa4094c1883eBE3AC28A9761bCDe7859024",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "10000000000000000000",
+      "0",
+      "0"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePoolActivity": {
+    "contractName": "GamePoolActivity",
+    "address": "0xE6139b5ef0aE9041dCF824c5262eD3E420224600",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePoolCS": {
+    "contractName": "GamePoolCS",
+    "address": "0xEE852f0f6207bF4EeA71023993aDaF7Ed2199e75",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  }
 }

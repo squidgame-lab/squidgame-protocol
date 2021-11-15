@@ -82,6 +82,20 @@
     },
     {
         "call": true,
+        "name": "GamePoolCS",
+        "functionName": "configure",
+        "contractName": "GamePoolCS",
+        "contractAddr": "",
+        "args": [
+            "${TestToken.address}",
+            "${GameToken.address}",
+            2592000,
+            864000,
+            false
+        ]
+    },
+    {
+        "call": true,
         "name": "GamePool1",
         "functionName": "configure",
         "contractName": "GamePool",
@@ -125,23 +139,6 @@
             "${GameToken.address}",
             "${GamePoolCS.address}",
             5000,
-            2592000,
-            864000,
-            false,
-            false
-        ]
-    },
-    {
-        "call": true,
-        "name": "GamePoolCS",
-        "functionName": "configure",
-        "contractName": "GamePool",
-        "contractAddr": "",
-        "args": [
-            "${GamePool30.address}",
-            "${GameToken.address}",
-            "0x0000000000000000000000000000000000000000",
-            0,
             2592000,
             864000,
             false,

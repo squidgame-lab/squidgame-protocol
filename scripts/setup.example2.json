@@ -6,7 +6,7 @@
         "contractName": "GameToken",
         "contractAddr": "",
         "args": [
-            ["${GamePool21.address}","${GamePool27.address}","${GamePool230.address}","${GamePool2CS.address}"],
+            ["${GamePool21.address}","${GamePool27.address}","${GamePool230.address}","${GamePoolCS.address}"],
             ["1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000"]
         ]
     },
@@ -62,16 +62,6 @@
     },
     {
         "call": true,
-        "name": "GamePool2CS",
-        "functionName": "setupConfig",
-        "contractName": "GamePool",
-        "contractAddr": "",
-        "args": [
-            "${GameConfig.address}"
-        ]
-    },
-    {
-        "call": true,
         "name": "GamePool21",
         "functionName": "configure",
         "contractName": "GamePool",
@@ -113,27 +103,10 @@
         "args": [
             "${GamePool27.address}",
             "${GameToken.address}",
-            "${GamePool2CS.address}",
+            "${GamePoolCS.address}",
             5000,
             2592000,
             864000,
-            false,
-            false
-        ]
-    },
-    {
-        "call": true,
-        "name": "GamePool2CS",
-        "functionName": "configure",
-        "contractName": "GamePool",
-        "contractAddr": "",
-        "args": [
-            "${GamePool230.address}",
-            "${GameToken.address}",
-            "0x0000000000000000000000000000000000000000",
-            0,
-            2592000,
-            86400,
             false,
             false
         ]
@@ -254,16 +227,6 @@
     {
         "call": true,
         "name": "GamePool230",
-        "functionName": "setFeeRate",
-        "contractName": "GamePool",
-        "contractAddr": "",
-        "args": [
-            1000
-        ]
-    },
-    {
-        "call": true,
-        "name": "GamePool2CS",
         "functionName": "setFeeRate",
         "contractName": "GamePool",
         "contractAddr": "",
