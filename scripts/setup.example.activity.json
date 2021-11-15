@@ -1,0 +1,94 @@
+[
+    {
+        "call": true,
+        "name": "GameToken",
+        "functionName": "increaseFunds",
+        "contractName": "GameToken",
+        "contractAddr": "",
+        "args": [
+            ["${GameTicketActivity.address}"],
+            ["1000000000000000000000000000"]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTicketActivity",
+        "functionName": "setRewardPool",
+        "contractName": "GameTicket2",
+        "contractAddr": "",
+        "args": [
+            "${GamePoolActivity.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTicketActivity",
+        "functionName": "setupConfig",
+        "contractName": "GameTicket2",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolActivity",
+        "functionName": "setupConfig",
+        "contractName": "GamePoolActivity",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolActivity",
+        "functionName": "configure",
+        "contractName": "GamePoolActivity",
+        "contractAddr": "",
+        "args": [
+            "${GameTicketActivity.address}",
+            "${GameToken.address}",
+            "${GamePoolCS.address}",
+            600,
+            864000,
+            true,
+            false
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolActivity",
+        "functionName": "setUserMaxScore",
+        "contractName": "GamePoolActivity",
+        "contractAddr": "",
+        "args": [
+            "15"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolActivity",
+        "functionName": "setRate",
+        "contractName": "GamePoolActivity",
+        "contractAddr": "",
+        "args": [
+            [
+                "1000000000000000000",
+                "100000000000000000000",
+                "50000000000000000000",
+                "10000000000000000000"
+            ]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolActivity",
+        "functionName": "setFeeRate",
+        "contractName": "GamePoolActivity",
+        "contractAddr": "",
+        "args": [
+            1000
+        ]
+    }
+]

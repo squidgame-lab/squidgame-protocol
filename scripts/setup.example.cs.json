@@ -1,0 +1,60 @@
+[
+    {
+        "call": true,
+        "name": "GameToken",
+        "functionName": "increaseFunds",
+        "contractName": "GameToken",
+        "contractAddr": "",
+        "args": [
+            ["${GamePoolCS.address}"],
+            ["1000000000000000000000000000"]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setupConfig",
+        "contractName": "GamePoolCS",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "configure",
+        "contractName": "GamePoolCS",
+        "contractAddr": "",
+        "args": [
+            "${TestToken.address}",
+            "${GameToken.address}",
+            2592000,
+            864000,
+            false
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setTopRate",
+        "contractName": "GamePoolCS",
+        "contractAddr": "",
+        "args": [
+            [1],
+            [
+                [100,1,1]
+            ]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePoolCS",
+        "functionName": "setFeeRate",
+        "contractName": "GamePoolCS",
+        "contractAddr": "",
+        "args": [
+            1000
+        ]
+    }
+]
