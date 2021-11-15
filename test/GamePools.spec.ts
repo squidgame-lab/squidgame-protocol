@@ -407,6 +407,7 @@ describe('GamePools', async () => {
         })
 
         it('all', async () => {
+            // Pool
             await gamePool.uploadBatch([
                 {
                     user: wallet.address,
@@ -436,9 +437,8 @@ describe('GamePools', async () => {
             );
 
             let poolBalance = await gamePool.getBalance();
-            console.log('poolBalance:', poolBalance.toString());
 
-
+            // Pool Activity
             await gamePoolActivity.uploadOne({
                 user: wallet.address,
                 ticketAmount: bigNumber18.mul(10),
@@ -449,9 +449,34 @@ describe('GamePools', async () => {
             });
             let t = Math.floor(new Date().getTime()/1000) - 100;
             await gamePoolActivity.uploaded(t, bigNumber18.mul(10));
+            let poolActivityBalance = await gamePoolActivity.getBalance();
             
+            // PoolCS
+            await gamePoolCS.uploadBatch([
+                {
+                    user: wallet.address,
+                    rank: 1,
+                    score: 1,
+                    ticketAmount: bigNumber18.mul(10),
+                }
+            ]);
+
+            await gamePoolCS.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                bigNumber18.mul(10),
+                1,
+                1,
+            );
+
+            let poolCSBalance = await gamePoolCS.getBalance();
+            expect(poolCSBalance).to.eq(poolBalance.add(poolActivityBalance));
+            
+            let poolBalance2 = await gamePool.getBalance();
+            let poolActivityBalance2 = await gamePoolActivity.getBalance();
+            expect(poolBalance2.toNumber()).to.eq(0);
+            expect(poolActivityBalance2.toNumber()).to.eq(0);
+        
         })
 
-        
     })
 })
