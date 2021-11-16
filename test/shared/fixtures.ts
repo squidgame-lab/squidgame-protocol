@@ -10,6 +10,7 @@ import { GamePoolCS } from '../../typechain/GamePoolCS'
 import { GameToken } from '../../typechain/GameToken'
 import { GameSchedualPool } from '../../typechain/GameSchedualPool'
 import { GameAirdrop } from '../../typechain/GameAirdrop'
+import { GameTimeLock } from '../../typechain/GameTimeLock'
 import { Fixture } from 'ethereum-waffle'
 
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
@@ -205,16 +206,16 @@ export const gamePoolsFixture: Fixture<GamePoolsFixture> = async function ([wall
 
     let gameToken = (await gameTokenFactory.deploy()) as GameToken;
     await gameToken.initialize();
-    await gameToken.increaseFund(wallet.address,ethers.constants.MaxUint256);
+    await gameToken.increaseFund(wallet.address, ethers.constants.MaxUint256);
 
     let gameTicket = (await gameTicketFactory.deploy()) as GameTicket;
     await gameTicket.initialize(buyToken.address, bigNumber18);
     await gameTicket.setupConfig(gameConfig.address);
-    
+
     let gameTicket2 = (await gameTicket2Factory.deploy()) as GameTicket2;
     await gameTicket2.initialize(buyToken.address, gameToken.address, bigNumber18, bigNumber18.mul(10), bigNumber18.mul(100));
     await gameTicket2.setupConfig(gameConfig.address);
-   
+
 
     let gamePool = (await gamePoolFactory.deploy()) as GamePool;
     await gamePool.initialize();
@@ -259,4 +260,22 @@ export const gamePoolsFixture: Fixture<GamePoolsFixture> = async function ([wall
     await gameTicket2.setRewardPool(gamePoolActivity.address);
 
     return { buyToken, gameToken, gameTicket, gameTicket2, gamePool, gamePoolActivity, gamePoolCS }
+}
+
+interface GameTimeLockFixture {
+    lockToken: TestToken
+    gameTimeLock: GameTimeLock
+}
+
+export const gameTimeLockFixture: Fixture<GameTimeLockFixture> = async function ([wallet]: Wallet[]): Promise<GameTimeLockFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let lockToken = (await testTokenFactory.deploy()) as TestToken
+    await lockToken.initialize();
+
+    let gameTimeLockFactory = await ethers.getContractFactory('GameTimeLock')
+    let gameTimeLock = (await gameTimeLockFactory.deploy()) as GameTimeLock
+    await gameTimeLock.initialize(lockToken.address, BigNumber.from(5))
+
+    await lockToken.mint(wallet.address, bigNumber18.mul(10000));
+    return { lockToken, gameTimeLock }
 }
