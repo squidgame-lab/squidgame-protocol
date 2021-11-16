@@ -55,6 +55,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             await network.provider.send('evm_mine')
             expect(await pool.pendingReward(wallet.address)).to.eq(bigNumber18.mul(10))
+            expect(await pool.averageLockDur()).to.eq(10)
         })
 
         it('success for two create lock', async () => {
@@ -63,9 +64,19 @@ describe('GameSchedualPool', async () => {
             await network.provider.send('evm_mine')
             expect(await pool.pendingReward(wallet.address)).to.eq(bigNumber18.mul(12))
             expect(await pool.pendingReward(other.address)).to.eq(bigNumber18.mul(8))
+            expect(await pool.averageLockDur()).to.eq(25)
         })
 
+        it('fails for repetitive create lock', async () => {
+            await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
+            await expect(pool.createLock(bigNumber18.mul(10), BigNumber.from(1))).to.revertedWith('GameSchedualPool: EXIST_LOCK')
+        })
 
+        it('gas used', async () => {
+            let tx = await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
+            let receipt = await tx.wait()
+            expect(receipt.gasUsed).to.eq(26_1264)
+        })
     })
 
     describe('#increaseAmount', async () => {
@@ -91,6 +102,7 @@ describe('GameSchedualPool', async () => {
             let lockedBalance = await pool.locked(wallet.address)
             expect(lockedBalance.amount).to.eq(bigNumber18.mul(20))
             expect(lockedBalance.rewardDebt).to.eq(bigNumber18.mul(60))
+            expect(await pool.averageLockDur()).to.eq(1 * 10)
         })
 
         it('emit', async () => {
@@ -102,7 +114,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             let tx = await pool.increaseAmount(bigNumber18.mul(10))
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(20_5196)
+            expect(receipt.gasUsed).to.eq(21_3680)
         })
     })
 
@@ -135,6 +147,7 @@ describe('GameSchedualPool', async () => {
             let lockedBalance = await pool.locked(wallet.address)
             expect(lockedBalance.lockWeeks).to.eq(BigNumber.from(2))
             expect(lockedBalance.rewardDebt).to.eq(bigNumber18.mul(60))
+            expect(await pool.averageLockDur()).to.eq(2 * 10)
         })
 
         it('emit', async () => {
@@ -146,7 +159,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             let tx = await pool.increaseUnlockTime(BigNumber.from(1))
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(201130)
+            expect(receipt.gasUsed).to.eq(20_9250)
         })
     })
 
@@ -209,8 +222,7 @@ describe('GameSchedualPool', async () => {
             await network.provider.send('evm_mine')
             let tx = await pool.connect(other).withdraw()
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(20_0000)
+            expect(receipt.gasUsed).to.eq(18_8177)
         })
-
     })
 })
