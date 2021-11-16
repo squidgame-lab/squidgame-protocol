@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "./interfaces/IGameSchedualPool.sol";
 import "./interfaces/IShareToken.sol";
+import "./interfaces/IGameTimeLock.sol";
 import "./modules/Configable.sol";
 import "./modules/ReentrancyGuard.sol";
 import "./modules/Initializable.sol";
@@ -24,6 +25,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     uint256 public override maxTime;
     address public override depositToken;
     address public override rewardToken;
+    address public timeLock;
 
     uint256 public constant BONUS_MULTIPLIER = 1;
     uint256 public mintPerBlock;
@@ -33,6 +35,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     uint256 public depositTotalPower;
     uint256 public incrementalTotalSupply;
     uint256 public averageLockDur;
+    uint256 public harvestRate;
 
     mapping(address => LockedBalance) public locked;
     /// @notice Mapping of unlockTime => total amount that will be unlocked at unlockTime
@@ -45,7 +48,9 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         address _rewardToken,
         uint256 _maxTime,
         uint256 _mintPerBlock,
-        uint256 _startBlock
+        uint256 _startBlock,
+        uint256 _harvestRate,
+        address _timeLock
     ) external initializer {
         require(_depositToken != address(0) && _rewardToken != address(0), "Invalid address");
         require(_maxTime > 0 && _mintPerBlock > 0, "Zero number");
@@ -55,6 +60,8 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         maxTime = _maxTime;
         mintPerBlock = _mintPerBlock;
         lastBlock = block.number > _startBlock ? block.number : _startBlock;
+        harvestRate = _harvestRate;
+        timeLock = _timeLock;
     }
 
     function getTimestampDropBelow(address _account, uint256 _threshold) external view override returns (uint256) {
@@ -260,6 +267,13 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
             .mul(accRewardPerShare)
             .div(1e18)
             .sub(lockedBalance.rewardDebt);
+        if (harvestRate == 0) {
+            amount = _safeTokenTransfer(rewardToken, _to, pending);
+        } else {
+            amount = _safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
+            uint256 lockAmount = _safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
+            IGameTimeLock(timeLock).lock(_to, lockAmount);
+        }
         amount = _safeTokenTransfer(rewardToken, _to, pending);
         lockedBalance.rewardDebt = lockedBalance
             .amount

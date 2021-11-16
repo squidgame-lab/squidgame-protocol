@@ -4,6 +4,7 @@ pragma solidity >=0.6.12;
 
 import "./interfaces/IERC20.sol";
 import './interfaces/IShareToken.sol';
+import "./interfaces/IGameTimeLock.sol";
 import './libraries/SafeMath.sol';
 import './libraries/TransferHelper.sol';
 import './modules/Configable.sol';
@@ -67,6 +68,8 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     uint public totalAllocPoint;
     // The block number when reward token mining starts.
     uint public startBlock;
+    address public timeLock;
+    uint256 public harvestRate;
 
     event Deposit(address indexed user, address indexed to, uint indexed pid, uint amount, uint fee);
     event Withdraw(address indexed user, address indexed to, uint indexed pid, uint amount);
@@ -80,7 +83,9 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         address _rewardToken,
         address _feeAddress,
         uint _mintPerBlock,
-        uint _startBlock
+        uint _startBlock,
+        uint256 _harvestRate,
+        address _timeLock
     ) external initializer {
         require(_rewardToken != address(0) && _feeAddress != address(0), 'GameFarm: INVALID_ADDRESS');
         owner = msg.sender;
@@ -88,6 +93,8 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         feeAddress = _feeAddress;
         mintPerBlock = _mintPerBlock;
         startBlock = _startBlock;
+        harvestRate = _harvestRate;
+        timeLock = _timeLock;
     }
 
     function poolLength() external view returns (uint) {
@@ -292,7 +299,13 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         PoolInfo memory pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         uint pending = user.amount.mul(pool.accRewardPerShare).div(1e18).sub(user.rewardDebt);
-        amount = safeTokenTransfer(rewardToken, _to, pending);
+        if (harvestRate == 0) {
+            amount = safeTokenTransfer(rewardToken, _to, pending);
+        } else {
+            amount = safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
+            uint256 lockAmount = safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
+            IGameTimeLock(timeLock).lock(_to, lockAmount);
+        }
         user.rewardDebt = user.amount.mul(pool.accRewardPerShare).div(1e18);
         return amount;
     }
