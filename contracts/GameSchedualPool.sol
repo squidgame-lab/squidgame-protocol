@@ -177,7 +177,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
 
         depositTokenSupply = depositTokenSupply.add(_amount);
         depositTotalPower = depositTotalPower.add(
-            _amount.mul(lockWeights[_weeksCount].div(100))
+            _amount.mul(lockWeights[_weeksCount]).div(100)
         );
         _updateAveLockDur(_amount, _weeksCount);
 

@@ -169,14 +169,14 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         return block.number;
     }
 
-    function pendingRewardInfo(uint _pid) public view validatePoolByPid(_pid) returns (uint, uint, uint) {
+    function pendingRewardInfo(uint _pid) public view validatePoolByPid(_pid) returns (uint, uint) {
         PoolInfo storage pool = poolInfo[_pid];
         if (getToBlock() > pool.lastBlock && totalAllocPoint > 0) {
             uint multiplier = getMultiplier(pool.lastBlock, getToBlock());
             uint reward = multiplier.mul(mintPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-            return (reward, 0, block.number);
+            return (reward, block.number);
         }
-        return (0, 0, block.number);
+        return (0, block.number);
     }
 
     // View function to see pending RewardTokens on frontend.
@@ -192,13 +192,13 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         return user.amount.mul(accRewardPerShare).div(1e18).sub(user.rewardDebt);
     }
     
-    function _mintRewardToken(uint _pid) internal returns (uint, uint, uint) {
-        (uint reward, uint teamReward,) = pendingRewardInfo(_pid);
+    function _mintRewardToken(uint _pid) internal returns (uint, uint) {
+        (uint reward,) = pendingRewardInfo(_pid);
         if(reward > IShareToken(rewardToken).funds(address(this))) {
-            return (0, 0, block.number);
+            return (0, block.number);
         }
         IShareToken(rewardToken).mint(address(this), reward);
-        return (reward, teamReward, block.number);
+        return (reward, block.number);
     }
 
     // Update reward variables for all pools. Be careful of gas spending!
@@ -221,7 +221,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
             return;
         }
         
-        (uint reward, ,) = _mintRewardToken(_pid);
+        (uint reward,) = _mintRewardToken(_pid);
         pool.accRewardPerShare = pool.accRewardPerShare.add(reward.mul(1e18).div(pool.depositTokenSupply));
 
         pool.lastBlock = toBlock;
