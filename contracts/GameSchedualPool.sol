@@ -20,7 +20,9 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     event UnlockTimeIncreased(address indexed account, uint256 newUnlockTime, uint256 newLockWeeks);
     event Withdraw(address indexed account, uint256 amount);
     event Harvest(address indexed account, address to, uint256 amount);
-    event UpdateLockWeights(address indexed account, uint256 lockWeeks, uint256 weight);
+    event SetLockWeights(address indexed account, uint256 lockWeeks, uint256 weight);
+    event SetHarvestRate(address indexed account, uint256 oldOne, uint256 newOne);
+    event SetTimeLock(address indexed account, address oldOne, address newOne);
 
     uint256 public override maxTime;
     address public override depositToken;
@@ -52,8 +54,9 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         uint256 _harvestRate,
         address _timeLock
     ) external initializer {
-        require(_depositToken != address(0) && _rewardToken != address(0), "Invalid address");
-        require(_maxTime > 0 && _mintPerBlock > 0, "Zero number");
+        require(_depositToken != address(0) && _rewardToken != address(0) && _timeLock != address(0), "GameSchedualPool: INVALID_ADDRESS");
+        require(_maxTime > 0 && _mintPerBlock > 0, "GameSchedualPool: ZERO_NUMBER");
+        require(_harvestRate < 100, 'GameSchedualPool: OVER_RATE');
         owner = msg.sender;
         depositToken = _depositToken;
         rewardToken = _rewardToken;
@@ -115,19 +118,31 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         return _to.sub(_from).mul(BONUS_MULTIPLIER);
     }
 
-    function batchUpdateLockWeights(
+    function setTimeLock(address _timeLock) external onlyDev {
+        require(timeLock != _timeLock && _timeLock != address(0), 'GameSchedualPool: INVALID_ARGS');
+        emit SetTimeLock(msg.sender, timeLock, _timeLock);
+        timeLock = _timeLock;
+    }
+
+    function setHarvestRate(uint256 _harvestRate) external onlyDev {
+        require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
+        emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
+        harvestRate = _harvestRate;
+    }
+
+    function batchSetLockWeights(
         uint256[] memory _lockWeeksArr,
         uint256[] memory _weightArr
     ) external onlyDev {
         require(_lockWeeksArr.length == _weightArr.length, "Arguments length wrong");
         for (uint256 i = 0; i < _lockWeeksArr.length; i++) {
-            updateLockWeights(_lockWeeksArr[i], _weightArr[i]);
+            setLockWeights(_lockWeeksArr[i], _weightArr[i]);
         }
     }
 
-    function updateLockWeights(uint256 _lockWeeks, uint256 _weight) public onlyDev {
+    function setLockWeights(uint256 _lockWeeks, uint256 _weight) public onlyDev {
         lockWeights[_lockWeeks] = _weight;
-        emit UpdateLockWeights(msg.sender, _lockWeeks, _weight);
+        emit SetLockWeights(msg.sender, _lockWeeks, _weight);
     }
 
     function createLock(uint256 _amount, uint256 _weeksCount) external nonReentrant {
@@ -274,7 +289,6 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
             uint256 lockAmount = _safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
             IGameTimeLock(timeLock).lock(_to, lockAmount);
         }
-        amount = _safeTokenTransfer(rewardToken, _to, pending);
         lockedBalance.rewardDebt = lockedBalance
             .amount
             .mul(lockWeights[lockedBalance.lockWeeks])

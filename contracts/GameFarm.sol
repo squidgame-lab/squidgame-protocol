@@ -41,7 +41,6 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         uint lastBlock;  // Last block number that RewardTokens distribution occurs.
         uint accRewardPerShare;   // Accumulated RewardTokens per share, times 1e18. See below.
         uint depositTokenSupply;
-        uint16 depositFeeBP;      // Deposit fee in basis points
         bool paused;
     }
 
@@ -49,15 +48,11 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
 
     // The reward TOKEN!
     address public rewardToken;
-    mapping(address => uint) public earnTokensTotal;
-    uint public teamRewardRate;
     
     // reward tokens created per block.
     uint public mintPerBlock;
     // Bonus muliplier for early rewardToken makers.
     uint public constant BONUS_MULTIPLIER = 1;
-    // Deposit Fee address
-    address public feeAddress;
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
@@ -71,35 +66,12 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     address public timeLock;
     uint256 public harvestRate;
 
-    event Deposit(address indexed user, address indexed to, uint indexed pid, uint amount, uint fee);
+    event Deposit(address indexed user, address indexed to, uint indexed pid, uint amount);
     event Withdraw(address indexed user, address indexed to, uint indexed pid, uint amount);
     event EmergencyWithdraw(address indexed user, address indexed to, uint indexed pid, uint amount);
-    event SetFeeAddress(address indexed user, address indexed newAddress);
-    event SetDevAddress(address indexed user, address indexed newAddress);
     event UpdateEmissionRate(address indexed user, uint mintPerBlock);
-    event SetTeamRate(address indexed user, uint teamRewardRate);
-
-    function initialize(
-        address _rewardToken,
-        address _feeAddress,
-        uint _mintPerBlock,
-        uint _startBlock,
-        uint256 _harvestRate,
-        address _timeLock
-    ) external initializer {
-        require(_rewardToken != address(0) && _feeAddress != address(0), 'GameFarm: INVALID_ADDRESS');
-        owner = msg.sender;
-        rewardToken = _rewardToken;
-        feeAddress = _feeAddress;
-        mintPerBlock = _mintPerBlock;
-        startBlock = _startBlock;
-        harvestRate = _harvestRate;
-        timeLock = _timeLock;
-    }
-
-    function poolLength() external view returns (uint) {
-        return poolInfo.length;
-    }
+    event SetHarvestRate(address indexed account, uint256 oldOne, uint256 newOne);
+    event SetTimeLock(address indexed account, address oldOne, address newOne);
 
     modifier nonDuplicated(address _depositToken) {
         require(poolExistence[_depositToken] == false, "GameFarm: DUPLICATED");
@@ -111,6 +83,26 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         _;
     }
 
+    function initialize(
+        address _rewardToken,
+        uint256 _mintPerBlock,
+        uint256 _startBlock,
+        uint256 _harvestRate,
+        address _timeLock
+    ) external initializer {
+        require(_rewardToken != address(0), 'GameFarm: INVALID_ADDRESS');
+        owner = msg.sender;
+        rewardToken = _rewardToken;
+        mintPerBlock = _mintPerBlock;
+        startBlock = _startBlock;
+        harvestRate = _harvestRate;
+        timeLock = _timeLock;
+    }
+
+    function poolLength() external view returns (uint) {
+        return poolInfo.length;
+    }
+
     function pause() public onlyManager whenNotPaused {
         _pause();
     }
@@ -120,10 +112,8 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     // Add a new lp to the pool. Can only be called by the owner.
-    function add(bool _withUpdate, uint _allocPoint, address _depositToken, uint16 _depositFeeBP) public onlyDev nonDuplicated(_depositToken) {
-        require(_depositFeeBP <= 10000, "GameFarm: INVALID_DEPOSIT_FEE_BP");
+    function add(bool _withUpdate, uint _allocPoint, address _depositToken) public onlyDev nonDuplicated(_depositToken) {
         if (_withUpdate) massUpdatePools(); 
-
         uint lastBlock = block.number > startBlock ? block.number : startBlock;
         totalAllocPoint = totalAllocPoint.add(_allocPoint);
         poolExistence[_depositToken] = true;
@@ -133,29 +123,24 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
             lastBlock : lastBlock,
             accRewardPerShare : 0,
             depositTokenSupply: 0,
-            depositFeeBP : _depositFeeBP,
             paused: false
         }));
     }
 
-    function batchAdd(bool _withUpdate, uint[] memory _allocPoints, address[] memory _depositTokens, uint16[] memory _depositFeeBPs) external onlyDev {
-        require(_allocPoints.length == _depositTokens.length && _depositTokens.length == _depositFeeBPs.length, 'GameFarm: INVALID_PARAMS');
-        if (_withUpdate) {
-            massUpdatePools();
-        }
+    function batchAdd(bool _withUpdate, uint[] memory _allocPoints, address[] memory _depositTokens) external onlyDev {
+        require(_allocPoints.length == _depositTokens.length, 'GameFarm: INVALID_PARAMS');
+        if (_withUpdate) massUpdatePools();
         for(uint i; i<_allocPoints.length; i++) {
-            add(false, _allocPoints[i], _depositTokens[i], _depositFeeBPs[i]);
+            add(false, _allocPoints[i], _depositTokens[i]);
         }
     }
 
-    function set(bool _withUpdate, uint _pid, uint _allocPoint, uint16 _depositFeeBP, bool _paused) external validatePoolByPid(_pid) onlyManager {
-        require(_depositFeeBP <= 10000, "GameFarm: DEPOSIT_FEE_BP_OVERFLOW");
+    function set(bool _withUpdate, uint _pid, uint _allocPoint, bool _paused) external validatePoolByPid(_pid) onlyManager {
         if (_withUpdate) {
             massUpdatePools();
         }
         totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(_allocPoint);
         poolInfo[_pid].allocPoint = _allocPoint;
-        poolInfo[_pid].depositFeeBP = _depositFeeBP;
         poolInfo[_pid].paused = _paused;
     }
 
@@ -165,14 +150,6 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         for (uint i; i<_pids.length; i++) {
             totalAllocPoint = totalAllocPoint.sub(poolInfo[_pids[i]].allocPoint).add(_allocPoints[i]);
             poolInfo[_pids[i]].allocPoint = _allocPoints[i];
-        }
-    }
-
-    function batchSetDepositFeeBP(uint[] memory _pids, uint16[] memory _depositFeeBPs) external onlyManager {
-        require(_pids.length == _depositFeeBPs.length, 'GameFarm: INVALID_PARAMS');
-        for (uint i; i<_pids.length; i++) {
-            require(_depositFeeBPs[i] <= 10000, "GameFarm: DEPOSIT_FEE_BP_OVERFLOW");
-            poolInfo[_pids[i]].depositFeeBP = _depositFeeBPs[i];
         }
     }
 
@@ -251,29 +228,19 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     // Deposit tokens to GameFarm for reward allocation.
-    function deposit(uint _pid, uint _amount, address _to) external validatePoolByPid(_pid) whenNotPaused nonReentrant returns(uint, uint) {
+    function deposit(uint _pid, uint _amount, address _to) external validatePoolByPid(_pid) whenNotPaused nonReentrant returns(uint) {
+        require(_amount > 0, 'GameFarm: INVALID_AMOUNT');
         PoolInfo storage pool = poolInfo[_pid];
         require(pool.paused == false, "GameFarm: POOL_PAUSED");
         UserInfo storage user = userInfo[_pid][_to];
         updatePool(_pid);
-        uint depositFee;
-
-        if (_amount > 0) {
-            IERC20(pool.depositToken).transferFrom(address(msg.sender), address(this), _amount);
-            
-            if (pool.depositFeeBP > 0) {
-                depositFee = _amount.mul(pool.depositFeeBP).div(10000);
-                TransferHelper.safeTransfer(pool.depositToken, feeAddress, depositFee);
-                _amount = _amount.sub(depositFee);
-                user.amount = user.amount.add(_amount);
-            } else {
-                user.amount = user.amount.add(_amount);
-            }
-        }
+        _harvestRewardToken(_pid, _to);
+        IERC20(pool.depositToken).transferFrom(address(msg.sender), address(this), _amount);
+        user.amount = user.amount.add(_amount);
         pool.depositTokenSupply  = pool.depositTokenSupply.add(_amount);
         user.rewardDebt = user.amount.mul(pool.accRewardPerShare).div(1e18);
-        emit Deposit(msg.sender, _to, _pid, _amount, depositFee);
-        return (_amount, depositFee);
+        emit Deposit(msg.sender, _to, _pid, _amount);
+        return _amount;
     }
 
     // Withdraw tokens from GameFarm.
@@ -311,8 +278,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     function harvest(uint _pid, address _to) external validatePoolByPid(_pid) whenNotPaused nonReentrant  returns (uint reward) {
-        PoolInfo memory pool = poolInfo[_pid];
-        require(pool.paused == false, "GameFarm: POOL_PAUSED");
+        require(poolInfo[_pid].paused == false, "GameFarm: POOL_PAUSED");
         updatePool(_pid);
         reward = _harvestRewardToken(_pid, _to);
     }
@@ -346,15 +312,16 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         return _amount;
     }
 
-    function setFeeAddress(address _feeAddress) external onlyDev {
-        feeAddress = _feeAddress;
-        emit SetFeeAddress(msg.sender, _feeAddress);
+    function setTimeLock(address _timeLock) external onlyDev {
+        require(timeLock != _timeLock && _timeLock != address(0), 'GameSchedualPool: INVALID_ARGS');
+        emit SetTimeLock(msg.sender, timeLock, _timeLock);
+        timeLock = _timeLock;
     }
 
-    function setTeamRate(uint _teamRewardRate) external onlyDev {
-        require(_teamRewardRate >=0, 'GameFarm: INVALID_PARAMS');
-        teamRewardRate = _teamRewardRate;
-        emit SetTeamRate(msg.sender, _teamRewardRate);
+    function setHarvestRate(uint256 _harvestRate) external onlyDev {
+        require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
+        emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
+        harvestRate = _harvestRate;
     }
 
     //reward has to add hidden dummy pools inorder to alter the emission, here we make it simple and transparent to all.
