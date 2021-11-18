@@ -354,8 +354,11 @@
         "contractAddr": "",
         "args": [
             true,
-            [1],
-            ["${GameToken.address}"]
+            [1, 1],
+            [
+                "0xF30635215D8fa82821c0C13715965f0C921Af757",
+                "0x90216EDc722d14482954Fdcf240f8fB4D54E7a0E"
+            ]
         ]
     }
 ]

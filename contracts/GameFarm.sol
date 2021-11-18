@@ -266,12 +266,14 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
         PoolInfo memory pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         uint pending = user.amount.mul(pool.accRewardPerShare).div(1e18).sub(user.rewardDebt);
-        if (harvestRate == 0) {
-            amount = safeTokenTransfer(rewardToken, _to, pending);
-        } else {
-            amount = safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
-            uint256 lockAmount = safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
-            IGameTimeLock(timeLock).lock(_to, lockAmount);
+        if (pending > 0) {
+            if (harvestRate == 0) {
+                amount = safeTokenTransfer(rewardToken, _to, pending);
+            } else {
+                amount = safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
+                uint256 lockAmount = safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
+                IGameTimeLock(timeLock).lock(_to, lockAmount);
+            }
         }
         user.rewardDebt = user.amount.mul(pool.accRewardPerShare).div(1e18);
         return amount;
