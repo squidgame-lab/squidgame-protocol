@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "./interfaces/IGameSchedualPool.sol";
 import "./interfaces/IShareToken.sol";
+import "./interfaces/IGameTimeLock.sol";
 import "./modules/Configable.sol";
 import "./modules/ReentrancyGuard.sol";
 import "./modules/Initializable.sol";
@@ -19,11 +20,14 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     event UnlockTimeIncreased(address indexed account, uint256 newUnlockTime, uint256 newLockWeeks);
     event Withdraw(address indexed account, uint256 amount);
     event Harvest(address indexed account, address to, uint256 amount);
-    event UpdateLockWeights(address indexed account, uint256 lockWeeks, uint256 weight);
+    event SetLockWeights(address indexed account, uint256 lockWeeks, uint256 weight);
+    event SetHarvestRate(address indexed account, uint256 oldOne, uint256 newOne);
+    event SetTimeLock(address indexed account, address oldOne, address newOne);
 
     uint256 public override maxTime;
     address public override depositToken;
     address public override rewardToken;
+    address public timeLock;
 
     uint256 public constant BONUS_MULTIPLIER = 1;
     uint256 public mintPerBlock;
@@ -31,6 +35,9 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     uint256 public accRewardPerShare;
     uint256 public depositTokenSupply;
     uint256 public depositTotalPower;
+    uint256 public incrementalTotalSupply;
+    uint256 public averageLockDur;
+    uint256 public harvestRate;
 
     mapping(address => LockedBalance) public locked;
     /// @notice Mapping of unlockTime => total amount that will be unlocked at unlockTime
@@ -43,48 +50,53 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         address _rewardToken,
         uint256 _maxTime,
         uint256 _mintPerBlock,
-        uint256 _startBlock
+        uint256 _startBlock,
+        uint256 _harvestRate,
+        address _timeLock
     ) external initializer {
-        require(_depositToken != address(0) && _rewardToken != address(0), "Invalid address");
-        require(_maxTime > 0 && _mintPerBlock > 0, "Zero number");
+        require(_depositToken != address(0) && _rewardToken != address(0) && _timeLock != address(0), "GameSchedualPool: INVALID_ADDRESS");
+        require(_maxTime > 0 && _mintPerBlock > 0, "GameSchedualPool: ZERO_NUMBER");
+        require(_harvestRate < 100, 'GameSchedualPool: OVER_RATE');
         owner = msg.sender;
         depositToken = _depositToken;
         rewardToken = _rewardToken;
         maxTime = _maxTime;
         mintPerBlock = _mintPerBlock;
         lastBlock = block.number > _startBlock ? block.number : _startBlock;
+        harvestRate = _harvestRate;
+        timeLock = _timeLock;
     }
 
-    function getTimestampDropBelow(address account, uint256 threshold) external view override returns (uint256) {
-        LockedBalance memory lockedBalance = locked[account];
-        if (lockedBalance.amount == 0 || lockedBalance.amount < threshold) {
+    function getTimestampDropBelow(address _account, uint256 _threshold) external view override returns (uint256) {
+        LockedBalance memory lockedBalance = locked[_account];
+        if (lockedBalance.amount == 0 || lockedBalance.amount < _threshold) {
             return 0;
         }
-        return lockedBalance.unlockTime.sub(threshold.mul(maxTime).div(lockedBalance.amount));
+        return lockedBalance.unlockTime.sub(_threshold.mul(maxTime).div(lockedBalance.amount));
     }
 
-    function balanceOf(address account) external view returns (uint256) {
-        return _balanceOfAtTimestamp(account, block.timestamp);
+    function balanceOf(address _account) external view returns (uint256) {
+        return _balanceOfAtTimestamp(_account, block.timestamp);
     }
 
     function totalSupply() external view returns (uint256) {
         return _totalSupplyAtTimestamp(block.timestamp);
     }
 
-    function getLockedBalance(address account) external view override returns (LockedBalance memory) {
-        return locked[account];
+    function getLockedBalance(address _account) external view override returns (LockedBalance memory) {
+        return locked[_account];
     }
 
-    function balanceOfAtTimestamp(address account, uint256 timestamp) external view override returns (uint256) {
-        return _balanceOfAtTimestamp(account, timestamp);
+    function balanceOfAtTimestamp(address _account, uint256 _timestamp) external view override returns (uint256) {
+        return _balanceOfAtTimestamp(_account, _timestamp);
     }
 
-    function totalSupplyAtTimestamp(uint256 timestamp) external view returns (uint256) {
-        return _totalSupplyAtTimestamp(timestamp);
+    function totalSupplyAtTimestamp(uint256 _timestamp) external view returns (uint256) {
+        return _totalSupplyAtTimestamp(_timestamp);
     }
 
-    function pendingReward(address account) external view override returns (uint256) {
-        LockedBalance memory lockedBalance = locked[account];
+    function pendingReward(address _account) external view override returns (uint256) {
+        LockedBalance memory lockedBalance = locked[_account];
         uint256 accRewardPerShareTmp = accRewardPerShare;
         if (block.number > lastBlock && depositTotalPower != 0) {
             uint256 multiplier = getMultiplier(lastBlock, block.number);
@@ -102,44 +114,56 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
                 .sub(lockedBalance.rewardDebt);
     }
 
-    function getMultiplier(uint256 from, uint256 to) public pure returns (uint256)  {
-        return to.sub(from).mul(BONUS_MULTIPLIER);
+    function getMultiplier(uint256 _from, uint256 _to) public pure returns (uint256)  {
+        return _to.sub(_from).mul(BONUS_MULTIPLIER);
     }
 
-    function batchUpdateLockWeights(
-        uint256[] memory lockWeeksArr,
-        uint256[] memory weightArr
+    function setTimeLock(address _timeLock) external onlyDev {
+        require(timeLock != _timeLock && _timeLock != address(0), 'GameSchedualPool: INVALID_ARGS');
+        emit SetTimeLock(msg.sender, timeLock, _timeLock);
+        timeLock = _timeLock;
+    }
+
+    function setHarvestRate(uint256 _harvestRate) external onlyDev {
+        require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
+        emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
+        harvestRate = _harvestRate;
+    }
+
+    function batchSetLockWeights(
+        uint256[] memory _lockWeeksArr,
+        uint256[] memory _weightArr
     ) external onlyDev {
-        require(lockWeeksArr.length == weightArr.length, "Arguments length wrong");
-        for (uint256 i = 0; i < lockWeeksArr.length; i++) {
-            updateLockWeights(lockWeeksArr[i], weightArr[i]);
+        require(_lockWeeksArr.length == _weightArr.length, "Arguments length wrong");
+        for (uint256 i = 0; i < _lockWeeksArr.length; i++) {
+            setLockWeights(_lockWeeksArr[i], _weightArr[i]);
         }
     }
 
-    function updateLockWeights(uint256 lockWeeks, uint256 weight) public onlyDev {
-        lockWeights[lockWeeks] = weight;
-        emit UpdateLockWeights(msg.sender, lockWeeks, weight);
+    function setLockWeights(uint256 _lockWeeks, uint256 _weight) public onlyDev {
+        lockWeights[_lockWeeks] = _weight;
+        emit SetLockWeights(msg.sender, _lockWeeks, _weight);
     }
 
-    function createLock(uint256 amount, uint256 weeksCount) external nonReentrant {
+    function createLock(uint256 _amount, uint256 _weeksCount) external nonReentrant {
         uint256 cw = (block.timestamp / 1 weeks) * 1 weeks + 1 weeks;
-        uint256 unlockTime = cw.add(weeksCount * 1 weeks);
+        uint256 unlockTime = cw.add(_weeksCount * 1 weeks);
 
         LockedBalance memory lockedBalance = locked[msg.sender];
 
-        require(amount > 0 && weeksCount > 0, "GameSchedualPool: ZERO_VALUE");
+        require(_amount > 0 && _weeksCount > 0, "GameSchedualPool: ZERO_VALUE");
         require(lockedBalance.amount == 0, "GameSchedualPool: EXIST_LOCK");
         require(unlockTime <= block.timestamp + maxTime, "GameSchedualPool: OVER_MAX_TIME");
-        require(lockWeights[weeksCount] != 0, "GameSchedualPool: NOT_SUPPORT_WEEKCOUNT");
+        require(lockWeights[_weeksCount] != 0, "GameSchedualPool: NOT_SUPPORT_WEEKCOUNT");
 
         _update();
 
-        scheduledUnlock[unlockTime] = scheduledUnlock[unlockTime].add(amount);
+        scheduledUnlock[unlockTime] = scheduledUnlock[unlockTime].add(_amount);
         locked[msg.sender].unlockTime = unlockTime;
-        locked[msg.sender].amount = amount;
-        locked[msg.sender].lockWeeks = weeksCount;
-        locked[msg.sender].rewardDebt = amount
-            .mul(lockWeights[weeksCount])
+        locked[msg.sender].amount = _amount;
+        locked[msg.sender].lockWeeks = _weeksCount;
+        locked[msg.sender].rewardDebt = _amount
+            .mul(lockWeights[_weeksCount])
             .div(100)
             .mul(accRewardPerShare)
             .div(1e18);
@@ -148,44 +172,47 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
             depositToken,
             msg.sender,
             address(this),
-            amount
+            _amount
         );
 
-        depositTokenSupply = depositTokenSupply.add(amount);
+        depositTokenSupply = depositTokenSupply.add(_amount);
         depositTotalPower = depositTotalPower.add(
-            amount.mul(lockWeights[weeksCount].div(100))
+            _amount.mul(lockWeights[_weeksCount]).div(100)
         );
+        _updateAveLockDur(_amount, _weeksCount);
 
-        emit LockCreated(msg.sender, amount, unlockTime, weeksCount);
+        emit LockCreated(msg.sender, _amount, unlockTime, _weeksCount);
     }
 
-    function increaseAmount(uint256 amount) external nonReentrant {
+    function increaseAmount(uint256 _increasedAmount) external nonReentrant {
         LockedBalance memory lockedBalance = locked[msg.sender];
 
-        require(amount > 0, "GameSchedualPool: ZERO_VALUE");
+        require(_increasedAmount > 0, "GameSchedualPool: ZERO_VALUE");
         require(lockedBalance.unlockTime > block.timestamp, "GameSchedualPool: EXPIRED_LOCK");
 
         _update();
         _harvestRewardToken(msg.sender);
 
-        scheduledUnlock[lockedBalance.unlockTime] = scheduledUnlock[lockedBalance.unlockTime].add(amount);
-        locked[msg.sender].amount = lockedBalance.amount.add(amount);
+        scheduledUnlock[lockedBalance.unlockTime] = scheduledUnlock[lockedBalance.unlockTime].add(_increasedAmount);
+        locked[msg.sender].amount = lockedBalance.amount.add(_increasedAmount);
         locked[msg.sender].rewardDebt = locked[msg.sender].amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100).mul(accRewardPerShare).div(1e18);
 
-        TransferHelper.safeTransferFrom(depositToken, msg.sender, address(this), amount);
-        depositTokenSupply = depositTokenSupply.add(amount);
-        depositTotalPower = depositTotalPower.add(amount.mul(lockWeights[lockedBalance.lockWeeks]).div(100));
-
-        emit AmountIncreased(msg.sender, amount);
+        TransferHelper.safeTransferFrom(depositToken, msg.sender, address(this), _increasedAmount);
+        depositTokenSupply = depositTokenSupply.add(_increasedAmount);
+        depositTotalPower = depositTotalPower.add(_increasedAmount.mul(lockWeights[lockedBalance.lockWeeks]).div(100));
+        averageLockDur = (incrementalTotalSupply.mul(averageLockDur).div(10).add(_increasedAmount.mul(lockedBalance.lockWeeks))).mul(10).div(incrementalTotalSupply.add(_increasedAmount));
+        incrementalTotalSupply = incrementalTotalSupply.add(_increasedAmount);
+        
+        emit AmountIncreased(msg.sender, _increasedAmount);
     }
 
-    function increaseUnlockTime(uint256 weeksCount) external nonReentrant {
+    function increaseUnlockTime(uint256 _increasedWeeksCount) external nonReentrant {
         LockedBalance memory lockedBalance = locked[msg.sender];
         require(lockedBalance.unlockTime > block.timestamp, "GameSchedualPool: EXPIRED_LOCK");
-        require(weeksCount > 0, "GameSchedualPool: INVALID_WEEKCOUNT");
+        require(_increasedWeeksCount > 0, "GameSchedualPool: INVALID_WEEKCOUNT");
 
-        uint256 unlockTime = lockedBalance.unlockTime.add(weeksCount * 1 weeks);
-        weeksCount = lockedBalance.lockWeeks.add(weeksCount);
+        uint256 unlockTime = lockedBalance.unlockTime.add(_increasedWeeksCount * 1 weeks);
+        uint256 weeksCount = lockedBalance.lockWeeks.add(_increasedWeeksCount);
         require(unlockTime <= block.timestamp + maxTime && lockWeights[weeksCount] > 0, "GameSchedualPool: INVALID_WEEKCOUNT");
         
 
@@ -203,8 +230,9 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         );
         locked[msg.sender].unlockTime = unlockTime;
         locked[msg.sender].lockWeeks = weeksCount;
+        averageLockDur = (incrementalTotalSupply.mul(averageLockDur).div(10).add(lockedBalance.amount.mul(_increasedWeeksCount))).mul(10).div(incrementalTotalSupply);
 
-        emit UnlockTimeIncreased(msg.sender, unlockTime, weeksCount);
+        emit UnlockTimeIncreased(msg.sender, unlockTime, _increasedWeeksCount);
     }
 
     function withdraw() external nonReentrant {
@@ -229,10 +257,10 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         emit Withdraw(msg.sender, amount);
     }
 
-    function harvest(address to) external nonReentrant {
+    function harvest(address _to) external nonReentrant {
         _update();
-        uint256 amount = _harvestRewardToken(to);
-        emit Harvest(msg.sender, to, amount);
+        uint256 amount = _harvestRewardToken(_to);
+        emit Harvest(msg.sender, _to, amount);
     }
 
     function _safeTokenTransfer(address _token, address _to, uint256 _amount) internal returns (uint256) {
@@ -245,7 +273,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         return _amount;
     }
 
-    function _harvestRewardToken(address to) internal returns (uint256 amount) {
+    function _harvestRewardToken(address _to) internal returns (uint256 amount) {
         LockedBalance storage lockedBalance = locked[msg.sender];
         uint256 pending = lockedBalance
             .amount
@@ -254,7 +282,13 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
             .mul(accRewardPerShare)
             .div(1e18)
             .sub(lockedBalance.rewardDebt);
-        amount = _safeTokenTransfer(rewardToken, to, pending);
+        if (harvestRate == 0) {
+            amount = _safeTokenTransfer(rewardToken, _to, pending);
+        } else {
+            amount = _safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
+            uint256 lockAmount = _safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
+            IGameTimeLock(timeLock).lock(_to, lockAmount);
+        }
         lockedBalance.rewardDebt = lockedBalance
             .amount
             .mul(lockWeights[lockedBalance.lockWeeks])
@@ -282,21 +316,21 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         lastBlock = toBlock;
     }
 
-    function _balanceOfAtTimestamp(address account, uint256 timestamp) internal view returns (uint256){
-        require(timestamp >= block.timestamp, "Must be current or future time");
-        LockedBalance memory lockedBalance = locked[account];
-        if (timestamp > lockedBalance.unlockTime) {
+    function _balanceOfAtTimestamp(address _account, uint256 _timestamp) internal view returns (uint256){
+        require(_timestamp >= block.timestamp, "Must be current or future time");
+        LockedBalance memory lockedBalance = locked[_account];
+        if (_timestamp > lockedBalance.unlockTime) {
             return 0;
         }
-        return (lockedBalance.amount.mul(lockedBalance.unlockTime - timestamp)) / maxTime;
+        return (lockedBalance.amount.mul(lockedBalance.unlockTime - _timestamp)) / maxTime;
     }
 
-    function _totalSupplyAtTimestamp(uint256 timestamp) internal view returns (uint256) {
-        uint256 weekCursor = (timestamp / 1 weeks) * 1 weeks + 1 weeks;
+    function _totalSupplyAtTimestamp(uint256 _timestamp) internal view returns (uint256) {
+        uint256 weekCursor = (_timestamp / 1 weeks) * 1 weeks + 1 weeks;
         uint256 total = 0;
-        for (; weekCursor <= timestamp + maxTime; weekCursor += 1 weeks) {
+        for (; weekCursor <= _timestamp + maxTime; weekCursor += 1 weeks) {
             total = total.add(
-                (scheduledUnlock[weekCursor].mul(weekCursor - timestamp)) /
+                (scheduledUnlock[weekCursor].mul(weekCursor - _timestamp)) /
                     maxTime
             );
         }
@@ -317,5 +351,15 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
 
         IShareToken(rewardToken).mint(address(this), rewardAmount);
         return (rewardAmount, block.number);
+    }
+
+    function _updateAveLockDur(uint256 _amount, uint256 _weeksCount) internal {
+        if (incrementalTotalSupply == 0) {
+            incrementalTotalSupply = _amount;
+            averageLockDur = _weeksCount.mul(10);
+        } else {
+            averageLockDur = (incrementalTotalSupply.mul(averageLockDur).div(10).add(_amount.mul(_weeksCount))).mul(10).div(incrementalTotalSupply.add(_amount));
+            incrementalTotalSupply = incrementalTotalSupply.add(_amount);
+        }
     }
 }

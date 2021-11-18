@@ -8,9 +8,12 @@ import { GamePool } from '../../typechain/GamePool'
 import { GamePoolActivity } from '../../typechain/GamePoolActivity'
 import { GamePoolCS } from '../../typechain/GamePoolCS'
 import { GameToken } from '../../typechain/GameToken'
-import { GameSchedualPool } from '../../typechain/GameSchedualPool'
 import { GameAirdrop } from '../../typechain/GameAirdrop'
-import { Fixture } from 'ethereum-waffle'
+import { GameTimeLock } from '../../typechain/GameTimeLock'
+import { GameSchedualPool } from '../../typechain/GameSchedualPool'
+import { GameFarm } from '../../typechain/GameFarm'
+import { Fixture, deployMockContract, MockContract } from 'ethereum-waffle'
+import { abi as TimeLockABI } from '../../artifacts/contracts/interfaces/IGameTimeLock.sol/IGameTimeLock.json'
 
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
 export const bigNumber17 = BigNumber.from("100000000000000000")  //1e17
@@ -118,38 +121,6 @@ export const gamePoolFixture: Fixture<GamePoolFixture> = async function (): Prom
     return { buyToken, gameTicket, gameConfig, gameToken, gamePoolDay, gamePoolWeek, gamePoolMonth };
 }
 
-
-interface GameSchedualPoolFixture {
-    depositToken: TestToken
-    rewardToken: GameToken
-    pool: GameSchedualPool
-}
-
-export const gameSchedualPoolFixture: Fixture<GameSchedualPoolFixture> = async function ([wallet, other]: Wallet[]): Promise<GameSchedualPoolFixture> {
-    let testTokenFactory = await ethers.getContractFactory('TestToken')
-    let depositToken = (await testTokenFactory.deploy()) as TestToken
-    await depositToken.initialize();
-    await depositToken.mint(wallet.address, bigNumber18.mul(10000));
-
-    let rewardTokenFactory = await ethers.getContractFactory('GameToken');
-    let rewardToken = (await rewardTokenFactory.deploy()) as GameToken;
-    await rewardToken.initialize();
-
-
-    let poolFactory = await ethers.getContractFactory('GameSchedualPool');
-    let pool = (await poolFactory.deploy()) as GameSchedualPool
-    await pool.initialize(
-        depositToken.address,
-        rewardToken.address,
-        BigNumber.from('1640966400'),
-        bigNumber18.mul(10),
-        0
-    );
-    await rewardToken.increaseFund(pool.address, ethers.constants.MaxUint256);
-
-    return { depositToken, rewardToken, pool };
-}
-
 interface GameAirdropFixture {
     gameToken: GameToken
     gameAirdrop: GameAirdrop
@@ -205,16 +176,16 @@ export const gamePoolsFixture: Fixture<GamePoolsFixture> = async function ([wall
 
     let gameToken = (await gameTokenFactory.deploy()) as GameToken;
     await gameToken.initialize();
-    await gameToken.increaseFund(wallet.address,ethers.constants.MaxUint256);
+    await gameToken.increaseFund(wallet.address, ethers.constants.MaxUint256);
 
     let gameTicket = (await gameTicketFactory.deploy()) as GameTicket;
     await gameTicket.initialize(buyToken.address, bigNumber18);
     await gameTicket.setupConfig(gameConfig.address);
-    
+
     let gameTicket2 = (await gameTicket2Factory.deploy()) as GameTicket2;
     await gameTicket2.initialize(buyToken.address, gameToken.address, bigNumber18, bigNumber18.mul(10), bigNumber18.mul(100));
     await gameTicket2.setupConfig(gameConfig.address);
-   
+
 
     let gamePool = (await gamePoolFactory.deploy()) as GamePool;
     await gamePool.initialize();
@@ -259,4 +230,105 @@ export const gamePoolsFixture: Fixture<GamePoolsFixture> = async function ([wall
     await gameTicket2.setRewardPool(gamePoolActivity.address);
 
     return { buyToken, gameToken, gameTicket, gameTicket2, gamePool, gamePoolActivity, gamePoolCS }
+}
+
+interface GameTimeLockFixture {
+    lockToken: TestToken
+    gameTimeLock: GameTimeLock
+}
+
+export const gameTimeLockFixture: Fixture<GameTimeLockFixture> = async function ([wallet]: Wallet[]): Promise<GameTimeLockFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let lockToken = (await testTokenFactory.deploy()) as TestToken
+    await lockToken.initialize();
+
+    let gameTimeLockFactory = await ethers.getContractFactory('GameTimeLock')
+    let gameTimeLock = (await gameTimeLockFactory.deploy()) as GameTimeLock
+    await gameTimeLock.initialize(lockToken.address, BigNumber.from(5))
+
+    await lockToken.mint(wallet.address, bigNumber18.mul(10000));
+    return { lockToken, gameTimeLock }
+}
+
+interface GameSchedualPoolFixture {
+    depositToken: TestToken
+    rewardToken: GameToken
+    gameTimeLock: MockContract
+    pool: GameSchedualPool
+}
+
+export const gameSchedualPoolFixture: Fixture<GameSchedualPoolFixture> = async function ([wallet, other]: Wallet[]): Promise<GameSchedualPoolFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let depositToken = (await testTokenFactory.deploy()) as TestToken
+    await depositToken.initialize();
+    await depositToken.mint(wallet.address, bigNumber18.mul(10000));
+
+    let rewardTokenFactory = await ethers.getContractFactory('GameToken');
+    let rewardToken = (await rewardTokenFactory.deploy()) as GameToken;
+    await rewardToken.initialize();
+
+    let gameTimeLock = await deployMockContract(wallet, TimeLockABI)
+    await gameTimeLock.mock.lock.returns()
+
+    let poolFactory = await ethers.getContractFactory('GameSchedualPool');
+    let pool = (await poolFactory.deploy()) as GameSchedualPool
+    await pool.initialize(
+        depositToken.address,
+        rewardToken.address,
+        BigNumber.from('1640966400'),
+        bigNumber18.mul(10),
+        BigNumber.from(0),
+        BigNumber.from(0),
+        gameTimeLock.address
+    );
+    await rewardToken.increaseFund(pool.address, ethers.constants.MaxUint256);
+
+    return { depositToken, rewardToken, gameTimeLock, pool };
+}
+
+interface GameFarmFixture {
+    depositToken1: TestToken
+    depositToken2: TestToken
+    rewardToken: GameToken
+    gameTimeLock: MockContract
+    farm: GameFarm
+}
+
+export const gameFarmFixture: Fixture<GameFarmFixture> = async function ([wallet, other]: Wallet[]): Promise<GameFarmFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let depositToken1 = (await testTokenFactory.deploy()) as TestToken
+    await depositToken1.initialize();
+    await depositToken1.mint(wallet.address, bigNumber18.mul(10000));
+
+    let depositToken2 = (await testTokenFactory.deploy()) as TestToken
+    await depositToken2.initialize();
+    await depositToken2.mint(wallet.address, bigNumber18.mul(10000));
+
+    let rewardTokenFactory = await ethers.getContractFactory('GameToken');
+    let rewardToken = (await rewardTokenFactory.deploy()) as GameToken;
+    await rewardToken.initialize();
+
+    let gameTimeLock = await deployMockContract(wallet, TimeLockABI)
+    await gameTimeLock.mock.lock.returns()
+
+    let farmFactory = await ethers.getContractFactory('GameFarm');
+    let farm = (await farmFactory.deploy()) as GameFarm
+    await farm.initialize(
+        rewardToken.address,
+        bigNumber18.mul(10),
+        BigNumber.from(0),
+        BigNumber.from(0),
+        gameTimeLock.address
+    );
+    await rewardToken.increaseFund(farm.address, ethers.constants.MaxUint256);
+
+    await depositToken1.approve(farm.address, ethers.constants.MaxUint256)
+    await depositToken1.transfer(other.address, bigNumber18.mul(100))
+    await depositToken1.connect(other).approve(farm.address, ethers.constants.MaxUint256)
+
+    await depositToken2.approve(farm.address, ethers.constants.MaxUint256)
+    await depositToken2.transfer(other.address, bigNumber18.mul(100))
+    await depositToken2.connect(other).approve(farm.address, ethers.constants.MaxUint256)
+
+    return { depositToken1, depositToken2, rewardToken, gameTimeLock, farm };
 }

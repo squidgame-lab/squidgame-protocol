@@ -6,8 +6,22 @@
         "contractName": "GameToken",
         "contractAddr": "",
         "args": [
-            ["${GamePool1.address}","${GamePool7.address}","${GamePool30.address}","${GamePoolCS.address}"],
-            ["1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000","1000000000000000000000000000"]
+            [
+                "${GamePool1.address}",
+                "${GamePool7.address}",
+                "${GamePool30.address}",
+                "${GamePoolCS.address}",
+                "${GameSchedualPool.address}",
+                "${GameFarm.address}"
+            ],
+            [
+                "1000000000000000000000000000",
+                "1000000000000000000000000000",
+                "1000000000000000000000000000",
+                "1000000000000000000000000000",
+                "1000000000000000000000000000",
+                "1000000000000000000000000000"
+            ]
         ]
     },
     {
@@ -280,6 +294,29 @@
     },
     {
         "call": true,
+        "name": "GameTimeLock",
+        "functionName": "setupConfig",
+        "contractName": "GameTimeLock",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTimeLock",
+        "functionName": "setFarmList",
+        "contractName": "GameTimeLock",
+        "contractAddr": "",
+        "args": [
+            [
+                "${GameSchedualPool.address}",
+                "${GameFarm.address}"
+            ]
+        ]
+    },
+    {
+        "call": true,
         "name": "GameSchedualPool",
         "functionName": "setupConfig",
         "contractName": "GameSchedualPool",
@@ -291,12 +328,34 @@
     {
         "call": true,
         "name": "GameSchedualPool",
-        "functionName": "batchUpdateLockWeights",
+        "functionName": "batchSetLockWeights",
         "contractName": "GameSchedualPool",
         "contractAddr": "",
         "args": [
             [1, 2, 3, 4],
-            [10, 20, 30, 40]
+            [100, 200, 400, 800]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameFarm",
+        "functionName": "setupConfig",
+        "contractName": "GameFarm",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameFarm",
+        "functionName": "batchAdd",
+        "contractName": "GameFarm",
+        "contractAddr": "",
+        "args": [
+            true,
+            [1],
+            ["${GameToken.address}"]
         ]
     }
 ]

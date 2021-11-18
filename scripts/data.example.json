@@ -106,6 +106,19 @@
 		"upgraded": false,
 		"verified": false
 	},
+	"GameTimeLock": {
+		"contractName": "GameTimeLock",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}",
+			"60"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
 	"GameSchedualPool": {
 		"contractName": "GameSchedualPool",
 		"address": "",
@@ -113,9 +126,27 @@
 		"upgradeArgs": [
 			"${GameToken.address}",
 			"${GameToken.address}",
+			"2592000",
 			"1000000000000000000",
-			"1640966400",
-			"0"
+			"0",
+			"30",
+			"${GameTimeLock.address}"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
+	"GameFarm": {
+		"contractName": "GameFarm",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${GameToken.address}",
+			"1000000000000000000",
+			"0",
+			"30",
+			"${GameTimeLock.address}"
 		],
 		"upgradedAddress": "",
 		"deployed": false,

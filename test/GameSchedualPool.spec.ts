@@ -5,6 +5,7 @@ import { GameToken } from '../typechain/GameToken'
 import { GameSchedualPool } from '../typechain/GameSchedualPool'
 import { expect } from './shared/expect'
 import { gameSchedualPoolFixture, bigNumber18 } from './shared/fixtures'
+import { MockContract } from '@ethereum-waffle/mock-contract'
 
 const createFixtureLoader = waffle.createFixtureLoader
 
@@ -13,6 +14,7 @@ describe('GameSchedualPool', async () => {
 
     let depositToken: TestToken;
     let rewardToken: GameToken;
+    let gameTimeLock: MockContract
     let pool: GameSchedualPool;
 
     let loadFixTure: ReturnType<typeof createFixtureLoader>;
@@ -23,11 +25,11 @@ describe('GameSchedualPool', async () => {
     })
 
     beforeEach('deploy GameSchedualPool', async () => {
-        ; ({ depositToken, rewardToken, pool } = await loadFixTure(gameSchedualPoolFixture));
+        ; ({ depositToken, rewardToken, gameTimeLock, pool } = await loadFixTure(gameSchedualPoolFixture));
         await depositToken.approve(pool.address, ethers.constants.MaxUint256)
         await depositToken.transfer(other.address, bigNumber18.mul(100))
         await depositToken.connect(other).approve(pool.address, ethers.constants.MaxUint256)
-        await pool.batchUpdateLockWeights(
+        await pool.batchSetLockWeights(
             [
                 BigNumber.from(1),
                 BigNumber.from(2),
@@ -55,6 +57,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             await network.provider.send('evm_mine')
             expect(await pool.pendingReward(wallet.address)).to.eq(bigNumber18.mul(10))
+            expect(await pool.averageLockDur()).to.eq(10)
         })
 
         it('success for two create lock', async () => {
@@ -63,9 +66,19 @@ describe('GameSchedualPool', async () => {
             await network.provider.send('evm_mine')
             expect(await pool.pendingReward(wallet.address)).to.eq(bigNumber18.mul(12))
             expect(await pool.pendingReward(other.address)).to.eq(bigNumber18.mul(8))
+            expect(await pool.averageLockDur()).to.eq(25)
         })
 
+        it('fails for repetitive create lock', async () => {
+            await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
+            await expect(pool.createLock(bigNumber18.mul(10), BigNumber.from(1))).to.revertedWith('GameSchedualPool: EXIST_LOCK')
+        })
 
+        it('gas used', async () => {
+            let tx = await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
+            let receipt = await tx.wait()
+            expect(receipt.gasUsed).to.eq(26_1267)
+        })
     })
 
     describe('#increaseAmount', async () => {
@@ -91,6 +104,7 @@ describe('GameSchedualPool', async () => {
             let lockedBalance = await pool.locked(wallet.address)
             expect(lockedBalance.amount).to.eq(bigNumber18.mul(20))
             expect(lockedBalance.rewardDebt).to.eq(bigNumber18.mul(60))
+            expect(await pool.averageLockDur()).to.eq(1 * 10)
         })
 
         it('emit', async () => {
@@ -102,7 +116,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             let tx = await pool.increaseAmount(bigNumber18.mul(10))
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(20_5196)
+            expect(receipt.gasUsed).to.eq(21_5831)
         })
     })
 
@@ -135,6 +149,7 @@ describe('GameSchedualPool', async () => {
             let lockedBalance = await pool.locked(wallet.address)
             expect(lockedBalance.lockWeeks).to.eq(BigNumber.from(2))
             expect(lockedBalance.rewardDebt).to.eq(bigNumber18.mul(60))
+            expect(await pool.averageLockDur()).to.eq(2 * 10)
         })
 
         it('emit', async () => {
@@ -146,7 +161,7 @@ describe('GameSchedualPool', async () => {
             await pool.createLock(bigNumber18.mul(10), BigNumber.from(1))
             let tx = await pool.increaseUnlockTime(BigNumber.from(1))
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(201130)
+            expect(receipt.gasUsed).to.eq(21_1356)
         })
     })
 
@@ -157,11 +172,22 @@ describe('GameSchedualPool', async () => {
             await network.provider.send('evm_mine')
         })
 
-        it('success', async () => {
+        it('success for harvest rate 0', async () => {
             let rewardTokenBalanceBefore = await rewardToken.balanceOf(wallet.address)
             await pool.harvest(wallet.address)
             let rewardTokenBalanceAfter = await rewardToken.balanceOf(wallet.address)
             expect(rewardTokenBalanceAfter.sub(rewardTokenBalanceBefore)).to.eq(bigNumber18.mul(30))
+        })
+
+        it('success for harvest rate 0.3', async () => {
+            await pool.setHarvestRate(BigNumber.from(30)) // mine block
+            let walletRewardTokenBalanceBefore = await rewardToken.balanceOf(wallet.address)
+            let timeLockRewardTokenBalanceBefore = await rewardToken.balanceOf(gameTimeLock.address)
+            await pool.harvest(wallet.address) // mine block
+            let walletRewardTokenBalanceAfter = await rewardToken.balanceOf(wallet.address)
+            let timeLockRewardTokenBalanceAfter = await rewardToken.balanceOf(gameTimeLock.address)
+            expect(walletRewardTokenBalanceAfter.sub(walletRewardTokenBalanceBefore)).to.eq(bigNumber18.mul(12))
+            expect(timeLockRewardTokenBalanceAfter.sub(timeLockRewardTokenBalanceBefore)).to.eq(bigNumber18.mul(28))
         })
 
         it('emit', async () => {
@@ -171,7 +197,7 @@ describe('GameSchedualPool', async () => {
         it('gas used', async () => {
             let tx = await pool.harvest(wallet.address)
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(160049)
+            expect(receipt.gasUsed).to.eq(16_2194)
         })
     })
 
@@ -209,8 +235,7 @@ describe('GameSchedualPool', async () => {
             await network.provider.send('evm_mine')
             let tx = await pool.connect(other).withdraw()
             let receipt = await tx.wait()
-            expect(receipt.gasUsed).to.eq(20_0000)
+            expect(receipt.gasUsed).to.eq(18_9857)
         })
-
     })
 })
