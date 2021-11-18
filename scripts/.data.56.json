@@ -70,10 +70,10 @@
   },
   "GamePoolCS": {
     "contractName": "GamePool",
-    "address": "0x9E3Fc6A5Bba3Ae0F13D523ecB2151E2E8Fdd381A",
+    "address": "0x7ab1Add1e7A2aDF08c49a9D9DfEe2381DA3388D8",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
+    "upgradedAddress": "0x023070b33a4f9f2365f0ecce7fbdf1427a1e37a8",
     "deployed": true,
     "upgraded": true,
     "verified": true
