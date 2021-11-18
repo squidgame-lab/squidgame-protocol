@@ -47,7 +47,7 @@ async function after() {
 async function deployContract(name: string, value: any) {
   // Deploying
   if (data[name].deployed) {
-    console.log(`Deploy contract ${name} exits: ${data[name].address}`)
+    console.log(`Deploy contract ${name} exits: "${data[name].address}",`)
     return;
   }
   // console.log('deploy...')
