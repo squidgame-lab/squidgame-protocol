@@ -319,21 +319,42 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return false;
     }
   
-    function _claim(uint128 _orderId) internal returns (uint128 winAmount, uint128 shareAmount) {
+    function _claim(uint128 _orderId) internal returns (address to, uint128 winAmount, uint128 shareAmount) {
         Order memory order = orders[_orderId];
         RoundData memory round = historys[order.roundNumber];
         require(order.user == msg.sender || order.user == address(0), 'forbidden');
         require(round.ticketTotal > 0, 'not ready');
         require(canClaim(_orderId), 'can not claim');
         ClaimLog storage clog = claimLogs[_orderId];
-        address to = order.user;
+        to = order.user;
         if(order.user == address(0)) {
             to = team();
         }
         OrderResult memory result = getOrderResult(_orderId);
-        if(result.claimWin > 0 && clog.claimedWin == 0) {
+        if(clog.claimedWin > 0) {
+            winAmount = 0;
+        } else {
+            winAmount = result.claimWin;
+            clog.claimedWin = result.claimWin;
+        }
+
+        if(result.claimShareParticipationAmount > 0 && clog.claimedShareParticipationAmount == 0) {
+            shareAmount = shareAmount.add(result.claimShareParticipationAmount);
+            clog.claimedShareParticipationAmount = result.claimShareParticipationAmount;
+        }
+
+        if(result.claimShareTopAvaliable > 0 && clog.claimedShareTopAmount.add(result.claimShareTopAvaliable) <= result.claimShareTopAmount) {
+            shareAmount = shareAmount.add(result.claimShareTopAvaliable);
+            clog.claimedShareTopAmount = clog.claimedShareTopAmount.add(result.claimShareTopAvaliable);
+        }
+        
+        emit Claimed(to, _orderId, winAmount, shareAmount);
+    }
+
+    function _transferForClaim(address to, uint128 winAmount, uint128 shareAmount) internal returns (uint128, uint128) {
+        if(winAmount > 0) {
             uint128 fee;
-            uint128 reward = result.claimWin;
+            uint128 reward = winAmount;
             if(feeRate > 0) {
                 fee = reward.mul(feeRate).div(10000);
                 reward = reward.sub(fee);
@@ -346,30 +367,18 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
                 if(fee > 0) TransferHelper.safeTransfer(buyToken, team(), fee);
                 if(reward > 0) TransferHelper.safeTransfer(buyToken, to, reward);
             }
-            clog.claimedWin = result.claimWin;
-            winAmount = result.claimWin;
-        }
-
-        if(result.claimShareParticipationAmount > 0 && clog.claimedShareParticipationAmount == 0) {
-            shareAmount = shareAmount.add(result.claimShareParticipationAmount);
-            clog.claimedShareParticipationAmount = result.claimShareParticipationAmount;
-        }
-
-        if(result.claimShareTopAvaliable > 0 && clog.claimedShareTopAmount.add(result.claimShareTopAvaliable) <= result.claimShareTopAmount) {
-            shareAmount = shareAmount.add(result.claimShareTopAvaliable);
-            clog.claimedShareTopAmount = clog.claimedShareTopAmount.add(result.claimShareTopAvaliable);
         }
 
         if(shareAmount > 0) {
             require(IShareToken(shareToken).take() >= shareAmount, 'share stop');
             IShareToken(shareToken).mint(to, shareAmount);
         }
-        
-        emit Claimed(to, _orderId, winAmount, shareAmount);
+        return (winAmount, shareAmount);
     }
 
     function claim(uint128 _orderId) external returns (uint128 winAmount, uint128 shareAmount) {
-        return _claim(_orderId);
+        (address to, uint128 _winAmount, uint128 _shareAmount) = _claim(_orderId);
+        return _transferForClaim(to, _winAmount, _shareAmount);
     }
 
     function _claimAll(address _to, uint128 _start, uint128 _end) internal returns (uint128 winAmount, uint128 shareAmount) {
@@ -382,11 +391,12 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         for(uint128 i = _start; i < _end; i++) {
             uint128 orderId = userOrders[_to][i];
             if(canClaim(orderId)) {
-                (uint128 _win, uint128 _share) = _claim(orderId);
+                (,uint128 _win, uint128 _share) = _claim(orderId);
                 winAmount = winAmount.add(_win);
                 shareAmount = shareAmount.add(_share);
             }
         }
+        return _transferForClaim(_to, winAmount, shareAmount);
     }
 
     function claimAll(uint128 _start, uint128 _end) external returns (uint128 winAmount, uint128 shareAmount) {
