@@ -54,6 +54,16 @@ describe('GameSchedualPool', async () => {
             expect(userInfo.rewardDebt).to.eq(bigNumber18.mul(20))
         })
 
+        it('success for repetitive deposit for harvest rate 0.3', async () => {
+            await farm.setHarvestRate(30); 
+            await farm.deposit(BigNumber.from(0), bigNumber18.mul(50), wallet.address)
+            await network.provider.send('evm_mine')
+            let rewardBalanceBefore = await rewardToken.balanceOf(wallet.address)
+            await farm.deposit(BigNumber.from(0), bigNumber18.mul(50), wallet.address)
+            let rewardBalanceAfter = await rewardToken.balanceOf(wallet.address)
+            expect(rewardBalanceAfter.sub(rewardBalanceBefore)).to.eq(bigNumber18.mul(6))
+        })
+
         it('success for two deposit', async () => {
             await farm.deposit(BigNumber.from(0), bigNumber18.mul(50), wallet.address)
             await farm.connect(other).deposit(BigNumber.from(0), bigNumber18.mul(50), other.address)

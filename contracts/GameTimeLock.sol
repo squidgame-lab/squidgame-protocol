@@ -31,7 +31,6 @@ contract GameTimeLock is Configable, ReentrancyGuard, Initializable {
         _;
     }
 
-    event SetDuration(address indexed user, uint256 oldOne, uint256 newOne);
     event SetLockToken(address indexed user, address oldOne, address newOne);
     event CreateLock(address indexed user, uint256 amount);
     event Claim(address indexed user, uint256 amount);
@@ -59,12 +58,6 @@ contract GameTimeLock is Configable, ReentrancyGuard, Initializable {
         require(_lockToken != lockToken, 'GameTimeLock: NO_CHANGE');
         emit SetLockToken(msg.sender, lockToken, _lockToken);
         lockToken = _lockToken;
-    }
-
-    function setDuration(uint256 _duration) external onlyAdmin {
-        require(_duration != duration, 'GameTimeLock: NO_CHANGE');
-        emit SetDuration(msg.sender, duration, _duration);
-        duration = _duration;
     }
 
     function lock(address _account, uint256 _amount) external onlyFarms nonReentrant {
