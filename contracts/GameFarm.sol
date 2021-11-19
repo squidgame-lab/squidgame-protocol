@@ -69,7 +69,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     event Deposit(address indexed user, address indexed to, uint indexed pid, uint amount);
     event Withdraw(address indexed user, address indexed to, uint indexed pid, uint amount);
     event EmergencyWithdraw(address indexed user, address indexed to, uint indexed pid, uint amount);
-    event UpdateEmissionRate(address indexed user, uint mintPerBlock);
+    event SetEmissionRate(address indexed user, uint mintPerBlock);
     event SetHarvestRate(address indexed account, uint256 oldOne, uint256 newOne);
     event SetTimeLock(address indexed account, address oldOne, address newOne);
 
@@ -327,9 +327,9 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     //reward has to add hidden dummy pools inorder to alter the emission, here we make it simple and transparent to all.
-    function updateEmissionRate(uint _mintPerBlock) external onlyDev {
+    function setEmissionRate(uint _mintPerBlock) external onlyDev {
         massUpdatePools();
         mintPerBlock = _mintPerBlock;
-        emit UpdateEmissionRate(msg.sender, _mintPerBlock);
+        emit SetEmissionRate(msg.sender, _mintPerBlock);
     }
 }

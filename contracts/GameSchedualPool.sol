@@ -23,6 +23,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     event SetLockWeights(address indexed account, uint256 lockWeeks, uint256 weight);
     event SetHarvestRate(address indexed account, uint256 oldOne, uint256 newOne);
     event SetTimeLock(address indexed account, address oldOne, address newOne);
+    event SetEmissionRate(address indexed user, uint mintPerBlock);
 
     uint256 public override maxTime;
     address public override depositToken;
@@ -128,6 +129,12 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
         emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
         harvestRate = _harvestRate;
+    }
+
+    function setEmissionRate(uint _mintPerBlock) external onlyDev {
+        _update();
+        mintPerBlock = _mintPerBlock;
+        emit SetEmissionRate(msg.sender, _mintPerBlock);
     }
 
     function batchSetLockWeights(
