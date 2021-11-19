@@ -282,12 +282,14 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
             .mul(accRewardPerShare)
             .div(1e18)
             .sub(lockedBalance.rewardDebt);
-        if (harvestRate == 0) {
-            amount = _safeTokenTransfer(rewardToken, _to, pending);
-        } else {
-            amount = _safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
-            uint256 lockAmount = _safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
-            IGameTimeLock(timeLock).lock(_to, lockAmount);
+        if (pending > 0) {
+            if (harvestRate == 0) {
+                amount = _safeTokenTransfer(rewardToken, _to, pending);
+            } else {
+                amount = _safeTokenTransfer(rewardToken, _to, pending.mul(harvestRate).div(100));
+                uint256 lockAmount = _safeTokenTransfer(rewardToken, timeLock, pending.sub(amount));
+                IGameTimeLock(timeLock).lock(_to, lockAmount);
+            }
         }
         lockedBalance.rewardDebt = lockedBalance
             .amount
