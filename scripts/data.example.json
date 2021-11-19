@@ -112,7 +112,7 @@
 		"constructorArgs": [],
 		"upgradeArgs": [
 			"${GameToken.address}",
-			"60"
+			"5184000"
 		],
 		"upgradedAddress": "",
 		"deployed": false,
@@ -126,7 +126,7 @@
 		"upgradeArgs": [
 			"${GameToken.address}",
 			"${GameToken.address}",
-			"2592000",
+			"15552000",
 			"1000000000000000000",
 			"0",
 			"30",
