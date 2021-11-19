@@ -75,8 +75,8 @@ contract GameTicket2 is IRewardSource, Configable, Pausable, ReentrancyGuard, In
     }
 
     function _buy(address _to, uint _buyTokenAmount, uint _gameTokenAmount) internal returns (bool) {
-        require(_buyTokenAmount > 0 || _gameTokenAmount > 0, 'GameTicket: ZERO');
-        require(_buyTokenAmount % unit == 0 && _gameTokenAmount % gameTokenUnit == 0, 'GameTicket: REMAINDER');
+        require(_buyTokenAmount > 0, 'GameTicket: ZERO');
+        require(_buyTokenAmount % unit == 0, 'GameTicket: REMAINDER');
         tickets[_to] = tickets[_to].add(_buyTokenAmount);
         total = total.add(_buyTokenAmount);
         emit Bought(msg.sender, _to, _buyTokenAmount, _gameTokenAmount);
