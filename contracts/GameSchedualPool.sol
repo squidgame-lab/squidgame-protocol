@@ -56,8 +56,8 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
         address _timeLock
     ) external initializer {
         require(_depositToken != address(0) && _rewardToken != address(0) && _timeLock != address(0), "GameSchedualPool: INVALID_ADDRESS");
-        require(_maxTime > 0 && _mintPerBlock > 0, "GameSchedualPool: ZERO_NUMBER");
-        require(_harvestRate < 100, 'GameSchedualPool: OVER_RATE');
+        require(_maxTime > 0, "GameSchedualPool: ZERO_NUMBER");
+        require(_harvestRate <= 100, 'GameSchedualPool: OVER_RATE');
         owner = msg.sender;
         depositToken = _depositToken;
         rewardToken = _rewardToken;
@@ -126,7 +126,7 @@ contract GameSchedualPool is IGameSchedualPool, ReentrancyGuard, Configable, Ini
     }
 
     function setHarvestRate(uint256 _harvestRate) external onlyDev {
-        require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
+        require(harvestRate != _harvestRate && _harvestRate <= 100, 'GameSchedualPool: INVALID_ARGS');
         emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
         harvestRate = _harvestRate;
     }

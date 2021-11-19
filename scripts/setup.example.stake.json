@@ -1,0 +1,83 @@
+[
+    {
+        "call": true,
+        "name": "GameToken",
+        "functionName": "increaseFunds",
+        "contractName": "GameToken",
+        "contractAddr": "",
+        "args": [
+            ["${GameSchedualPool.address}","${GameFarm.address}"],
+            ["1000000000000000000000000000","1000000000000000000000000000"]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTimeLock",
+        "functionName": "setupConfig",
+        "contractName": "GameTimeLock",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTimeLock",
+        "functionName": "setFarmList",
+        "contractName": "GameTimeLock",
+        "contractAddr": "",
+        "args": [
+            [
+                "${GameSchedualPool.address}",
+                "${GameFarm.address}"
+            ]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameSchedualPool",
+        "functionName": "setupConfig",
+        "contractName": "GameSchedualPool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameSchedualPool",
+        "functionName": "batchSetLockWeights",
+        "contractName": "GameSchedualPool",
+        "contractAddr": "",
+        "args": [
+            [1, 4, 12, 24],
+            [100, 100, 100, 100]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameFarm",
+        "functionName": "setupConfig",
+        "contractName": "GameFarm",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameFarm",
+        "functionName": "batchAdd",
+        "contractName": "GameFarm",
+        "contractAddr": "",
+        "args": [
+            true,
+            [1, 1, 1],
+            [
+                "0x0198a4fee000C0f90a88089Ba358B23AE1d1a02e",
+                "0x290fB10BCafe0f037a9e5fB06FDE92Aa5C30B937",
+                "0xBfD806bdbeb327C7120DfCB0c90Fc01519227e2D"
+            ]
+        ]
+    }
+]

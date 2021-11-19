@@ -135,5 +135,52 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameTimeLock": {
+    "contractName": "GameTimeLock",
+    "address": "0x289890Ade9F7f748077313190b411473342a6A04",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
+      "864000"
+    ],
+    "upgradedAddress": "0xcD935147BE04FefD34fcf0B875eeA677BD1b1dF4",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameSchedualPool": {
+    "contractName": "GameSchedualPool",
+    "address": "0xd63a879729f9aBc47a7B18EaB620A7d9181CF9f8",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
+      "15552000",
+      "0",
+      "0",
+      "30",
+      "0x289890Ade9F7f748077313190b411473342a6A04"
+    ],
+    "upgradedAddress": "0xE4024ba09E08F7E2EdD5354828a00618a7BdB972",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameFarm": {
+    "contractName": "GameFarm",
+    "address": "0x17F4712A0fB9c4594322aE10D623f275986898FB",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
+      "0",
+      "0",
+      "30",
+      "0x289890Ade9F7f748077313190b411473342a6A04"
+    ],
+    "upgradedAddress": "0xb177c6CF469Ea1d319f5e0020F9920F0d5f6574d",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
   }
 }

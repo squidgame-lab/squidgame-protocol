@@ -66,7 +66,6 @@ contract GameTimeLock is Configable, ReentrancyGuard, Initializable {
 
         Lock memory lockInfo = userLocked[_account];
         if (lockInfo.lockedAmount == 0) {
-            uint256 accReleasedPerBlock = _amount.div(duration);
             userLocked[_account] = Lock({
                 lockedAmount: _amount,
                 startBlockNum: block.number,

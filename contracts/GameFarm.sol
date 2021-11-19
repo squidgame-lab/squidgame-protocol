@@ -321,7 +321,7 @@ contract GameFarm is Pausable, Configable, ReentrancyGuard, Initializable {
     }
 
     function setHarvestRate(uint256 _harvestRate) external onlyDev {
-        require(harvestRate != _harvestRate && _harvestRate < 100, 'GameSchedualPool: INVALID_ARGS');
+        require(harvestRate != _harvestRate && _harvestRate <= 100, 'GameSchedualPool: INVALID_ARGS');
         emit SetHarvestRate(msg.sender, harvestRate, _harvestRate);
         harvestRate = _harvestRate;
     }
