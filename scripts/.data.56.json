@@ -43,7 +43,7 @@
     "address": "0x6990d5EEeA2D095D7B0EAE32f2fd23862a5d2581",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
+    "upgradedAddress": "0x85E02a68B87BEce39A211CFB54A09fe33771B8EE",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -53,7 +53,7 @@
     "address": "0x185dd26Ba1fB28D1A0cD056A99f95351eBd9DF8d",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -63,7 +63,7 @@
     "address": "0x4b163a5B6Cba132459e3daBE341Bb7f98671eC24",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0xa7A10558902ebB230Dbb0f0De12B072e2ab48c8C",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -114,7 +114,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool27": {
     "contractName": "GamePool",
@@ -124,7 +124,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool230": {
     "contractName": "GamePool",
@@ -134,7 +134,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GameTimeLock": {
     "contractName": "GameTimeLock",
