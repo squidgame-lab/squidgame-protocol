@@ -116,6 +116,11 @@ contract GamePoolActivity is IRewardSource, Configable, Pausable, ReentrancyGuar
         }
     }
 
+    function setEpoch(uint64 _epoch, uint64 _shareReleaseEpoch) external onlyManager {
+        epoch = _epoch;
+        shareReleaseEpoch = _shareReleaseEpoch;
+    }
+
     function setFeeRate(uint128 _rate) external onlyManager {
         require(_rate != feeRate, 'no change');
         require(_rate <= 10000, 'invalid param');

@@ -218,7 +218,7 @@ describe('GamePool', async () => {
                 score: 50
             })
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(212649);
+            expect(receipt.gasUsed).to.eq(212616);
         })
     })
 
@@ -298,7 +298,7 @@ describe('GamePool', async () => {
                 }
             ])
             let receipt = await tx.wait();
-            expect(receipt.gasUsed).to.eq(504050)
+            expect(receipt.gasUsed).to.eq(503951)
         })
     })
 
@@ -554,6 +554,109 @@ describe('GamePool', async () => {
             expect(await buyToken.balanceOf(gamePoolMonth.address)).to.eq(bigNumber17.mul(6));
             expect(await gamePoolMonth.nextPoolTotal()).to.eq(0)
 
+        })
+    })
+
+    describe('#claimAll', async () => {
+        beforeEach('mock set', async () => {
+            await mockSet();
+
+            await buyToken.approve(gameTicket.address, ethers.constants.MaxUint256);
+            await gameTicket.buy(bigNumber18.mul(20), wallet.address);
+
+            await buyToken.transfer(otherZero.address, bigNumber18.mul(100))
+            await buyToken.connect(otherZero).approve(gameTicket.address, ethers.constants.MaxUint256);
+            await gameTicket.connect(otherZero).buy(bigNumber18.mul(20), otherZero.address);
+
+            await buyToken.transfer(otherOne.address, bigNumber18.mul(100))
+            await buyToken.connect(otherOne).approve(gameTicket.address, ethers.constants.MaxUint256);
+            await gameTicket.connect(otherOne).buy(bigNumber18.mul(20), otherOne.address);
+        })
+
+
+        it('success', async () => {
+            await gamePoolDay.setFeeRate(1000);
+            await gamePoolDay.uploadBatch([
+                {
+                    user: wallet.address,
+                    rank: 1,
+                    ticketAmount: bigNumber18.mul(5),
+                    score: 50
+                },
+                {
+                    user: otherZero.address,
+                    rank: 2,
+                    ticketAmount: bigNumber18.mul(5),
+                    score: 30
+                },
+                {
+                    user: otherOne.address,
+                    rank: 3,
+                    ticketAmount: bigNumber18.mul(5),
+                    score: 20
+                }
+            ])
+            // let totalRound = await gamePoolDay.totalRound();
+            expect(await gamePoolDay.userOrders(wallet.address, 0)).to.eq(0);
+            expect(await gamePoolDay.userOrders(otherZero.address, 0)).to.eq(1);
+            expect(await gamePoolDay.userOrders(otherOne.address, 0)).to.eq(2);
+
+            await gamePoolDay.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                bigNumber18.mul(15),
+                100,
+                100,
+            );
+
+            await new Promise(f => setTimeout(f, 1000));
+            let tx = await gamePoolDay.uploadBatch([
+                {
+                    user: wallet.address,
+                    rank: 1,
+                    ticketAmount: bigNumber18.mul(10),
+                    score: 50
+                },
+                {
+                    user: otherZero.address,
+                    rank: 2,
+                    ticketAmount: bigNumber18.mul(10),
+                    score: 30
+                },
+                {
+                    user: otherOne.address,
+                    rank: 3,
+                    ticketAmount: bigNumber18.mul(10),
+                    score: 20
+                }
+            ])
+
+
+            await gamePoolDay.uploaded(
+                BigNumber.from(Date.now().toString()).div(1000),
+                bigNumber18.mul(30),
+                100,
+                100,
+            );
+
+            let beforeBalance = await buyToken.balanceOf(otherOne.address);
+
+            let orders = await gamePoolDay.iterateReverseUserOrders(otherOne.address, 10, 0);
+            let data:any = [];
+            let claimValue = BigNumber.from(0);
+            for(let o of orders) {
+                let d:any = {...o};
+                claimValue = claimValue.add(d.claimWin);
+                d.orderId = d.orderId.toString();
+                d.roundNumber = d.roundNumber.toString();
+                d.claimWin = d.claimWin.toString();
+                data.push(d);
+            }
+            console.log('orders:', data);
+
+            await gamePoolDay.connect(otherOne).claimAll(0, 10);
+            let afterBalance = await buyToken.balanceOf(otherOne.address);
+            console.log('beforeBalance:', beforeBalance.toString(), 'afterBalance:', afterBalance.toString(), 'claimValue:', claimValue.toString(), 'claimed', afterBalance.sub(beforeBalance).toString());
+            expect(afterBalance.sub(beforeBalance)).to.eq(claimValue.mul(9).div(10));
         })
     })
 
