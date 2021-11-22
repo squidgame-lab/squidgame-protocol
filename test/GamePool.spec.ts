@@ -639,24 +639,33 @@ describe('GamePool', async () => {
             );
 
             let beforeBalance = await buyToken.balanceOf(otherOne.address);
+            let beforeShareBalance = await gameToken.balanceOf(otherOne.address);
 
             let orders = await gamePoolDay.iterateReverseUserOrders(otherOne.address, 10, 0);
             let data:any = [];
             let claimValue = BigNumber.from(0);
+            let claimShareValue = BigNumber.from(0);
             for(let o of orders) {
                 let d:any = {...o};
                 claimValue = claimValue.add(d.claimWin);
+                claimShareValue = claimShareValue.add(d.claimShareParticipationAmount).add(d.claimShareTopAmount);
                 d.orderId = d.orderId.toString();
                 d.roundNumber = d.roundNumber.toString();
                 d.claimWin = d.claimWin.toString();
+                d.claimShareParticipationAmount = d.claimShareParticipationAmount.toString();
+                d.claimShareTopAmount = d.claimShareTopAmount.toString();
                 data.push(d);
             }
             console.log('orders:', data);
 
+            await new Promise(f => setTimeout(f, 1000));
             await gamePoolDay.connect(otherOne).claimAll(0, 10);
             let afterBalance = await buyToken.balanceOf(otherOne.address);
+            let afterShareBalance = await gameToken.balanceOf(otherOne.address);
             console.log('beforeBalance:', beforeBalance.toString(), 'afterBalance:', afterBalance.toString(), 'claimValue:', claimValue.toString(), 'claimed', afterBalance.sub(beforeBalance).toString());
+            console.log('beforeShareBalance:', beforeShareBalance.toString(), 'afterShareBalance:', afterShareBalance.toString(), 'claimShareValue:', claimShareValue.toString(), 'claimed', afterShareBalance.sub(beforeShareBalance).toString());
             expect(afterBalance.sub(beforeBalance)).to.eq(claimValue.mul(9).div(10));
+            expect(afterShareBalance.sub(beforeShareBalance)).to.eq(claimShareValue);
         })
     })
 
