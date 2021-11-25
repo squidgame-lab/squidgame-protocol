@@ -17,15 +17,28 @@
     "upgraded": true,
     "verified": false
   },
-  "GameConfig": {
-    "address": "0x2575e5cC3992b90DC9866E99B0F85c4CF090d818",
+  "GameConfigActivity": {
+    "address": "",
+    "contractName": "GameConfig",
     "constructorArgs": [],
     "upgradeArgs": [],
     "upgradedAddress": "",
-    "deployed": true,
-    "upgraded": true,
+    "deployed": false,
+    "upgraded": false,
     "verified": false
   },
+  "GameTeamActivity": {
+		"contractName": "GameTeam",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${TestToken.address}"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
   "GameTicketActivity": {
     "contractName": "GameTicket2",
     "address": "",
@@ -33,7 +46,7 @@
     "upgradeArgs": [
       "${TestToken.address}",
       "${GameToken.address}",
-      "10000000000000000000",
+      "100000000000000000000",
       "0",
       "0"
     ],

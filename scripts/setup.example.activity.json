@@ -6,7 +6,7 @@
         "contractName": "GameToken",
         "contractAddr": "",
         "args": [
-            ["${GameTicketActivity.address}"],
+            ["${GamePoolActivity.address}"],
             ["1000000000000000000000000000"]
         ]
     },
@@ -27,7 +27,17 @@
         "contractName": "GameTicket2",
         "contractAddr": "",
         "args": [
-            "${GameConfig.address}"
+            "${GameConfigActivity.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTicketActivity",
+        "functionName": "setFeeRate",
+        "contractName": "GameTicket2",
+        "contractAddr": "",
+        "args": [
+            7000
         ]
     },
     {
@@ -37,7 +47,7 @@
         "contractName": "GamePoolActivity",
         "contractAddr": "",
         "args": [
-            "${GameConfig.address}"
+            "${GameConfigActivity.address}"
         ]
     },
     {
@@ -50,8 +60,8 @@
             "${GameTicketActivity.address}",
             "${GameToken.address}",
             "${GamePoolCS.address}",
-            600,
-            864000,
+            80400,
+            0,
             true,
             false
         ]
@@ -74,21 +84,31 @@
         "contractAddr": "",
         "args": [
             [
-                "1000000000000000000",
-                "100000000000000000000",
-                "50000000000000000000",
-                "10000000000000000000"
+                "200000000000000000000",
+                "3000000000000000000000",
+                "1000000000000000000000",
+                "500000000000000000000"
             ]
         ]
     },
     {
         "call": true,
-        "name": "GamePoolActivity",
-        "functionName": "setFeeRate",
-        "contractName": "GamePoolActivity",
+        "name": "GameConfigActivity",
+        "functionName": "changeTeam",
+        "contractName": "GameConfig",
         "contractAddr": "",
         "args": [
-            1000
+            "${GameTeamActivity.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameConfigActivity",
+        "functionName": "changeUploader",
+        "contractName": "GameConfig",
+        "contractAddr": "",
+        "args": [
+            "0x6bd4aa674ab696c1ab7a1e2dfcb64e8709c69cfa"
         ]
     }
 ]
