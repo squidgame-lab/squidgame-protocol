@@ -4373,6 +4373,158 @@
           }
         }
       }
+    },
+    "3f94bee10d7f15cf3e365a12045997adc20879dc93ed7fefa53279d0fcd59b20": {
+      "address": "0xfE401c8860C67bE12132add892279dE39cf16525",
+      "txHash": "0x920be4f885fecfb0fa46d97b8fd7b749f663d730fed8d2b58cdc281d4d488afa",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "shareToken",
+            "type": "t_address",
+            "src": "contracts/GameTeam.sol:9"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "users",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "contracts/GameTeam.sol:10"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "rates",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTeam.sol:11"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "51e52ec7e303072b757cea7e3b8242ca5d410f847184f8d2646e6bfd158d3d3b": {
+      "address": "0xbC18eb4DEfDC15210d1E89e92AD8c4981F35a58F",
+      "txHash": "0xc1616ab1f9b28ab3e94428221a05ae2e3390d8bfc98f4f6e626c406bbf0aeb7a",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "shareToken",
+            "type": "t_address",
+            "src": "contracts/GameTeam.sol:9"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "users",
+            "type": "t_array(t_address)dyn_storage",
+            "src": "contracts/GameTeam.sol:10"
+          },
+          {
+            "contract": "GameTeam",
+            "label": "rates",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameTeam.sol:11"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }

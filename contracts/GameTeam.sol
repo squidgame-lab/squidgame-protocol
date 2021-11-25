@@ -20,6 +20,10 @@ contract GameTeam is Configable, Initializable {
         shareToken = _shareToken;
     }
 
+    function setShareToken(address _shareToken) external onlyDev {
+        shareToken = _shareToken;
+    }
+
     function setRate(address[] calldata _users, uint[] calldata _values) external onlyManager {
         require(_users.length > 0  && _users.length == _values.length, 'invalid param');
         uint count = users.length;
@@ -36,16 +40,16 @@ contract GameTeam is Configable, Initializable {
         require(_total == 100, 'sum of rate is not 100');
     }
 
-    function withdraw(uint _amount) external {
+    function withdraw(address _shareToken, uint _amount) external {
         require(foundUser() || msg.sender == dev() || msg.sender == admin() || msg.sender == owner, "permission");
-        uint balance = IERC20(shareToken).balanceOf(address(this));
+        uint balance = IERC20(_shareToken).balanceOf(address(this));
         if(_amount > balance) {
             _amount = balance;
         }
         require(_amount > 0, 'zero');
         for(uint i; i<users.length; i++) {
             uint v = _amount * rates[users[i]] / 100;
-            if(v > 0) IERC20(shareToken).transfer(users[i], v);
+            if(v > 0) IERC20(_shareToken).transfer(users[i], v);
         }
     }
 
