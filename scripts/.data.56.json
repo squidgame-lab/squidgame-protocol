@@ -85,7 +85,7 @@
     "upgradeArgs": [
       "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1"
     ],
-    "upgradedAddress": "0x76Ffa6d8fC0EeBf117FD77728bec47EdD6c29B5C",
+    "upgradedAddress": "0xbC18eb4DEfDC15210d1E89e92AD8c4981F35a58F",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -104,7 +104,7 @@
     "upgradedAddress": "0x5b59eA114fA03320A02c2785a1ee1945Add8Da8F",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool21": {
     "contractName": "GamePool",
@@ -179,6 +179,54 @@
       "0x289890Ade9F7f748077313190b411473342a6A04"
     ],
     "upgradedAddress": "0xb177c6CF469Ea1d319f5e0020F9920F0d5f6574d",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameConfigActivity": {
+    "address": "0x369A7E35c45e30cDd8a30E867c62888E9630B997",
+    "contractName": "GameConfig",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameTeamActivity": {
+    "contractName": "GameTeam",
+    "address": "0x1f431ffBe51e6c947dEC688C85BB0A0FE6810468",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x55d398326f99059fF775485246999027B3197955"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameTicketActivity": {
+    "contractName": "GameTicket2",
+    "address": "0xB979dFE34Ad4BE592e41eA02860b2c335013F604",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x55d398326f99059fF775485246999027B3197955",
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
+      "100000000000000000000",
+      "0",
+      "0"
+    ],
+    "upgradedAddress": "0xDcD81c396946C458632796651230969d587606F4",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GamePoolActivity": {
+    "contractName": "GamePoolActivity",
+    "address": "0x62ebF4CD048893550312eb93B1B5F7Bf8823f6b2",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "0x9B01785621A729dCf5DEb9Bf07FaaE03319C791e",
     "deployed": true,
     "upgraded": true,
     "verified": true
