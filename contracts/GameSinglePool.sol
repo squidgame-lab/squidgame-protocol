@@ -46,7 +46,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         uint256 _mintPerBlock,
         uint256 _lockWeekCount
     ) external initializer {
-        require(_assetsAccount !=address(0) && _depositToken != address(0) && _rewardToken != address(0), 'GameFarm: INVALID_ADDRESS');
+        require(_assetsAccount !=address(0) && _depositToken != address(0) && _rewardToken != address(0), 'GameSinglePool: INVALID_ADDRESS');
         owner = msg.sender;
         assetsAccount = _assetsAccount;
         depositToken = _depositToken;
@@ -104,7 +104,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
     }
     
     function deposit(uint256 _amount, address _to) external nonReentrant returns(uint256) {
-        require(_amount > 0, 'GameFarm: INVALID_AMOUNT');
+        require(_amount > 0, 'GameSinglePool: INVALID_AMOUNT');
         UserInfo storage user = userInfo[_to];
         _updatePool();
         _harvestRewardToken(_to);
