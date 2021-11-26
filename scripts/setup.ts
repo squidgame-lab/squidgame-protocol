@@ -28,9 +28,9 @@ async function waitForMint(tx:any) {
   let result = null
   do {
     result = await ethers.provider.getTransactionReceipt(tx)
-    await sleep(500)
+    await sleep(1000)
   } while (result === null)
-  await sleep(500)
+  await sleep(1000)
 }
 
 function replaceData(search:any, src:any, target:any) {
