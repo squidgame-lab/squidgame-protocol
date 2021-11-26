@@ -152,7 +152,9 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         (uint256 rewardAmount,) = pendingRewardInfo();
         uint256 balance = IERC20(rewardToken).balanceOf(assetsAccount);
         rewardAmount = rewardAmount > balance ? balance : rewardAmount;
-        TransferHelper.safeTransferFrom(rewardToken, assetsAccount, address(this), rewardAmount);
+        if(rewardAmount > 0) {
+            TransferHelper.safeTransferFrom(rewardToken, assetsAccount, address(this), rewardAmount);
+        }
         return (rewardAmount, block.number);
     }
 
