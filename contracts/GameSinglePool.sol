@@ -121,7 +121,6 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
     }
 
     function withdraw(uint256 _amount, address _to) public nonReentrant returns(uint256) {
-        require(userInfo[msg.sender].amount >= _amount, "GameSinglePool: INSUFFICIENT_AMOUNT");
         require(userInfo[msg.sender].unlockTime <= block.timestamp, "GameSinglePool: INSUFFICIENT_AMOUNT");
         _updatePool();
         _harvestRewardToken(_to);
@@ -159,7 +158,9 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
     }
 
     function _withdraw(uint256 _amount, address _to) internal returns (uint256) {
+        require(_amount > 0, "GameSinglePool: ZERO");
         UserInfo storage user = userInfo[msg.sender];
+        require(user.amount >= _amount, "GameSinglePool: INSUFFICIENT_AMOUNT");
         user.amount = user.amount.sub(_amount);
         depositTokenSupply = depositTokenSupply.sub(_amount);
         TransferHelper.safeTransfer(depositToken, _to, _amount);
