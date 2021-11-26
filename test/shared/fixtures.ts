@@ -11,6 +11,7 @@ import { GameToken } from '../../typechain/GameToken'
 import { GameAirdrop } from '../../typechain/GameAirdrop'
 import { GameTimeLock } from '../../typechain/GameTimeLock'
 import { GameSchedualPool } from '../../typechain/GameSchedualPool'
+import { GameSinglePool } from '../../typechain/GameSinglePool'
 import { GameFarm } from '../../typechain/GameFarm'
 import { Fixture, deployMockContract, MockContract } from 'ethereum-waffle'
 import { abi as TimeLockABI } from '../../artifacts/contracts/interfaces/IGameTimeLock.sol/IGameTimeLock.json'
@@ -331,4 +332,41 @@ export const gameFarmFixture: Fixture<GameFarmFixture> = async function ([wallet
     await depositToken2.connect(other).approve(farm.address, ethers.constants.MaxUint256)
 
     return { depositToken1, depositToken2, rewardToken, gameTimeLock, farm };
+}
+
+interface GameSinglePoolFixture {
+    depositToken: TestToken
+    rewardToken: GameToken
+    pool: GameSinglePool
+}
+
+export const gameSinglePoolFixture: Fixture<GameSinglePoolFixture> = async function ([wallet, other]: Wallet[]): Promise<GameSinglePoolFixture> {
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let depositToken = (await testTokenFactory.deploy()) as TestToken
+    await depositToken.initialize();
+    await depositToken.mint(wallet.address, bigNumber18.mul(10000));
+
+    let rewardTokenFactory = await ethers.getContractFactory('GameToken');
+    let rewardToken = (await rewardTokenFactory.deploy()) as GameToken;
+    await rewardToken.initialize();
+    await rewardToken.increaseFund(wallet.address, bigNumber18.mul(10000))
+    await rewardToken.mint(wallet.address, bigNumber18.mul(1000));
+
+    let poolFactory = await ethers.getContractFactory('GameSinglePool');
+    let pool = (await poolFactory.deploy()) as GameSinglePool
+    await pool.initialize(
+        wallet.address,
+        depositToken.address,
+        rewardToken.address,
+        BigNumber.from(0),
+        bigNumber18.mul(10),
+        BigNumber.from(1)
+    );
+
+    await depositToken.approve(pool.address, ethers.constants.MaxUint256)
+    await rewardToken.approve(pool.address, ethers.constants.MaxUint256)
+    await depositToken.transfer(other.address, bigNumber18.mul(100))
+    await depositToken.connect(other).approve(pool.address, ethers.constants.MaxUint256)
+
+    return { depositToken, rewardToken, pool };
 }

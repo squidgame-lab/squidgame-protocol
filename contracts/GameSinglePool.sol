@@ -52,7 +52,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         depositToken = _depositToken;
         rewardToken = _rewardToken;
         mintPerBlock = _mintPerBlock;
-        startBlock = _startBlock;
+        lastBlock = block.number > _startBlock ? block.number : _startBlock;
         lockWeekCount = _lockWeekCount;
     }
 
@@ -95,8 +95,10 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         uint256 accRewardPerShareTMP = accRewardPerShare;
         if (block.number > lastBlock && depositTokenSupply != 0) {
             uint256 multiplier = getMultiplier(lastBlock, block.number);
-            uint256 reward = multiplier.mul(mintPerBlock);
-            accRewardPerShareTMP = accRewardPerShareTMP.add(reward.mul(1e18).div(depositTokenSupply));
+            uint256 rewardAmount = multiplier.mul(mintPerBlock);
+            uint256 balance = IERC20(rewardToken).balanceOf(assetsAccount);
+            rewardAmount = rewardAmount > balance ? balance : rewardAmount;
+            accRewardPerShareTMP = accRewardPerShareTMP.add(rewardAmount.mul(1e18).div(depositTokenSupply));
         }
         return user.amount.mul(accRewardPerShareTMP).div(1e18).sub(user.rewardDebt);
     }
