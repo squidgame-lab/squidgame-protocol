@@ -68,6 +68,7 @@ contract GameTicket2 is IRewardSource, Configable, Pausable, ReentrancyGuard, In
     }
 
     function join() external returns (bool) {
+        require(!status[msg.sender], 'GameTicket: JOINED');
         TransferHelper.safeTransferFrom(gameToken, msg.sender, address(0), joinAmount);
         status[msg.sender] = true;
         emit Joined(msg.sender);
