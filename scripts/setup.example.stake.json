@@ -79,5 +79,26 @@
                 "0xBfD806bdbeb327C7120DfCB0c90Fc01519227e2D"
             ]
         ]
+    },
+    {
+        "call": true,
+        "name": "GameSinglePool",
+        "functionName": "setupConfig",
+        "contractName": "GameSinglePool",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameToken",
+        "functionName": "approve",
+        "contractName": "GameToken",
+        "contractAddr": "",
+        "args": [
+            "${GameSinglePool.address}",
+            "1000000000000000000000000000"
+        ]
     }
 ]

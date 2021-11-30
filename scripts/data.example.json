@@ -159,7 +159,7 @@
 		"constructorArgs": [],
 		"upgradeArgs": [
 			"0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
-			"0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+			"${GameToken.address}",
 			"${GameToken.address}",
 			"0",
 			"1000000000000000000",
