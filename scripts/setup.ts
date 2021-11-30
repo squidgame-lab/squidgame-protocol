@@ -36,9 +36,7 @@ async function waitForMint(tx:any) {
 function replaceData(search:any, src:any, target:any) {
   if(Array.isArray(src)) {
     for(let i in src) {
-      if ((src[i]+'').indexOf(search) != -1) {
-        src[i] = src[i].replace(src[i], target);
-      }
+      src[i] = replaceData(search, src[i], target);
     }
   } else if ((src+'').indexOf(search) != -1) {
     src = src.replace(src, target);

@@ -169,5 +169,15 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GamePoolShareRule": {
+		"contractName": "GamePoolShareRule",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }

@@ -11,6 +11,7 @@ import './modules/Initializable.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IRewardSource.sol';
 import './interfaces/IShareToken.sol';
+import './interfaces/IGamePoolShareRule.sol';
 
 contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initializable {
     using SafeMath128 for uint128;
@@ -100,6 +101,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
     uint128 public ticketTotal;
     uint128 public scoreTotal;
     uint128 public topScoreTotal;
+    address public shareRule;
 
     event NewRound(uint128 indexed value);
     event Claimed(address indexed user, uint128 indexed orderId, uint128 winAmount, uint128 shareAmount);
@@ -146,6 +148,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(shareParticipationAmount != _shareParticipationAmount || shareTopAmount != _shareTopAmount, 'no change');
         shareParticipationAmount = _shareParticipationAmount;
         shareTopAmount = _shareTopAmount;
+    }
+
+    function setShareRule(address _shareRule) external onlyManager {
+        require(shareRule != _shareRule, 'no change');
+        shareRule = _shareRule;
     }
 
     function setTopRate(uint128[] calldata _levels, TopRate[] memory _values) external onlyManager {
@@ -267,13 +274,15 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
         require(currentRound.ticketTotal == 0, 'already uploaded');
 
+        (uint128 _shareParticipationAmount, uint128 _shareTopAmount) = getShareAmount();
+
         currentRound.startTime = _startTime;
         currentRound.ticketTotal = _ticketTotal;
         currentRound.scoreTotal = _scoreTotal;
         currentRound.topScoreTotal = _topScoreTotal;
         currentRound.topStrategySn = totalTopStrategy;
-        currentRound.shareParticipationAmount = shareParticipationAmount;
-        currentRound.shareTopAmount = shareTopAmount;
+        currentRound.shareParticipationAmount = _shareParticipationAmount;
+        currentRound.shareTopAmount = _shareTopAmount;
         currentRound.releaseBlockStart = uint64(block.number);
         currentRound.releaseBlockEnd = currentRound.releaseBlockStart + shareReleaseEpoch;
 
@@ -560,4 +569,13 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
         return _amount;
     }
+
+    function getShareAmount() public view returns (uint128 participationAmount, uint128 topAmount) {
+        if(shareRule == address(0)) {
+            return (shareParticipationAmount, shareTopAmount);
+        }
+
+        return IGamePoolShareRule(shareRule).getShareAmount(address(this));
+    }
+
 }
