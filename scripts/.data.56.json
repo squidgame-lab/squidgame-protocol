@@ -12,7 +12,7 @@
     "address": "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0x3E76AB5952dca3e4a9EB273561068072E043454A",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -21,7 +21,7 @@
     "address": "0x4Ef1Fee888a517293F6b43af38C85D9314BFB2ce",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0x7f7690E97eD6A46705eeA8CbaCBA588f191a5e02",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -33,7 +33,7 @@
       "0x55d398326f99059fF775485246999027B3197955",
       "1000000000000000000"
     ],
-    "upgradedAddress": "0xcb8bd518Db01929E7628595d792cF3CFA7eF754F",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -63,10 +63,10 @@
     "address": "0x4b163a5B6Cba132459e3daBE341Bb7f98671eC24",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "",
+    "upgradedAddress": "0x17573F56eA46B55843f60912bAc1C67122bc734D",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePoolCS": {
     "contractName": "GamePool",
@@ -101,7 +101,7 @@
       "1000000000000000000",
       "1000000000000000000000"
     ],
-    "upgradedAddress": "0x5b59eA114fA03320A02c2785a1ee1945Add8Da8F",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": false
@@ -144,7 +144,7 @@
       "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
       "864000"
     ],
-    "upgradedAddress": "0xcD935147BE04FefD34fcf0B875eeA677BD1b1dF4",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -162,7 +162,7 @@
       "30",
       "0x289890Ade9F7f748077313190b411473342a6A04"
     ],
-    "upgradedAddress": "0xE4024ba09E08F7E2EdD5354828a00618a7BdB972",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -226,7 +226,7 @@
     "address": "0x62ebF4CD048893550312eb93B1B5F7Bf8823f6b2",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0x9B01785621A729dCf5DEb9Bf07FaaE03319C791e",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": true
@@ -273,6 +273,16 @@
     "constructorArgs": [],
     "upgradeArgs": [],
     "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePoolShareRule": {
+    "contractName": "GamePoolShareRule",
+    "address": "0x246677B30850f2242372113c45058eA6406B8BC3",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "0x61CC174DD323498f163eB26d8212D07f1eA26991",
     "deployed": true,
     "upgraded": true,
     "verified": false
