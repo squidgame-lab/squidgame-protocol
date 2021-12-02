@@ -30,10 +30,11 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
     uint256 public startBlock;
     uint256 public mintPerBlock;
     uint256 public lockWeekCount;
+    uint256 public lockDuration;
 
     event SetEmissionRate(address indexed user, uint256 mintPerBlock);
     event SetAssetsAccount(address indexed user, address account);
-    event SetLockWeekCount(address indexed user, uint256 count);
+    event SetLockDuration(address indexed user, uint256 lockDuration);
     event Deposit(address indexed user, address indexed to, uint256 amount, uint256 unlockTime);
     event Withdraw(address indexed user, address indexed to, uint256 amount);
     event Harvest(address indexed user, address indexed to, uint256 amount);
@@ -44,7 +45,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         address _rewardToken,
         uint256 _startBlock,
         uint256 _mintPerBlock,
-        uint256 _lockWeekCount
+        uint256 _lockDuration
     ) external initializer {
         require(_assetsAccount !=address(0) && _depositToken != address(0) && _rewardToken != address(0), 'GameSinglePool: INVALID_ADDRESS');
         owner = msg.sender;
@@ -53,7 +54,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         rewardToken = _rewardToken;
         mintPerBlock = _mintPerBlock;
         lastBlock = block.number > _startBlock ? block.number : _startBlock;
-        lockWeekCount = _lockWeekCount;
+        lockDuration = _lockDuration;
     }
 
     function setEmissionRate(uint256 _mintPerBlock) external onlyDev {
@@ -68,9 +69,9 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         emit SetAssetsAccount(msg.sender, _account);
     }
 
-    function setLockWeekCount(uint256 _count) external onlyDev {
-        lockWeekCount = _count;
-        emit SetLockWeekCount(msg.sender, _count);
+    function setLockDuration(uint256 _lockDuration) external onlyDev {
+        lockDuration = _lockDuration;
+        emit SetLockDuration(msg.sender, _lockDuration);
     }
 
     function getMultiplier(uint256 _from, uint256 _to) public pure returns (uint256) {
@@ -113,7 +114,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
         }
         TransferHelper.safeTransferFrom(depositToken, address(msg.sender), address(this), _amount);
         user.amount = user.amount.add(_amount);
-        user.unlockTime = block.timestamp.add(lockWeekCount.mul(1 weeks));
+        user.unlockTime = block.timestamp.add(lockDuration);
         depositTokenSupply  = depositTokenSupply.add(_amount);
         user.rewardDebt = user.amount.mul(accRewardPerShare).div(1e18);
         emit Deposit(msg.sender, _to, _amount, user.unlockTime);
@@ -121,7 +122,7 @@ contract GameSinglePool is Configable, ReentrancyGuard, Initializable {
     }
 
     function withdraw(uint256 _amount, address _to) public nonReentrant returns(uint256) {
-        require(userInfo[msg.sender].unlockTime <= block.timestamp, "GameSinglePool: INSUFFICIENT_AMOUNT");
+        require(userInfo[msg.sender].unlockTime <= block.timestamp, "GameSinglePool: NOT_UNLOCKED");
         _updatePool();
         _harvestRewardToken(_to);
         _withdraw(_amount, _to);

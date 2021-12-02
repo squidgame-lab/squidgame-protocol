@@ -162,8 +162,8 @@
 			"${GameToken.address}",
 			"${GameToken.address}",
 			"0",
-			"1000000000000000000",
-			"1"
+			"100000000000000000",
+			"604800"
 		],
 		"upgradedAddress": "",
 		"deployed": false,

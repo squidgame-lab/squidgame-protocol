@@ -309,6 +309,11 @@
       "address": "0xab6541edEcEecAAa193073c6B828790aa5064bad",
       "txHash": "0xe0b589bbb26f974450c01f51890d98a6752e79b999614ee7a633cd31fe191ead",
       "kind": "transparent"
+    },
+    {
+      "address": "0x2A8259Ce8a1B660422A353B11D046a16FecAb5Cb",
+      "txHash": "0xde39b84d2b86fc9b5c5aa99b2ad82e9ca8546170c43c12dac33b071056ef13ff",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -11705,6 +11710,150 @@
           },
           "t_uint256": {
             "label": "uint256"
+          }
+        }
+      }
+    },
+    "34f282430954bd28dab9ccea7748fe586a19a7168f0c394a01230a8f3520bb42": {
+      "address": "0xAeDc31453A7166C3d617397A91B4f5A91068EB92",
+      "txHash": "0x72631b9e81ed0385405e2290d083b866d37744aef5a758b4477d09285a76a173",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "userInfo",
+            "type": "t_mapping(t_address,t_struct(UserInfo)11134_storage)",
+            "src": "contracts/GameSinglePool.sol:20"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "lastBlock",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:23"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "accRewardPerShare",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:24"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "depositTokenSupply",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:25"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "assetsAccount",
+            "type": "t_address",
+            "src": "contracts/GameSinglePool.sol:27"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "depositToken",
+            "type": "t_address",
+            "src": "contracts/GameSinglePool.sol:28"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "rewardToken",
+            "type": "t_address",
+            "src": "contracts/GameSinglePool.sol:29"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "startBlock",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:30"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "mintPerBlock",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:31"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "lockWeekCount",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:32"
+          },
+          {
+            "contract": "GameSinglePool",
+            "label": "lockDuration",
+            "type": "t_uint256",
+            "src": "contracts/GameSinglePool.sol:33"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(UserInfo)11134_storage)": {
+            "label": "mapping(address => struct GameSinglePool.UserInfo)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(UserInfo)11134_storage": {
+            "label": "struct GameSinglePool.UserInfo",
+            "members": [
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "unlockTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "rewardDebt",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
           }
         }
       }

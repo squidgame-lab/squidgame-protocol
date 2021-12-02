@@ -340,5 +340,22 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameSinglePool": {
+    "contractName": "GameSinglePool",
+    "address": "0x2A8259Ce8a1B660422A353B11D046a16FecAb5Cb",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "0x9505D2C9a5CF3977a33babC55E3582607E877D15",
+      "0",
+      "100000000000000000",
+      "600"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
   }
 }
