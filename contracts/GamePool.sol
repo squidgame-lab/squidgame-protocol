@@ -114,7 +114,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         owner = msg.sender;
     }
 
-    function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
+    function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder, address _shareRule) external onlyDev {
         rewardSource = _rewardSource;
         buyToken = IRewardSource(_rewardSource).buyToken();
         shareToken = _shareToken;
@@ -124,6 +124,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         shareReleaseEpoch = _shareReleaseEpoch;
         isFromTicket = _isFromTicket;
         enableRoundOrder = _enableRoundOrder;
+        shareRule = _shareRule;
     }
 
     function setEpoch(uint64 _epoch, uint64 _shareReleaseEpoch) external onlyManager {
@@ -148,11 +149,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(shareParticipationAmount != _shareParticipationAmount || shareTopAmount != _shareTopAmount, 'no change');
         shareParticipationAmount = _shareParticipationAmount;
         shareTopAmount = _shareTopAmount;
-    }
-
-    function setShareRule(address _shareRule) external onlyManager {
-        require(shareRule != _shareRule, 'no change');
-        shareRule = _shareRule;
     }
 
     function setTopRate(uint128[] calldata _levels, TopRate[] memory _values) external onlyManager {
@@ -472,23 +468,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return uint128(roundOrders[_round].length);
     }
 
-    function iterateReverseRoundOrders(uint128 _round, uint128 _start, uint128 _end) external view returns (OrderResult[] memory list){
-        require(_end <= _start && _end >= 0 && _start >= 0, "invalid param");
-        uint128 count = countRoundOrder(_round);
-        if (_start > count) _start = count;
-        if (_end > _start) _end = _start;
-        count = _start - _end; 
-        list = new OrderResult[](count);
-        if (count == 0) return list;
-        uint128 index = 0;
-        for(uint128 i = _end;i < _start; i++) {
-            uint128 j = _start - index -1;
-            list[index] = getOrderResult(roundOrders[_round][j]);
-            index++;
-        }
-        return list;
-    }
-
     function getRankTopRate(uint128 _strategySn, uint128 _rank) public view returns (uint128 rate, uint128 count) {
         for(uint128 i; i<topStrategies[_strategySn].length; i++) {
             if(_rank >= topStrategies[_strategySn][i].start && _rank <= topStrategies[_strategySn][i].end) {
@@ -578,4 +557,8 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         return IGamePoolShareRule(shareRule).getShareAmount(address(this));
     }
 
+    function depositNextPool(uint128 _value) external {
+        TransferHelper.safeTransferFrom(buyToken, msg.sender, address(this), _value);
+        nextPoolTotal = nextPoolTotal.add(_value);
+    }
 }
