@@ -114,7 +114,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         owner = msg.sender;
     }
 
-    function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder, address _shareRule) external onlyDev {
+    function configure(address _rewardSource, address _shareToken, address _nextPool, uint128 _nextPoolRate, uint64 _epoch, uint64 _shareReleaseEpoch, bool _isFromTicket, bool _enableRoundOrder) external onlyDev {
         rewardSource = _rewardSource;
         buyToken = IRewardSource(_rewardSource).buyToken();
         shareToken = _shareToken;
@@ -124,7 +124,6 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         shareReleaseEpoch = _shareReleaseEpoch;
         isFromTicket = _isFromTicket;
         enableRoundOrder = _enableRoundOrder;
-        shareRule = _shareRule;
     }
 
     function setEpoch(uint64 _epoch, uint64 _shareReleaseEpoch) external onlyManager {
@@ -149,6 +148,11 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(shareParticipationAmount != _shareParticipationAmount || shareTopAmount != _shareTopAmount, 'no change');
         shareParticipationAmount = _shareParticipationAmount;
         shareTopAmount = _shareTopAmount;
+    }
+
+    function setShareRule(address _shareRule) external onlyManager {
+        require(shareRule != _shareRule, 'no change');
+        shareRule = _shareRule;
     }
 
     function setTopRate(uint128[] calldata _levels, TopRate[] memory _values) external onlyManager {
@@ -555,10 +559,5 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         }
 
         return IGamePoolShareRule(shareRule).getShareAmount(address(this));
-    }
-
-    function depositNextPool(uint128 _value) external {
-        TransferHelper.safeTransferFrom(buyToken, msg.sender, address(this), _value);
-        nextPoolTotal = nextPoolTotal.add(_value);
     }
 }

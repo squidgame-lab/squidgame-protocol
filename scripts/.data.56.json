@@ -111,10 +111,10 @@
     "address": "0x94945cAaC9293f2674184039C39AE6c5663e3Ab5",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0x34C4555f771F60FF5584B31B149c1d437E8eB5D6",
+    "upgradedAddress": "0xb05A1B436D989CD8f50fb9d4c6c94570266dcEBc",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool27": {
     "contractName": "GamePool",
@@ -311,7 +311,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": false
+    "verified": true
   },
   "GamePool47": {
     "contractName": "GamePool",
