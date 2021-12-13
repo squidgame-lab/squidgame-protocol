@@ -13,12 +13,17 @@ import { GameTimeLock } from '../../typechain/GameTimeLock'
 import { GameSchedualPool } from '../../typechain/GameSchedualPool'
 import { GameSinglePool } from '../../typechain/GameSinglePool'
 import { GameFarm } from '../../typechain/GameFarm'
+import { WETH9 } from '../../typechain/WETH9'
+import { MockGameTicket } from '../../typechain/MockGameTicket'
+import { PancakeFactory } from '../../typechain/PancakeFactory'
+import { PancakeRouter } from '../../typechain/PancakeRouter'
+import { GameTicketExchange } from '../../typechain/GameTicketExchange'
 import { Fixture, deployMockContract, MockContract } from 'ethereum-waffle'
 import { abi as TimeLockABI } from '../../artifacts/contracts/interfaces/IGameTimeLock.sol/IGameTimeLock.json'
-
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
 export const bigNumber17 = BigNumber.from("100000000000000000")  //1e17
 export const dateNow = BigNumber.from("1636429275") // 2021-11-09 11:41:15
+export const deadline = BigNumber.from('1893427200') // 2030
 
 export async function getBlockNumber() {
     const blockNumber = await ethers.provider.getBlockNumber()
@@ -369,4 +374,122 @@ export const gameSinglePoolFixture: Fixture<GameSinglePoolFixture> = async funct
     await depositToken.connect(other).approve(pool.address, ethers.constants.MaxUint256)
 
     return { depositToken, rewardToken, pool };
+}
+
+interface GameTicketExchangeFixture {
+    usdt: TestToken
+    busd: TestToken
+    sqt: GameToken
+    weth: WETH9
+    gameLevel1Ticket: GameTicket
+    gameLevel2Ticket: MockGameTicket
+    pancakeRouter: PancakeRouter
+    gameTicketExchange: GameTicketExchange
+}
+
+export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = async function ([wallet, other]: Wallet[]): Promise<GameTicketExchangeFixture> {
+    // deploy usdt
+    let testTokenFactory = await ethers.getContractFactory('TestToken')
+    let usdt = (await testTokenFactory.deploy()) as TestToken
+    await usdt.initialize();
+    await usdt.mint(wallet.address, bigNumber18.mul(10000));
+
+    // deploy busd
+    let busd = (await testTokenFactory.deploy()) as TestToken
+    await busd.initialize();
+    await busd.mint(wallet.address, bigNumber18.mul(10000));
+
+    // deploy sqt
+    let gameTokenFactory = await ethers.getContractFactory('GameToken');
+    let sqt = (await gameTokenFactory.deploy()) as GameToken;
+    await sqt.initialize();
+    await sqt.increaseFund(wallet.address, bigNumber18.mul(10000))
+    await sqt.mint(wallet.address, bigNumber18.mul(1000));
+
+    // deploy weth
+    let wethFactory = await ethers.getContractFactory('WETH9')
+    let weth = (await wethFactory.deploy()) as WETH9
+
+    // deploy game config
+    const gameConfigFactory = await ethers.getContractFactory('GameConfig');
+    const gameConfig = (await gameConfigFactory.deploy()) as GameConfig;
+    await gameConfig.initialize();
+
+    // deploy game ticket
+    const gameTicket1Factory = await ethers.getContractFactory('GameTicket');
+    const gameLevel1Ticket = (await gameTicket1Factory.deploy()) as GameTicket;
+    await gameLevel1Ticket.setupConfig(gameConfig.address);
+    await gameLevel1Ticket.initialize(usdt.address, bigNumber18);
+
+    // deploy game ticket2
+    const gameTicket2Factory = await ethers.getContractFactory('MockGameTicket');
+    const gameLevel2Ticket = (await gameTicket2Factory.deploy()) as MockGameTicket;
+    await gameLevel2Ticket.setupConfig(gameConfig.address);
+    await gameLevel2Ticket.initialize(usdt.address, sqt.address, bigNumber18, bigNumber18, bigNumber18);
+
+    // deploy pancake factory
+    const panacakeFactory = await ethers.getContractFactory('PancakeFactory')
+    const factory = (await panacakeFactory.deploy(wallet.address)) as PancakeFactory
+
+    // deploy pancake router
+    const pancakeRouterFactory = await ethers.getContractFactory('PancakeRouter')
+    const pancakeRouter = (await pancakeRouterFactory.deploy(factory.address, weth.address)) as PancakeRouter
+
+    // usdt approve to pancake router
+    await usdt.approve(pancakeRouter.address, ethers.constants.MaxUint256)
+
+    // busd approve to pancake router
+    await busd.approve(pancakeRouter.address, ethers.constants.MaxUint256)
+
+    // sqt approve to pancake router
+    await sqt.approve(pancakeRouter.address, ethers.constants.MaxUint256)
+
+    // add liquidity busd-usdt
+    await pancakeRouter.addLiquidity(
+        busd.address,
+        usdt.address,
+        bigNumber18.mul(10000),
+        bigNumber18.mul(10000),
+        BigNumber.from(0),
+        BigNumber.from(0),
+        wallet.address,
+        deadline
+    )
+
+    // add liquidity weth-usdt
+    await pancakeRouter.addLiquidityETH(
+        usdt.address,
+        bigNumber18.mul(5000),
+        BigNumber.from(0),
+        BigNumber.from(0),
+        wallet.address,
+        deadline,
+        { value: bigNumber18.mul(50) }
+    )
+
+    // add liquidity usdt-sqt
+    await pancakeRouter.addLiquidity(
+        sqt.address,
+        usdt.address,
+        bigNumber18.mul(100000),
+        bigNumber18.mul(10000),
+        BigNumber.from(0),
+        BigNumber.from(0),
+        wallet.address,
+        deadline
+    )
+
+
+    // deploy game ticket exchange
+    const gameTicketExchangeFactory = await ethers.getContractFactory('GameTicketExchange');
+    const gameTicketExchange = (await gameTicketExchangeFactory.deploy()) as GameTicketExchange;
+    await gameTicketExchange.initialize(weth.address, pancakeRouter.address)
+
+    // add level ticket
+    await gameTicketExchange.batchSetLevelTicket(
+        [BigNumber.from(1), BigNumber.from(2)],
+        [gameLevel1Ticket.address, gameLevel2Ticket.address]
+    )
+
+    return { usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, gameTicketExchange }
 }
