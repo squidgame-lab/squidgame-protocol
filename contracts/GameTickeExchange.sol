@@ -53,7 +53,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
     }
 
     function batchSetLevelTicket(uint[] memory _levels, address[] memory _tickets) external onlyAdmin {
-        require(_levels.length != _tickets.length, 'GameTicketExchange: INVALID_ARGS_LENGTH');
+        require(_levels.length == _tickets.length, 'GameTicketExchange: INVALID_ARGS_LENGTH');
         for (uint i = 0; i < _levels.length; i++) {
             setLevelTicket(_levels[i], _tickets[i]);
         }

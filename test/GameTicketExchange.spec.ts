@@ -22,6 +22,7 @@ describe('GameTicketExchange', async () => {
     let weth: WETH9
     let gameLevel1Ticket: GameTicket
     let gameLevel2Ticket: MockGameTicket
+    let pancakefactory: PancakeFactory
     let pancakeRouter: PancakeRouter
     let gameTicketExchange: GameTicketExchange
 
@@ -33,10 +34,12 @@ describe('GameTicketExchange', async () => {
     })
 
     beforeEach('deploy GameTicketExchange', async () => {
-        ; ({ usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, gameTicketExchange } = await loadFixTure(gameTicketExchangeFixture));
+        ; ({ usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, factory: pancakefactory, pancakeRouter, gameTicketExchange } = await loadFixTure(gameTicketExchangeFixture));
     })
 
-    it('check pancake router liquidity',async () => {
-        
+    it('check pancake router', async () => {
+        expect(await pancakefactory.getPair(busd.address, usdt.address)).to.not.eq(ethers.constants.AddressZero)
+        expect(await pancakefactory.getPair(sqt.address, usdt.address)).to.not.eq(ethers.constants.AddressZero)
+        expect(await pancakefactory.getPair(weth.address, usdt.address)).to.not.eq(ethers.constants.AddressZero)
     })
 })

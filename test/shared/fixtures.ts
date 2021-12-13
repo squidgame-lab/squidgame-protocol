@@ -383,6 +383,7 @@ interface GameTicketExchangeFixture {
     weth: WETH9
     gameLevel1Ticket: GameTicket
     gameLevel2Ticket: MockGameTicket
+    factory: PancakeFactory
     pancakeRouter: PancakeRouter
     gameTicketExchange: GameTicketExchange
 }
@@ -392,19 +393,19 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
     let testTokenFactory = await ethers.getContractFactory('TestToken')
     let usdt = (await testTokenFactory.deploy()) as TestToken
     await usdt.initialize();
-    await usdt.mint(wallet.address, bigNumber18.mul(10000));
+    await usdt.mint(wallet.address, bigNumber18.mul(100000000));
 
     // deploy busd
     let busd = (await testTokenFactory.deploy()) as TestToken
     await busd.initialize();
-    await busd.mint(wallet.address, bigNumber18.mul(10000));
+    await busd.mint(wallet.address, bigNumber18.mul(100000000));
 
     // deploy sqt
     let gameTokenFactory = await ethers.getContractFactory('GameToken');
     let sqt = (await gameTokenFactory.deploy()) as GameToken;
     await sqt.initialize();
-    await sqt.increaseFund(wallet.address, bigNumber18.mul(10000))
-    await sqt.mint(wallet.address, bigNumber18.mul(1000));
+    await sqt.increaseFund(wallet.address, bigNumber18.mul(100000000))
+    await sqt.mint(wallet.address, bigNumber18.mul(100000000));
 
     // deploy weth
     let wethFactory = await ethers.getContractFactory('WETH9')
@@ -418,14 +419,14 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
     // deploy game ticket
     const gameTicket1Factory = await ethers.getContractFactory('GameTicket');
     const gameLevel1Ticket = (await gameTicket1Factory.deploy()) as GameTicket;
-    await gameLevel1Ticket.setupConfig(gameConfig.address);
     await gameLevel1Ticket.initialize(usdt.address, bigNumber18);
+    await gameLevel1Ticket.setupConfig(gameConfig.address);
 
     // deploy game ticket2
     const gameTicket2Factory = await ethers.getContractFactory('MockGameTicket');
     const gameLevel2Ticket = (await gameTicket2Factory.deploy()) as MockGameTicket;
-    await gameLevel2Ticket.setupConfig(gameConfig.address);
     await gameLevel2Ticket.initialize(usdt.address, sqt.address, bigNumber18, bigNumber18, bigNumber18);
+    await gameLevel2Ticket.setupConfig(gameConfig.address);
 
     // deploy pancake factory
     const panacakeFactory = await ethers.getContractFactory('PancakeFactory')
@@ -491,5 +492,5 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
         [gameLevel1Ticket.address, gameLevel2Ticket.address]
     )
 
-    return { usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, gameTicketExchange }
+    return { usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, factory, gameTicketExchange }
 }
