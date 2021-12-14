@@ -19,10 +19,11 @@ let uniswapV2Dexs = [
   },
   {
     name: "pancakeFactory",
-    factory: '0x962E0fCc3f7E1b7e900dE12EDD67758ffE183aaB',
-    router: '0x8EFfCF3a721FF6169be25b225d06728B7Fe3411A',
-    sqt2wethPair: '',
-    sqt2usdtPair: ''
+    factory: '0xFbFFf699B94d2c351745CE78aab41481004a9B01',
+    router: '0xf9A182328736aa394F21105f761Bc7f6Db0310DB',
+    usdt2WethPair: "0xC4a0A527f3065cB9eEBb3fc888b4e30F50B7bbCD",
+    usdt2BusdPair: "0x5127d477E295124D84D5F8683d067B410a5829eF",
+    usdt2SqtPair: "0xD06943fF21CcBcBEe93a4aAb196F24cD9806ee4C"
   }
 ]
 
@@ -134,7 +135,8 @@ async function deployDexPancake(name: string) {
   await waitForMint(tx.hash);
   console.log('busd approve success: ', tx.hash);
 
-  // let routerIns = await ethers.getContractAt('PancakeRouter', "0x8EFfCF3a721FF6169be25b225d06728B7Fe3411A");
+  // let routerIns = await ethers.getContractAt('PancakeRouter', "0xf9A182328736aa394F21105f761Bc7f6Db0310DB");
+  
   // add liquidity usdt-sqt 20:200
   tx = await routerIns.addLiquidity(
     sqt,
@@ -158,8 +160,7 @@ async function deployDexPancake(name: string) {
     0,
     0,
     wallet,
-    deadLine,
-    {gasPrice: 6}
+    deadLine
   )
   await waitForMint(tx.hash);
   console.log('add liquidity usdt-busd success: ', tx.hash);

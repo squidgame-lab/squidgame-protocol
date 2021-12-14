@@ -14,6 +14,8 @@ import './modules/ReentrancyGuard.sol';
 import './modules/Configable.sol';
 import './modules/Initializable.sol';
 
+import 'hardhat/console.sol';
+
 interface IWETH {
     function deposit() external payable;
     function transfer(address to, uint value) external returns (bool);
@@ -25,9 +27,11 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
 
     address public weth;
     address public pancakeRouter;
-    mapping(uint => address) levelTickets;
+    mapping(uint => address) public levelTickets;
+    mapping(address => bool) public paymentTokenWhiteList;
     
     event SetLevelTicket(address indexed _user, uint level, address ticket);
+    event SetPTW(address indexed _user, address paymentToken, bool status);
     event Bought(address indexed user, uint ticketAmount, address paymentToken, uint paymentTokenAmount);
 
     receive() external payable {
@@ -42,6 +46,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         require(_weth != address(0), 'GameTicketExchange: INVALID_WETH_ADDR');
         require(_pancakeRouter != address(0), 'GameTicketExchange: INVALID_ROUTER_ADDR');
         owner = msg.sender;
+        weth = _weth;
         pancakeRouter = _pancakeRouter;
     }
 
@@ -59,18 +64,32 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         }
     }
 
-    function getStatus(uint _level) public view OnlyExistLevel(_level) returns (bool) {
-        if (_level == 1) return true;
-        return IGameTicket(levelTickets[_level]).status(msg.sender);
+    function setPTW(address _paymentToken, bool _status) public onlyAdmin {
+        paymentTokenWhiteList[_paymentToken] = _status;
+        emit SetPTW(msg.sender, _paymentToken, _status);
     }
 
-    function getTicketBalance(uint _level) public view OnlyExistLevel(_level) returns (uint) {
-        return IGameTicket(levelTickets[_level]).tickets(msg.sender);
+    function batchSetPTW(address[] memory _paymentTokens, bool[] memory _status) external onlyAdmin {
+        require(_paymentTokens.length == _status.length, 'GameTicketExchange: INVALID_ARGS_LENGTH');
+        for (uint i = 0; i < _paymentTokens.length; i++) {
+            setPTW(_paymentTokens[i], _status[i]);
+        }
+    }
+
+    function getStatus(uint _level, address _user) public view OnlyExistLevel(_level) returns (bool) {
+        if (_level == 1) return true;
+        return IGameTicket(levelTickets[_level]).status(_user);
+    }
+
+    function getTicketsAmount(uint _level, address _user) public view OnlyExistLevel(_level) returns (uint) {
+        return IGameTicket(levelTickets[_level]).tickets(_user);
     }
 
     function getPaymentAmount(uint _level, uint _ticketAmount, address _paymentToken) public view OnlyExistLevel(_level) returns (uint) {
+        require(paymentTokenWhiteList[_paymentToken], 'GameTicketExchange: NOT_SUPPORT_PAYMENT_TOKEN');
         TicketInfo memory ticketInfo = _getTicketInfo(_level);
         (uint buyTokenAmount, , ) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
+        if (_paymentToken == ticketInfo.buyToken) return buyTokenAmount;
         if (_paymentToken == address(0)) {
             return _calculateAmountIn(buyTokenAmount, weth, ticketInfo.buyToken);
         } else {
@@ -78,8 +97,17 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         }
     }
 
-    function buy(uint _level, uint _ticketAmount, address _paymentToken, uint deadline) external payable OnlyExistLevel(_level) {
+    function buy(
+        uint _level,
+        uint _ticketAmount,
+        address _paymentToken,
+        uint _paymentTokenAmount,
+        uint deadline
+    ) external payable OnlyExistLevel(_level) {
+        require(paymentTokenWhiteList[_paymentToken], 'GameTicketExchange: NOT_SUPPORT_PAYMENT_TOKEN');
         uint paymentTokenAmount = getPaymentAmount(_level, _ticketAmount, _paymentToken);
+        require(_paymentTokenAmount >= paymentTokenAmount, 'GameTicketExchange: NOT_ENOUGH_PAYMENT');
+
         if (_paymentToken == address(0)) {
             require(paymentTokenAmount <= msg.value, 'GameTicketExchange: INVALID_VALUE');
             IWETH(weth).deposit{value: msg.value}();
@@ -89,10 +117,10 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
 
         TicketInfo memory ticketInfo = _getTicketInfo(_level);
         (uint buyTokenAmount, uint gameTokenAmount, uint convertAmount) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
-        address[] memory path;
+        address[] memory path = new address[](2);
         if (_paymentToken != ticketInfo.buyToken) {
-            IERC20(_paymentToken).approve(pancakeRouter, paymentTokenAmount);
-            path[0] = _paymentToken;
+            path[0] = _paymentToken != address(0)? _paymentToken: weth;
+            IERC20(path[0]).approve(pancakeRouter, paymentTokenAmount);
             path[1] = ticketInfo.buyToken;
             IPancakeRouter(pancakeRouter).swapTokensForExactTokens(
                 buyTokenAmount,
@@ -102,9 +130,10 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
                 deadline
             );
         }
-        if (gameTokenAmount != 0) {
-            IERC20(ticketInfo.buyToken).approve(pancakeRouter, convertAmount);
+        IERC20(ticketInfo.buyToken).approve(levelTickets[_level], buyTokenAmount.sub(convertAmount));
+        if (ticketInfo.gameToken != address(0) && gameTokenAmount != 0 && _paymentToken != ticketInfo.gameToken) {
             path[0] = ticketInfo.buyToken;
+            IERC20(ticketInfo.buyToken).approve(pancakeRouter, convertAmount);
             path[1] = ticketInfo.gameToken;
             IPancakeRouter(pancakeRouter).swapTokensForExactTokens(
                 gameTokenAmount,
@@ -113,6 +142,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
                 address(this),
                 deadline
             );
+            IERC20(ticketInfo.gameToken).approve(levelTickets[_level], gameTokenAmount);
         }
 
         IGameTicket(levelTickets[_level]).buy(buyTokenAmount.sub(convertAmount), msg.sender);
@@ -127,11 +157,17 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
     }
 
     function _getTicketInfo(uint _level) internal view returns (TicketInfo memory ticketInfo){
+        address gameToken;
+        uint gameTokenUnit;
+        if (_level != 1) {
+            gameToken = IGameTicket(levelTickets[_level]).gameToken();
+            gameTokenUnit = IGameTicket(levelTickets[_level]).gameTokenUnit();
+        }
         ticketInfo = TicketInfo({
             buyToken: IGameTicket(levelTickets[_level]).buyToken(),
             uintAmount: IGameTicket(levelTickets[_level]).unit(),
-            gameToken: IGameTicket(levelTickets[_level]).gameToken(),
-            gameTokenUint: IGameTicket(levelTickets[_level]).gameTokenUnit()
+            gameToken: gameToken,
+            gameTokenUint: gameTokenUnit
         });
     }
 
@@ -139,7 +175,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         if (ticketInfo.uintAmount != 0) {
             buyTokenAmount = _ticketAmount.mul(ticketInfo.uintAmount);
         }
-        if (ticketInfo.gameTokenUint != 0) {
+        if (ticketInfo.gameTokenUint != 0 && ticketInfo.gameToken != address(0)) {
             gameTokenAmount = _ticketAmount.mul(ticketInfo.gameTokenUint);
             convertAmount = _calculateAmountIn(gameTokenAmount, ticketInfo.buyToken, ticketInfo.gameToken);
             buyTokenAmount = buyTokenAmount.add(convertAmount);

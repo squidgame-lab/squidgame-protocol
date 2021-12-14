@@ -301,5 +301,47 @@
         "args": [
             "${GameConfig.address}"
         ]
+    },
+    {
+        "call": true,
+        "name": "GameTicketExchange",
+        "functionName": "batchSetLevelTicket",
+        "contractName": "GameTicketExchange",
+        "contractAddr": "",
+        "args": [
+            [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            [
+                "0x0a415B25140F6b06e94Db0A56E2b92484752B4e0",
+                "0xf99cd27065AE5b955Ab8c59D3Cb09cDAd8293950",
+                "0x99eFA000563Ec87f2a38021dFC019599f7837803",
+                "0x42f528a02A28B879951a3eD4D4318aE6606bEadB",
+                "0x51f57f6733c27849Bc2Adf0252c26eE49B71fa1E"
+            ]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameTicketExchange",
+        "functionName": "batchSetPTW",
+        "contractName": "GameTicketExchange",
+        "contractAddr": "",
+        "args": [
+            [
+                "0xCC36337919dCE00519eb7a7013C97e79cC33D14f",
+                "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+                "0x0000000000000000000000000000000000000000"
+            ],
+            [
+                true,
+                true,
+                true
+            ]
+        ]
     }
 ]

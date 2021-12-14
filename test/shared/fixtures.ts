@@ -445,7 +445,7 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
     // sqt approve to pancake router
     await sqt.approve(pancakeRouter.address, ethers.constants.MaxUint256)
 
-    // add liquidity busd-usdt
+    // add liquidity busd-usdt 1:1
     await pancakeRouter.addLiquidity(
         busd.address,
         usdt.address,
@@ -457,7 +457,7 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
         deadline
     )
 
-    // add liquidity weth-usdt
+    // add liquidity weth-usdt 1:100
     await pancakeRouter.addLiquidityETH(
         usdt.address,
         bigNumber18.mul(5000),
@@ -468,7 +468,7 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
         { value: bigNumber18.mul(50) }
     )
 
-    // add liquidity usdt-sqt
+    // add liquidity sqt-usdt 10:1
     await pancakeRouter.addLiquidity(
         sqt.address,
         usdt.address,
@@ -490,6 +490,12 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
     await gameTicketExchange.batchSetLevelTicket(
         [BigNumber.from(1), BigNumber.from(2)],
         [gameLevel1Ticket.address, gameLevel2Ticket.address]
+    )
+
+    // add payment token whiteList
+    await gameTicketExchange.batchSetPTW(
+        [busd.address, usdt.address, sqt.address, ethers.constants.AddressZero],
+        [true, true, true, true]
     )
 
     return { usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, factory, gameTicketExchange }

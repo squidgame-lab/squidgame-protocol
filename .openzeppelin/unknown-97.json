@@ -314,6 +314,11 @@
       "address": "0x2A8259Ce8a1B660422A353B11D046a16FecAb5Cb",
       "txHash": "0xde39b84d2b86fc9b5c5aa99b2ad82e9ca8546170c43c12dac33b071056ef13ff",
       "kind": "transparent"
+    },
+    {
+      "address": "0x6664794ED1b81B5d5e0AE275497E0376F92A941c",
+      "txHash": "0x35cfd40ff79dc3d4f15ad97de1f9ce3c71622468fdeb9d4f417e54e2c75a5c43",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -11848,6 +11853,94 @@
           },
           "t_uint256": {
             "label": "uint256"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "945b9b2f2ba2a2f7d61b7acb8f44fa8acede4d2421f5b5a932f5498353e6bad3": {
+      "address": "0x5A2E60229002F6ddEDD684424aE6E25f5174f5fb",
+      "txHash": "0x5ddca8a3129e14680f484587e84cc01dc8e123a2ec30794d440dae602f745529",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "weth",
+            "type": "t_address",
+            "src": "contracts/GameTickeExchange.sol:28"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "pancakeRouter",
+            "type": "t_address",
+            "src": "contracts/GameTickeExchange.sol:29"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "levelTickets",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "contracts/GameTickeExchange.sol:30"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "paymentTokenWhiteList",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/GameTickeExchange.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
           },
           "t_bool": {
             "label": "bool"
