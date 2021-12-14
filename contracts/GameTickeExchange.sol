@@ -85,9 +85,31 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         return IGameTicket(levelTickets[_level]).tickets(_user);
     }
 
+    struct TicketInfo {
+        address buyToken;
+        uint uintAmount;
+        address gameToken;
+        uint gameTokenUint;
+    }
+
+    function getTicketInfo(uint _level) public view returns (TicketInfo memory ticketInfo){
+        address gameToken;
+        uint gameTokenUnit;
+        if (_level != 1) {
+            gameToken = IGameTicket(levelTickets[_level]).gameToken();
+            gameTokenUnit = IGameTicket(levelTickets[_level]).gameTokenUnit();
+        }
+        ticketInfo = TicketInfo({
+            buyToken: IGameTicket(levelTickets[_level]).buyToken(),
+            uintAmount: IGameTicket(levelTickets[_level]).unit(),
+            gameToken: gameToken,
+            gameTokenUint: gameTokenUnit
+        });
+    }
+
     function getPaymentAmount(uint _level, uint _ticketAmount, address _paymentToken) public view OnlyExistLevel(_level) returns (uint) {
         require(paymentTokenWhiteList[_paymentToken], 'GameTicketExchange: NOT_SUPPORT_PAYMENT_TOKEN');
-        TicketInfo memory ticketInfo = _getTicketInfo(_level);
+        TicketInfo memory ticketInfo = getTicketInfo(_level);
         (uint buyTokenAmount, , ) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
         if (_paymentToken == ticketInfo.buyToken) return buyTokenAmount;
         if (_paymentToken == address(0)) {
@@ -115,7 +137,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
             TransferHelper.safeTransferFrom(_paymentToken, msg.sender, address(this), paymentTokenAmount);
         }
 
-        TicketInfo memory ticketInfo = _getTicketInfo(_level);
+        TicketInfo memory ticketInfo = getTicketInfo(_level);
         (uint buyTokenAmount, uint gameTokenAmount, uint convertAmount) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
         address[] memory path = new address[](2);
         if (_paymentToken != ticketInfo.buyToken) {
@@ -147,28 +169,6 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
 
         IGameTicket(levelTickets[_level]).buy(buyTokenAmount.sub(convertAmount), msg.sender);
         emit Bought(msg.sender, _ticketAmount, _paymentToken, paymentTokenAmount);
-    }
-
-    struct TicketInfo {
-        address buyToken;
-        uint uintAmount;
-        address gameToken;
-        uint gameTokenUint;
-    }
-
-    function _getTicketInfo(uint _level) internal view returns (TicketInfo memory ticketInfo){
-        address gameToken;
-        uint gameTokenUnit;
-        if (_level != 1) {
-            gameToken = IGameTicket(levelTickets[_level]).gameToken();
-            gameTokenUnit = IGameTicket(levelTickets[_level]).gameTokenUnit();
-        }
-        ticketInfo = TicketInfo({
-            buyToken: IGameTicket(levelTickets[_level]).buyToken(),
-            uintAmount: IGameTicket(levelTickets[_level]).unit(),
-            gameToken: gameToken,
-            gameTokenUint: gameTokenUnit
-        });
     }
 
     function _getLevelTokenAmount(TicketInfo memory ticketInfo, uint _ticketAmount) internal view returns (uint buyTokenAmount, uint gameTokenAmount, uint convertAmount) {

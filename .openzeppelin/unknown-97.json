@@ -11950,6 +11950,94 @@
           }
         }
       }
+    },
+    "a438ecae4602fb8ad78a6cc244d432ad4deaf6c76a366c84258262405ab5b808": {
+      "address": "0xe4d2a62B689C815D218d5f821Aa689140AE71253",
+      "txHash": "0xc6f7cf0de73dbf040492afe8e05159fee174908ac42e866a7fc8037eda727057",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "weth",
+            "type": "t_address",
+            "src": "contracts/GameTickeExchange.sol:28"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "pancakeRouter",
+            "type": "t_address",
+            "src": "contracts/GameTickeExchange.sol:29"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "levelTickets",
+            "type": "t_mapping(t_uint256,t_address)",
+            "src": "contracts/GameTickeExchange.sol:30"
+          },
+          {
+            "contract": "GameTicketExchange",
+            "label": "paymentTokenWhiteList",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/GameTickeExchange.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }
