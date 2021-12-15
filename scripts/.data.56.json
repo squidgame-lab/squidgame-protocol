@@ -380,16 +380,16 @@
     "verified": false
   },
   "GameTicketExchange": {
-		"contractName": "GameTicketExchange",
-		"address": "",
-		"constructorArgs": [],
-		"upgradeArgs": [
-			"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-			"0x10ED43C718714eb63d5aA57B78B54704E256024E"
-		],
-		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
-	}
+    "contractName": "GameTicketExchange",
+    "address": "0x9650C3fc088224b93B159A18a2470CEC6A70B390",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "0x10ED43C718714eb63d5aA57B78B54704E256024E"
+    ],
+    "upgradedAddress": "0xDf818F97D64a8e693Cdf364F6162B07dCaa6a88A",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  }
 }
