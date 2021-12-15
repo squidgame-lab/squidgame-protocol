@@ -87,9 +87,9 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
 
     struct TicketInfo {
         address buyToken;
-        uint uintAmount;
+        uint unit;
         address gameToken;
-        uint gameTokenUint;
+        uint gameTokenUnit;
     }
 
     function getTicketInfo(uint _level) public view returns (TicketInfo memory ticketInfo){
@@ -101,9 +101,9 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         }
         ticketInfo = TicketInfo({
             buyToken: IGameTicket(levelTickets[_level]).buyToken(),
-            uintAmount: IGameTicket(levelTickets[_level]).unit(),
+            unit: IGameTicket(levelTickets[_level]).unit(),
             gameToken: gameToken,
-            gameTokenUint: gameTokenUnit
+            gameTokenUnit: gameTokenUnit
         });
     }
 
@@ -172,11 +172,11 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
     }
 
     function _getLevelTokenAmount(TicketInfo memory ticketInfo, uint _ticketAmount) internal view returns (uint buyTokenAmount, uint gameTokenAmount, uint convertAmount) {
-        if (ticketInfo.uintAmount != 0) {
-            buyTokenAmount = _ticketAmount.mul(ticketInfo.uintAmount);
+        if (ticketInfo.unit != 0) {
+            buyTokenAmount = _ticketAmount.mul(ticketInfo.unit);
         }
-        if (ticketInfo.gameTokenUint != 0 && ticketInfo.gameToken != address(0)) {
-            gameTokenAmount = _ticketAmount.mul(ticketInfo.gameTokenUint);
+        if (ticketInfo.gameTokenUnit != 0 && ticketInfo.gameToken != address(0)) {
+            gameTokenAmount = _ticketAmount.mul(ticketInfo.gameTokenUnit);
             convertAmount = _calculateAmountIn(gameTokenAmount, ticketInfo.buyToken, ticketInfo.gameToken);
         }
     }
