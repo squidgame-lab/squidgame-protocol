@@ -368,7 +368,7 @@
     ],
     "upgradedAddress": "",
     "deployed": true,
-    "upgraded": true,
+    "upgraded": false,
     "verified": false
   }
 }
