@@ -110,12 +110,12 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
     function getPaymentAmount(uint _level, uint _ticketAmount, address _paymentToken) public view OnlyExistLevel(_level) returns (uint) {
         require(paymentTokenWhiteList[_paymentToken], 'GameTicketExchange: NOT_SUPPORT_PAYMENT_TOKEN');
         TicketInfo memory ticketInfo = getTicketInfo(_level);
-        (uint buyTokenAmount, , ) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
-        if (_paymentToken == ticketInfo.buyToken) return buyTokenAmount;
+        (uint buyTokenAmount, ,uint convertAmount) = _getLevelTokenAmount(ticketInfo, _ticketAmount);
+        if (_paymentToken == ticketInfo.buyToken) return buyTokenAmount.add(convertAmount);
         if (_paymentToken == address(0)) {
-            return _calculateAmountIn(buyTokenAmount, weth, ticketInfo.buyToken);
+            return _calculateAmountIn(buyTokenAmount.add(convertAmount), weth, ticketInfo.buyToken);
         } else {
-            return _calculateAmountIn(buyTokenAmount, _paymentToken, ticketInfo.buyToken);
+            return _calculateAmountIn(buyTokenAmount.add(convertAmount), _paymentToken, ticketInfo.buyToken);
         }
     }
 
@@ -145,15 +145,15 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
             IERC20(path[0]).approve(pancakeRouter, paymentTokenAmount);
             path[1] = ticketInfo.buyToken;
             IPancakeRouter(pancakeRouter).swapTokensForExactTokens(
-                buyTokenAmount,
+                buyTokenAmount.add(convertAmount),
                 paymentTokenAmount,
                 path,
                 address(this),
                 deadline
             );
         }
-        IERC20(ticketInfo.buyToken).approve(levelTickets[_level], buyTokenAmount.sub(convertAmount));
-        if (ticketInfo.gameToken != address(0) && gameTokenAmount != 0 && _paymentToken != ticketInfo.gameToken) {
+        IERC20(ticketInfo.buyToken).approve(levelTickets[_level], buyTokenAmount);
+        if (gameTokenAmount != 0) {
             path[0] = ticketInfo.buyToken;
             IERC20(ticketInfo.buyToken).approve(pancakeRouter, convertAmount);
             path[1] = ticketInfo.gameToken;
@@ -167,7 +167,7 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
             IERC20(ticketInfo.gameToken).approve(levelTickets[_level], gameTokenAmount);
         }
 
-        IGameTicket(levelTickets[_level]).buy(buyTokenAmount.sub(convertAmount), msg.sender);
+        IGameTicket(levelTickets[_level]).buy(buyTokenAmount, msg.sender);
         emit Bought(msg.sender, _ticketAmount, _paymentToken, paymentTokenAmount);
     }
 
@@ -178,7 +178,6 @@ contract GameTicketExchange is Configable, ReentrancyGuard, Initializable {
         if (ticketInfo.gameTokenUint != 0 && ticketInfo.gameToken != address(0)) {
             gameTokenAmount = _ticketAmount.mul(ticketInfo.gameTokenUint);
             convertAmount = _calculateAmountIn(gameTokenAmount, ticketInfo.buyToken, ticketInfo.gameToken);
-            buyTokenAmount = buyTokenAmount.add(convertAmount);
         }
     }
 

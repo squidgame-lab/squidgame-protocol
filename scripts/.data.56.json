@@ -378,5 +378,18 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
-  }
+  },
+  "GameTicketExchange": {
+		"contractName": "GameTicketExchange",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+			"0x10ED43C718714eb63d5aA57B78B54704E256024E"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	}
 }
