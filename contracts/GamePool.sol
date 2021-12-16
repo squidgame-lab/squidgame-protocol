@@ -427,7 +427,7 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
         require(getBalance() >= _value, 'insufficient balance');
 
         reward = _value;
-        nextPoolTotal = nextPoolTotal.sub(uint128(reward));
+        nextPoolTotal = 0;
         if (buyToken == address(0)) {
             TransferHelper.safeTransferETH(nextPool, reward);
         } else {
@@ -560,4 +560,5 @@ contract GamePool is IRewardSource, Configable, Pausable, ReentrancyGuard, Initi
 
         return IGamePoolShareRule(shareRule).getShareAmount(address(this));
     }
+
 }
