@@ -18,6 +18,7 @@ import { MockGameTicket } from '../../typechain/MockGameTicket'
 import { PancakeFactory } from '../../typechain/PancakeFactory'
 import { PancakeRouter } from '../../typechain/PancakeRouter'
 import { GameTicketExchange } from '../../typechain/GameTicketExchange'
+import { GamePrediction } from '../../typechain/GamePrediction'
 import { Fixture, deployMockContract, MockContract } from 'ethereum-waffle'
 import { abi as TimeLockABI } from '../../artifacts/contracts/interfaces/IGameTimeLock.sol/IGameTimeLock.json'
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
@@ -499,4 +500,41 @@ export const gameTicketExchangeFixture: Fixture<GameTicketExchangeFixture> = asy
     )
 
     return { usdt, busd, sqt, weth, gameLevel1Ticket, gameLevel2Ticket, pancakeRouter, factory, gameTicketExchange }
+}
+
+interface GamePredictionFixture {
+    sqt: GameToken
+    gamePrediction: GamePrediction
+}
+
+export const gamePredictionFixture: Fixture<GamePredictionFixture> = async function ([wallet]: Wallet[]): Promise<GamePredictionFixture> {
+    // deploy sqt
+    let gameTokenFactory = await ethers.getContractFactory('GameToken');
+    let sqt = (await gameTokenFactory.deploy()) as GameToken;
+    await sqt.initialize();
+    await sqt.increaseFund(wallet.address, bigNumber18.mul(100000000))
+    await sqt.mint(wallet.address, bigNumber18.mul(100000000));
+
+    // deploy game prediction
+    let gamePredictionFactory = await ethers.getContractFactory('GamePrediction')
+    let gamePrediction = (await gamePredictionFactory.deploy()) as GamePrediction;
+    await gamePrediction.initialize(bigNumber17, wallet.address)
+
+    // add round 1
+    await gamePrediction.addRound(
+        BigNumber.from(5),
+        BigNumber.from((Date.now() / 1000).toFixed(0)),
+        BigNumber.from((Date.now() / 1000 + 299).toFixed(0)),
+        sqt.address
+    )
+
+    // add round 2
+    await gamePrediction.addRound(
+        BigNumber.from(5),
+        BigNumber.from((Date.now() / 1000).toFixed(0)),
+        BigNumber.from((Date.now() / 1000 + 300).toFixed(0)),
+        ethers.constants.AddressZero
+    )
+
+    return { sqt, gamePrediction }
 }
