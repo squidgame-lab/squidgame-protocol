@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+ // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.12;
 pragma experimental ABIEncoderV2;
@@ -26,6 +26,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     }
     
     struct Order {
+        uint128 orderId;
         uint128 round;
         uint number;
         uint amount;
@@ -33,10 +34,13 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     }
 
     Round[] rounds;
+    Order[] orders;
     mapping(uint128 => uint) public round2claimedAmount;
     mapping(uint128 => mapping(address => bool)) public round2user2cliamed;
-    mapping(uint128 => mapping(uint => uint)) public round2number2totalAmount;    
-    mapping(address => mapping(uint128 => Order[])) public user2round2orders;    
+    mapping(uint128 => mapping(uint => uint)) public round2number2totalAmount;
+    mapping(uint128 => uint128[]) public round2orders;
+    mapping(address => uint128[]) public user2orders;   
+    mapping(address => mapping(uint128 => uint128[])) public user2round2orders;  
 
     uint public rate;
     address public rewardPool;
@@ -58,6 +62,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         rate = _rate;
         rewardPool = _rewardPool;
         rounds.push(Round({maxNumber: 0, winNumber: 0, startTime: 0, endTime: 0, totalAmount: 0, accAmount: 0, token: address(0)}));
+        orders.push(Order({orderId: 0, round: 0, number: 0, amount: 0, user: address(0)}));
     }
 
     function setRewardPool(address _rewardPool) external onlyAdmin {
@@ -134,50 +139,72 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         round2number2totalAmount[_roundId][_num] = round2number2totalAmount[_roundId][_num].add(_amount);
         (bool flag, uint index) = _userNumOrder(_roundId, _num, msg.sender);
         if (!flag) {
-            user2round2orders[msg.sender][_roundId].push(Order({round: _roundId, number: _num, amount: _amount, user: msg.sender}));
+            uint128 orderId = uint128(orders.length);
+            orders.push(Order({orderId: orderId, round: _roundId, number: _num, amount: _amount, user: msg.sender}));
+            user2round2orders[msg.sender][_roundId].push(orderId);
+            user2orders[msg.sender].push(orderId);
+            round2orders[_roundId].push(orderId);
         } else {
-            user2round2orders[msg.sender][_roundId][index].amount = user2round2orders[msg.sender][_roundId][index].amount.add(_amount);
+            orders[index].amount = orders[index].amount.add(_amount);
         }
 
         emit Predict(msg.sender, _roundId, _num, _amount);
     }
 
-    function getUserOrderlength(uint128 _roundId, address _user) public view returns(uint) {
+    function getUserRoundOrderslength(uint128 _roundId, address _user) public view returns(uint) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         return user2round2orders[_user][_roundId].length;
     }
 
-    function getUserOrder(uint128 _roundId, address _user, uint _orderId) public view returns(Order memory order) {
-        require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        return user2round2orders[_user][_roundId][_orderId];
+    function getUserOrderslength(address _user) public view returns(uint) {
+        return user2orders[_user].length;
     }
 
-    function getAllUserOrders(uint128 _roundId, address _user) external view returns(Order[] memory orders) {
+    function getUserRoundOrders(uint128 _roundId, address _user, uint _startIndex, uint _endIndex) public view returns(Order[] memory userOrders) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        uint length = getUserOrderlength(_roundId, _user);
-        if (length == 0) return orders;
-        orders = new Order[](length);
-        for (uint i = 0; i < length; i++) {
-            orders[i] = getUserOrder(_roundId, _user, i);
+        require(_startIndex >= _endIndex && _startIndex < getUserRoundOrderslength(_roundId, _user), 'GamePrediction: INVALID_INDEX');
+        uint ordersLength = _startIndex.sub(_endIndex).add(1);
+        userOrders = new Order[](ordersLength);
+        for (uint i = 0; i < ordersLength; i++) {
+            uint128 orderId = user2round2orders[_user][_roundId][_startIndex.sub(i)];
+            userOrders[i] = orders[orderId];
         }
     }
 
-    function getReward(uint128 _roundId, address _user) public view returns (uint rewardAmount) {
-        require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        Round memory round = rounds[_roundId];
+    function getUserOrders(address _user, uint _startIndex, uint _endIndex) external view returns(Order[] memory userOrders) {
+        require(_startIndex >= _endIndex && _startIndex < getUserOrderslength(_user), 'GamePrediction: INVALID_INDEX');
+        uint ordersLength = _startIndex.sub(_endIndex).add(1);
+        userOrders = new Order[](ordersLength);
+        for (uint i = 0; i < ordersLength; i++) {
+            uint128 orderId = user2orders[_user][_startIndex.sub(i)];
+            userOrders[i] = orders[orderId];
+        }
+    }
+
+    function getUserNumberOrder(uint128 _roundId, uint128 _num, address _user) external view returns (Order memory order) {
+         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
+        (bool flag, uint index) = _userNumOrder(_roundId, _num, _user);
+        if (!flag) return order;
+        order = orders[index];
+    }
+
+    function getReward(uint128 _orderId, address _user) public view returns (uint rewardAmount) {
+        require(_orderId < orders.length, 'GamePrediction: INVALID_ORDERID');
+        Order memory order = orders[_orderId];
+        Round memory round = rounds[order.round];
         if (round.endTime > block.timestamp || round.winNumber == 0) return rewardAmount;
-        (bool flag, uint index) = _userNumOrder(_roundId, round.winNumber, _user);
-        if (!flag) return rewardAmount;
-        rewardAmount = user2round2orders[_user][_roundId][index].amount.mul(round.accAmount);
-        rewardAmount = round.totalAmount.sub(round2claimedAmount[_roundId]) >= rewardAmount ? rewardAmount: round.totalAmount.sub(round2claimedAmount[_roundId]);
+        if (order.number != round.winNumber || order.user != _user) return rewardAmount;
+        rewardAmount = order.amount.mul(round.accAmount);
+        rewardAmount = round.totalAmount.sub(round2claimedAmount[order.round]) >= rewardAmount ? rewardAmount: round.totalAmount.sub(round2claimedAmount[order.round]);
     } 
 
-    function claim(uint128 _roundId, address _user) external {
-        require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        uint rewardAmount = getReward(_roundId, _user);
+    function claim(uint128 _orderId, address _user) external {
+        require(_orderId < orders.length, 'GamePrediction: INVALID_ORDERID');
+        Order memory order = orders[_orderId];
+        uint rewardAmount = getReward(_orderId, _user);
         require(rewardAmount > 0, 'GmaePrediction: REWARDAMOUNT_ZERO');
-        require(!round2user2cliamed[_roundId][_user], "GamePrediction: REWARD_CLAIMED");
-        Round memory round = rounds[_roundId];
+        require(!round2user2cliamed[order.round][_user], "GamePrediction: REWARD_CLAIMED");
+        Round memory round = rounds[order.round];
         uint fee = rewardAmount.mul(rate).div(1e18);
         if (round.token == address(0)) {
             if (fee != 0) TransferHelper.safeTransferETH(team(), fee);
@@ -186,16 +213,9 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
             if (fee != 0) TransferHelper.safeTransfer(round.token, team(), fee);
             TransferHelper.safeTransfer(round.token, _user, rewardAmount);
         }
-        round2claimedAmount[_roundId] = round2claimedAmount[_roundId].add(rewardAmount);
-        round2user2cliamed[_roundId][_user] = true;
-        emit Claim(msg.sender, _user, _roundId, rewardAmount.sub(fee));
-    }
-
-    function getUserOrderNumber(uint128 _roundId, uint128 _num, address _user) external view returns (uint) {
-         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        (bool flag, uint index) = _userNumOrder(_roundId, _num, _user);
-        if (!flag) return 0;
-        return user2round2orders[_user][_roundId][index].amount;
+        round2claimedAmount[order.round] = round2claimedAmount[order.round].add(rewardAmount);
+        round2user2cliamed[order.round][_user] = true;
+        emit Claim(msg.sender, _user, order.round, rewardAmount.sub(fee));
     }
 
     function getNumbersAmount(uint128 _roundId, uint128[] memory _nums) external view returns (uint[] memory amounts) {
@@ -209,9 +229,10 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
 
     function _userNumOrder(uint128 _roundId, uint128 _num, address _user) internal view returns (bool flag, uint index) {
         for (uint i = 0; i < user2round2orders[_user][_roundId].length; i++) {
-            if (user2round2orders[_user][_roundId][i].number == _num) {
+            uint128 orderId = user2round2orders[_user][_roundId][i];
+            if (orders[orderId].number == _num) {
                 flag = true;
-                index = i;
+                index = orderId;
             }
         }
     }

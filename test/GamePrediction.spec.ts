@@ -42,7 +42,7 @@ describe('GamePrediction', async () => {
         })
 
         it('reverted for wrong time', async () => {
-            await network.provider.send('evm_increaseTime', [300])
+            await network.provider.send('evm_increaseTime', [3000])
             await network.provider.send('evm_mine')
             await expect(gamePrediction.updateRound(BigNumber.from(1), 6, 0, 0)).to.revertedWith('GamePrediction: ROUND_EXPIRED')
         })
@@ -64,7 +64,7 @@ describe('GamePrediction', async () => {
 
     describe('#predict', async () => {
         it('reverted for wrong time', async () => {
-            await network.provider.send('evm_increaseTime', [300])
+            await network.provider.send('evm_increaseTime', [3000])
             await network.provider.send('evm_mine')
             await expect(gamePrediction.predict(BigNumber.from(1), BigNumber.from(5), bigNumber18)).to.revertedWith('GamePrediction: WRONG_TIME')
         })
@@ -74,9 +74,11 @@ describe('GamePrediction', async () => {
             let num = BigNumber.from(1)
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
-            expect(await gamePrediction.getUserOrderlength(roundId, user1.address)).to.eq(BigNumber.from(1))
-            let userOrders = await gamePrediction.getAllUserOrders(roundId, user1.address)
+            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserOrderslength(user1.address)).to.eq(BigNumber.from(1))
+            let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
             expect(userOrders.length).to.eq(BigNumber.from(1))
+            expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
             expect(userOrders[0].round).to.eq(roundId)
             expect(userOrders[0].number).to.eq(num)
             expect(userOrders[0].amount).to.eq(amount)
@@ -92,9 +94,11 @@ describe('GamePrediction', async () => {
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
-            expect(await gamePrediction.getUserOrderlength(roundId, user1.address)).to.eq(BigNumber.from(1))
-            let userOrders = await gamePrediction.getAllUserOrders(roundId, user1.address)
+            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserOrderslength(user1.address)).to.eq(BigNumber.from(1))
+            let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
             expect(userOrders.length).to.eq(BigNumber.from(1))
+            expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
             expect(userOrders[0].round).to.eq(roundId)
             expect(userOrders[0].number).to.eq(num)
             expect(userOrders[0].amount).to.eq(amount.mul(2))
@@ -111,7 +115,7 @@ describe('GamePrediction', async () => {
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num1, amount)
             await gamePrediction.connect(user1).predict(roundId, num2, amount)
-            expect(await gamePrediction.getUserOrderlength(roundId, user1.address)).to.eq(BigNumber.from(2))
+            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(2))
         })
 
         it('success for predict round 2 num 1 first time', async () => {
@@ -119,7 +123,7 @@ describe('GamePrediction', async () => {
             let num1 = BigNumber.from(1)
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num1, amount, { value: amount })
-            expect(await gamePrediction.getUserOrderlength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
         })
     })
 
@@ -143,7 +147,7 @@ describe('GamePrediction', async () => {
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num1, amount)
             await gamePrediction.connect(user2).predict(roundId, num2, amount)
-            await network.provider.send('evm_increaseTime', [300])
+            await network.provider.send('evm_increaseTime', [3000])
             await network.provider.send('evm_mine')
             await gamePrediction.setWinNumber(roundId, num1)
             let round = await gamePrediction.getRound(roundId)

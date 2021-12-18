@@ -524,7 +524,7 @@ export const gamePredictionFixture: Fixture<GamePredictionFixture> = async funct
     await gamePrediction.addRound(
         BigNumber.from(5),
         BigNumber.from((Date.now() / 1000).toFixed(0)),
-        BigNumber.from((Date.now() / 1000 + 299).toFixed(0)),
+        BigNumber.from((Date.now() / 1000 + 3000).toFixed(0)),
         sqt.address
     )
 
@@ -532,7 +532,7 @@ export const gamePredictionFixture: Fixture<GamePredictionFixture> = async funct
     await gamePrediction.addRound(
         BigNumber.from(5),
         BigNumber.from((Date.now() / 1000).toFixed(0)),
-        BigNumber.from((Date.now() / 1000 + 300).toFixed(0)),
+        BigNumber.from((Date.now() / 1000 + 3000).toFixed(0)),
         ethers.constants.AddressZero
     )
 
