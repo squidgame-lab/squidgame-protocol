@@ -255,7 +255,7 @@
     "upgradedAddress": "0x34C4555f771F60FF5584B31B149c1d437E8eB5D6",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool37": {
     "contractName": "GamePool",
@@ -311,7 +311,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool47": {
     "contractName": "GamePool",
