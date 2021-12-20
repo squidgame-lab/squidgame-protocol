@@ -74,8 +74,8 @@ describe('GamePrediction', async () => {
             let num = BigNumber.from(1)
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
-            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
-            expect(await gamePrediction.getUserOrderslength(user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserRoundOrdersLength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserOrdersLength(user1.address)).to.eq(BigNumber.from(1))
             let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
             expect(userOrders.length).to.eq(BigNumber.from(1))
             expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
@@ -94,8 +94,8 @@ describe('GamePrediction', async () => {
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
             await gamePrediction.connect(user1).predict(roundId, num, amount)
-            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
-            expect(await gamePrediction.getUserOrderslength(user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserRoundOrdersLength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserOrdersLength(user1.address)).to.eq(BigNumber.from(1))
             let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
             expect(userOrders.length).to.eq(BigNumber.from(1))
             expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
@@ -115,7 +115,7 @@ describe('GamePrediction', async () => {
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num1, amount)
             await gamePrediction.connect(user1).predict(roundId, num2, amount)
-            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(2))
+            expect(await gamePrediction.getUserRoundOrdersLength(roundId, user1.address)).to.eq(BigNumber.from(2))
         })
 
         it('success for predict round 2 num 1 first time', async () => {
@@ -123,7 +123,7 @@ describe('GamePrediction', async () => {
             let num1 = BigNumber.from(1)
             let amount = bigNumber18.mul(10)
             await gamePrediction.connect(user1).predict(roundId, num1, amount, { value: amount })
-            expect(await gamePrediction.getUserRoundOrderslength(roundId, user1.address)).to.eq(BigNumber.from(1))
+            expect(await gamePrediction.getUserRoundOrdersLength(roundId, user1.address)).to.eq(BigNumber.from(1))
         })
     })
 
@@ -140,7 +140,7 @@ describe('GamePrediction', async () => {
             await expect(gamePrediction.setWinNumber(roundId, winNum)).to.revertedWith('GamePrediction: ROUND_NOT_FINISHED')
         })
 
-        it('success', async () => {
+        it('success for one win', async () => {
             let roundId = BigNumber.from(1)
             let num1 = BigNumber.from(1)
             let num2 = BigNumber.from(2)
@@ -152,7 +152,42 @@ describe('GamePrediction', async () => {
             await gamePrediction.setWinNumber(roundId, num1)
             let round = await gamePrediction.getRound(roundId)
             expect(round.totalAmount).to.eq(amount.mul(2))
-            expect(round.accAmount).to.eq(BigNumber.from(2))
+            expect(round.accAmount).to.eq(bigNumber18.mul(2))
+        })
+
+        it('success for two win', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            let num2 = BigNumber.from(2)
+            let amount = bigNumber18.mul(10)
+            await gamePrediction.connect(user1).predict(roundId, num1, amount)
+            await gamePrediction.connect(user2).predict(roundId, num2, amount)
+            await gamePrediction.connect(user3).predict(roundId, num1, amount)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            let round = await gamePrediction.getRound(roundId)
+            expect(round.totalAmount).to.eq(amount.mul(3))
+            expect(round.accAmount).to.eq(bigNumber17.mul(15))
+        })
+
+        it('success for no win', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            let num2 = BigNumber.from(2)
+            let num3 = BigNumber.from(3)
+            let amount = bigNumber18.mul(10)
+            await gamePrediction.connect(user1).predict(roundId, num1, amount)
+            await gamePrediction.connect(user2).predict(roundId, num2, amount)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            let tokenBefore = await sqt.balanceOf(wallet.address)
+            await gamePrediction.setWinNumber(roundId, num3)
+            let tokenAfter = await sqt.balanceOf(wallet.address)
+            expect(tokenAfter.sub(tokenBefore)).to.eq(amount.mul(2))
+            let round = await gamePrediction.getRound(roundId)
+            expect(round.totalAmount).to.eq(amount.mul(2))
+            expect(round.accAmount).to.eq(BigNumber.from(0))
         })
     })
 
@@ -171,19 +206,54 @@ describe('GamePrediction', async () => {
         })
 
         it('fails for no order user', async () => {
-            
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            expect(await gamePrediction.getReward(BigNumber.from(1), user2.address)).to.eq(BigNumber.from(0))
         })
 
         it('fails for not set winNumber', async () => {
-
+            expect(await gamePrediction.getReward(BigNumber.from(1), user1.address)).to.eq(BigNumber.from(0))
         })
 
         it('fails for predicted num is not win number', async () => {
-
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            let userOrders = await gamePrediction.getUserRoundOrders(roundId, user2.address, BigNumber.from(0), BigNumber.from(0))
+            expect(userOrders[0].orderId).to.eq(BigNumber.from(2))
+            expect(userOrders[0].user).to.eq(user2.address)
+            expect(await gamePrediction.getReward(BigNumber.from(2), user2.address)).to.eq(BigNumber.from(0))
         })
 
-        it('success for predicted num is win number', async () => {
+        it('success for user1 win', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
+            expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
+            expect(userOrders[0].user).to.eq(user1.address)
+            expect(await gamePrediction.getReward(BigNumber.from(1), user1.address)).to.eq(bigNumber18.mul(40))
+        })
 
+        it('success for user1 user4 win', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            let amount = bigNumber18.mul(10)
+            await gamePrediction.connect(user4).predict(roundId, num1, amount)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            let userOrders = await gamePrediction.getUserRoundOrders(roundId, user1.address, BigNumber.from(0), BigNumber.from(0))
+            expect(userOrders[0].orderId).to.eq(BigNumber.from(1))
+            expect(userOrders[0].user).to.eq(user1.address)
+            expect(await gamePrediction.getReward(BigNumber.from(1), user1.address)).to.eq(bigNumber18.mul(25))
         })
     })
 
@@ -199,26 +269,46 @@ describe('GamePrediction', async () => {
             await gamePrediction.connect(user2).predict(roundId, num2, amount)
             await gamePrediction.connect(user3).predict(roundId, num3, amount)
             await gamePrediction.connect(user4).predict(roundId, num4, amount)
+            await gamePrediction.connect(user4).predict(roundId, num1, amount)
         })
 
         it('fails for no prediction user', async () => {
-
+            await expect(gamePrediction.claim(BigNumber.from(1), user2.address)).to.revertedWith('REWARDAMOUNT_ZERO')
         })
 
         it('fails for not set winNumber', async () => {
-
+            await expect(gamePrediction.claim(BigNumber.from(1), user1.address)).to.revertedWith('REWARDAMOUNT_ZERO')
         })
 
         it('fails for predicted num is not win number', async () => {
-
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            await expect(gamePrediction.claim(BigNumber.from(2), user2.address)).to.revertedWith('REWARDAMOUNT_ZERO')
         })
 
-        it('success for predicted num is win number', async () => {
-
+        it('success for user1 user4 win', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            let tokenBefore = await sqt.balanceOf(user1.address)
+            await gamePrediction.claim(BigNumber.from(1), user1.address)
+            let tokenAfter = await sqt.balanceOf(user1.address)
+            expect(tokenAfter.sub(tokenBefore)).to.eq(bigNumber17.mul(225))
         })
 
-        it('fails for multi claim', async () => {
-
+        it('fails for user1 multi claim', async () => {
+            let roundId = BigNumber.from(1)
+            let num1 = BigNumber.from(1)
+            await network.provider.send('evm_increaseTime', [3000])
+            await network.provider.send('evm_mine')
+            await gamePrediction.setWinNumber(roundId, num1)
+            await gamePrediction.claim(BigNumber.from(1), user1.address)
+            await expect(gamePrediction.claim(BigNumber.from(1), user1.address)).to.revertedWith('GamePrediction: REWARD_CLAIMED')
         })
     })
 })

@@ -10,6 +10,8 @@ import './modules/ReentrancyGuard.sol';
 import './modules/Configable.sol';
 import './modules/Initializable.sol';
 
+import 'hardhat/console.sol';
+
 contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     using SafeMath for uint;
     using SafeMath for uint128;
@@ -114,7 +116,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
             }
             round2claimedAmount[_roundId] = rounds[_roundId].totalAmount;
         } else {
-            rounds[_roundId].accAmount = rounds[_roundId].totalAmount.div(round2number2totalAmount[_roundId][_winNumber]);
+            rounds[_roundId].accAmount = rounds[_roundId].totalAmount.mul(1e18).div(round2number2totalAmount[_roundId][_winNumber]);
         }
         rounds[_roundId].winNumber = _winNumber;
         emit SetWinNumber(msg.sender, _roundId, _winNumber);    
@@ -194,7 +196,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         Round memory round = rounds[order.round];
         if (round.endTime > block.timestamp || round.winNumber == 0) return rewardAmount;
         if (order.number != round.winNumber || order.user != _user) return rewardAmount;
-        rewardAmount = order.amount.mul(round.accAmount);
+        rewardAmount = order.amount.mul(round.accAmount).div(1e18);
         rewardAmount = round.totalAmount.sub(round2claimedAmount[order.round]) >= rewardAmount ? rewardAmount: round.totalAmount.sub(round2claimedAmount[order.round]);
     } 
 
@@ -211,7 +213,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
             TransferHelper.safeTransferETH(_user, rewardAmount.sub(fee));
         } else {
             if (fee != 0) TransferHelper.safeTransfer(round.token, team(), fee);
-            TransferHelper.safeTransfer(round.token, _user, rewardAmount);
+            TransferHelper.safeTransfer(round.token, _user, rewardAmount.sub(fee));
         }
         round2claimedAmount[order.round] = round2claimedAmount[order.round].add(rewardAmount);
         round2user2cliamed[order.round][_user] = true;
