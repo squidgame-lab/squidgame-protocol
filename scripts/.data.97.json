@@ -370,5 +370,18 @@
     "deployed": true,
     "upgraded": false,
     "verified": false
-  }
+  },
+  "GamePrediction": {
+		"contractName": "GamePrediction",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"100000000000000000",
+			"0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	}
 }
