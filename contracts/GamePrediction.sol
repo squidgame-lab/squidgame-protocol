@@ -151,18 +151,18 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         emit Predict(msg.sender, _roundId, _num, _amount);
     }
 
-    function getUserRoundOrderslength(uint128 _roundId, address _user) public view returns(uint) {
+    function getUserRoundOrdersLength(uint128 _roundId, address _user) public view returns(uint) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         return user2round2orders[_user][_roundId].length;
     }
 
-    function getUserOrderslength(address _user) public view returns(uint) {
+    function getUserOrdersLength(address _user) public view returns(uint) {
         return user2orders[_user].length;
     }
 
     function getUserRoundOrders(uint128 _roundId, address _user, uint _startIndex, uint _endIndex) public view returns(Order[] memory userOrders) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-        require(_startIndex >= _endIndex && _startIndex < getUserRoundOrderslength(_roundId, _user), 'GamePrediction: INVALID_INDEX');
+        require(_startIndex >= _endIndex && _startIndex < getUserRoundOrdersLength(_roundId, _user), 'GamePrediction: INVALID_INDEX');
         uint ordersLength = _startIndex.sub(_endIndex).add(1);
         userOrders = new Order[](ordersLength);
         for (uint i = 0; i < ordersLength; i++) {
@@ -172,7 +172,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     }
 
     function getUserOrders(address _user, uint _startIndex, uint _endIndex) external view returns(Order[] memory userOrders) {
-        require(_startIndex >= _endIndex && _startIndex < getUserOrderslength(_user), 'GamePrediction: INVALID_INDEX');
+        require(_startIndex >= _endIndex && _startIndex < getUserOrdersLength(_user), 'GamePrediction: INVALID_INDEX');
         uint ordersLength = _startIndex.sub(_endIndex).add(1);
         userOrders = new Order[](ordersLength);
         for (uint i = 0; i < ordersLength; i++) {
