@@ -343,5 +343,28 @@
                 true
             ]
         ]
+    },
+    {
+        "call": true,
+        "name": "GamePrediction",
+        "functionName": "setupConfig",
+        "contractName": "GamePrediction",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GamePrediction",
+        "functionName": "addRound",
+        "contractName": "GamePrediction",
+        "contractAddr": "",
+        "args": [
+            "456",
+            "1639978337",
+            "1640064737",
+            "${GameToken.address}"
+        ]
     }
 ]

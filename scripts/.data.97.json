@@ -1,4 +1,13 @@
 {
+  "devWallet": {
+    "address": "0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
   "TestToken": {
     "address": "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
     "constructorArgs": [],
@@ -416,5 +425,18 @@
     "deployed": false,
     "upgraded": false,
     "verified": false
-  }
+  },
+  "GamePrediction": {
+		"contractName": "GamePrediction",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"100000000000000000",
+			"${devWallet.address}"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	}
 }
