@@ -339,6 +339,11 @@
       "address": "0x0FF771efeA959AD7e9980EAfb17fb1d72E7f7C0B",
       "txHash": "0x0ec04659b81dfb4e7b9309f37235194df699f0922bca187dfed3b285e247b4a6",
       "kind": "transparent"
+    },
+    {
+      "address": "0x5A55E7D8194F5E7276884D6d49Def93242776a7a",
+      "txHash": "0xd4723df7f37c0f164aa7c30c357b89d3e3ac4a58140b93a9a2628a1ea47c16a7",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -12650,6 +12655,218 @@
                 "type": "t_uint128"
               }
             ]
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "d3ea3ebddfb2c1b166729ab406ec3479cce8f2b21458428fed1ccf32185c432e": {
+      "address": "0x62635B1779C7a6Fae9BA9621A25D9B91bD460198",
+      "txHash": "0xa4de5c099870edd190e9f3f1476b56f5731d2789e4e87eb8aad16fdee43020f5",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rounds",
+            "type": "t_array(t_struct(Round)9337_storage)dyn_storage",
+            "src": "contracts/GamePrediction.sol:35"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "orders",
+            "type": "t_array(t_struct(Order)9348_storage)dyn_storage",
+            "src": "contracts/GamePrediction.sol:36"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2claimedAmount",
+            "type": "t_mapping(t_uint128,t_uint256)",
+            "src": "contracts/GamePrediction.sol:37"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2user2cliamed",
+            "type": "t_mapping(t_uint128,t_mapping(t_address,t_bool))",
+            "src": "contracts/GamePrediction.sol:38"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2number2totalAmount",
+            "type": "t_mapping(t_uint128,t_mapping(t_uint256,t_uint256))",
+            "src": "contracts/GamePrediction.sol:39"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2orders",
+            "type": "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePrediction.sol:40"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "user2orders",
+            "type": "t_mapping(t_address,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePrediction.sol:41"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "user2round2orders",
+            "type": "t_mapping(t_address,t_mapping(t_uint128,t_array(t_uint128)dyn_storage))",
+            "src": "contracts/GamePrediction.sol:42"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rate",
+            "type": "t_uint256",
+            "src": "contracts/GamePrediction.sol:44"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GamePrediction.sol:45"
+          }
+        ],
+        "types": {
+          "t_array(t_struct(Round)9337_storage)dyn_storage": {
+            "label": "struct GamePrediction.Round[]"
+          },
+          "t_struct(Round)9337_storage": {
+            "label": "struct GamePrediction.Round",
+            "members": [
+              {
+                "label": "maxNumber",
+                "type": "t_uint128"
+              },
+              {
+                "label": "winNumber",
+                "type": "t_uint128"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "accAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_uint128": {
+            "label": "uint128"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_struct(Order)9348_storage)dyn_storage": {
+            "label": "struct GamePrediction.Order[]"
+          },
+          "t_struct(Order)9348_storage": {
+            "label": "struct GamePrediction.Order",
+            "members": [
+              {
+                "label": "orderId",
+                "type": "t_uint128"
+              },
+              {
+                "label": "round",
+                "type": "t_uint128"
+              },
+              {
+                "label": "number",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "user",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint128,t_uint256)": {
+            "label": "mapping(uint128 => uint256)"
+          },
+          "t_mapping(t_uint128,t_mapping(t_address,t_bool))": {
+            "label": "mapping(uint128 => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint128,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(uint128 => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(uint128 => uint128[])"
+          },
+          "t_array(t_uint128)dyn_storage": {
+            "label": "uint128[]"
+          },
+          "t_mapping(t_address,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(address => uint128[])"
+          },
+          "t_mapping(t_address,t_mapping(t_uint128,t_array(t_uint128)dyn_storage))": {
+            "label": "mapping(address => mapping(uint128 => uint128[]))"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"
