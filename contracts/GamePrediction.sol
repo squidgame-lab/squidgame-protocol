@@ -3,13 +3,12 @@
 pragma solidity >=0.6.12;
 pragma experimental ABIEncoderV2;
 
-import './libraries/SafeMath.sol';
 import './interfaces/IERC20.sol';
+import './libraries/SafeMath.sol';
 import './libraries/TransferHelper.sol';
 import './modules/ReentrancyGuard.sol';
 import './modules/Configable.sol';
 import './modules/Initializable.sol';
-import './interfaces/IRewardSource.sol';
 
 contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     using SafeMath for uint;
@@ -107,8 +106,6 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         require(_winNumber <= rounds[_roundId].maxNumber && _winNumber > 0 , 'GamePrediction: INVALID_WIN_NUMBER');
         require(block.timestamp > rounds[_roundId].endTime, 'GamePrediction: ROUND_NOT_FINISHED');
-        rounds[_roundId].winNumber = _winNumber;
-        rounds[_roundId].accAmount = rounds[_roundId].totalAmount.div(round2number2totalAmount[_roundId][_winNumber]);
         if (round2number2totalAmount[_roundId][_winNumber] == 0) {
             if (rounds[_roundId].token == address(0)) {
                 TransferHelper.safeTransferETH(rewardPool, rounds[_roundId].totalAmount);
@@ -116,7 +113,10 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
                 TransferHelper.safeTransfer(rounds[_roundId].token, rewardPool, rounds[_roundId].totalAmount);
             }
             round2claimedAmount[_roundId] = rounds[_roundId].totalAmount;
+        } else {
+            rounds[_roundId].accAmount = rounds[_roundId].totalAmount.div(round2number2totalAmount[_roundId][_winNumber]);
         }
+        rounds[_roundId].winNumber = _winNumber;
         emit SetWinNumber(msg.sender, _roundId, _winNumber);    
     }
 

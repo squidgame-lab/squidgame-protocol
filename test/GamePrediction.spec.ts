@@ -170,8 +170,8 @@ describe('GamePrediction', async () => {
             await gamePrediction.connect(user4).predict(roundId, num4, amount)
         })
 
-        it('fails for no prediction user', async () => {
-
+        it('fails for no order user', async () => {
+            
         })
 
         it('fails for not set winNumber', async () => {
