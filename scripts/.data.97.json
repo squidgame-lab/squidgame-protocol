@@ -428,14 +428,14 @@
   },
   "GamePrediction": {
 		"contractName": "GamePrediction",
-		"address": "",
+		"address": "0x6E27A5595B2C05f5dfAbA8b0E85B5e90509C1a9F",
 		"constructorArgs": [],
 		"upgradeArgs": [
 			"100000000000000000",
 			"${devWallet.address}"
 		],
 		"upgradedAddress": "",
-		"deployed": false,
+		"deployed": true,
 		"upgraded": false,
 		"verified": false
 	}

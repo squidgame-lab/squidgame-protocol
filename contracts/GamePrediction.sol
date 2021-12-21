@@ -99,6 +99,10 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         emit UpdateRound(msg.sender, _roundId, round.maxNumber, round.startTime, round.endTime);
     }
 
+    function getRoundsLength() external view returns(uint) {
+        return rounds.length;
+    }
+
     function getRound(uint128 _roundId) external view returns (Round memory round) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         round = rounds[_roundId];
@@ -165,6 +169,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     function iterateReverseUserRoundOrders(uint128 _roundId, address _user, uint _startIndex, uint _endIndex) public view returns(Order[] memory userOrders) {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         require(_startIndex >= _endIndex && _endIndex >= 0, 'GamePrediction: INVALID_INDEX');
+        if (getUserRoundOrdersLength(_roundId, _user) == 0) return userOrders;
         if (_startIndex >= getUserRoundOrdersLength(_roundId, _user)) _startIndex = getUserRoundOrdersLength(_roundId, _user).sub(1);
         uint ordersLength = _startIndex.sub(_endIndex).add(1);
         userOrders = new Order[](ordersLength);
@@ -176,6 +181,7 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
 
     function iterateReverseUserOrders(address _user, uint _startIndex, uint _endIndex) external view returns(Order[] memory userOrders) {
         require(_startIndex >= _endIndex && _endIndex >= 0, 'GamePrediction: INVALID_INDEX');
+        if (getUserOrdersLength(_user) == 0) return userOrders;
         if (_startIndex >= getUserOrdersLength(_user)) _startIndex = getUserOrdersLength(_user).sub(1);
         uint ordersLength = _startIndex.sub(_endIndex).add(1);
         userOrders = new Order[](ordersLength);
@@ -192,12 +198,15 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
         order = orders[index];
     }
 
-    function getNumbersAmount(uint128 _roundId, uint128[] memory _nums) external view returns (uint[] memory amounts) {
+    function getNumbersAmount(uint128 _roundId, uint128 _start, uint128 _end) external view returns (uint[] memory amounts) {
          require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
-         if (_nums.length == 0) return amounts;
-         amounts = new uint[](_nums.length);
-         for (uint i = 0; i < _nums.length; i++) {
-             amounts[i] = round2number2totalAmount[_roundId][_nums[i]];
+         require(_start <= _end && _start > 0, 'GamePrediction: INVALID_NUM_INDEX');
+         Round memory round = rounds[_roundId];
+         _end = _end > round.maxNumber ? round.maxNumber : _end;
+         uint length = _end.sub(_start).add(1);
+         amounts = new uint[](length);
+         for (uint i = 0; i < length; i++) {
+             amounts[i] = round2number2totalAmount[_roundId][i.add(_start)];
          }
     }
 
