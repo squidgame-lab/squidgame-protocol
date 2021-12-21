@@ -13297,6 +13297,218 @@
           }
         }
       }
+    },
+    "da2d521931af350cb72d4966ed4fb872e81fda6c45605c25e745df537271e161": {
+      "address": "0x9e7c27999aFC29d39eA97c86093CC62da12a3237",
+      "txHash": "0xcc8f991d37442b30f47ae0dd7f98b3be5ce22f4ef0d8265dd5eede58eddbe228",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rounds",
+            "type": "t_array(t_struct(Round)9338_storage)dyn_storage",
+            "src": "contracts/GamePrediction.sol:37"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "orders",
+            "type": "t_array(t_struct(Order)9349_storage)dyn_storage",
+            "src": "contracts/GamePrediction.sol:38"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2claimedAmount",
+            "type": "t_mapping(t_uint128,t_uint256)",
+            "src": "contracts/GamePrediction.sol:39"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2user2cliamed",
+            "type": "t_mapping(t_uint128,t_mapping(t_address,t_bool))",
+            "src": "contracts/GamePrediction.sol:40"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2number2totalAmount",
+            "type": "t_mapping(t_uint128,t_mapping(t_uint256,t_uint256))",
+            "src": "contracts/GamePrediction.sol:41"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "round2orders",
+            "type": "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePrediction.sol:42"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "user2orders",
+            "type": "t_mapping(t_address,t_array(t_uint128)dyn_storage)",
+            "src": "contracts/GamePrediction.sol:43"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "user2round2orders",
+            "type": "t_mapping(t_address,t_mapping(t_uint128,t_array(t_uint128)dyn_storage))",
+            "src": "contracts/GamePrediction.sol:44"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rate",
+            "type": "t_uint256",
+            "src": "contracts/GamePrediction.sol:46"
+          },
+          {
+            "contract": "GamePrediction",
+            "label": "rewardPool",
+            "type": "t_address",
+            "src": "contracts/GamePrediction.sol:47"
+          }
+        ],
+        "types": {
+          "t_array(t_struct(Round)9338_storage)dyn_storage": {
+            "label": "struct GamePrediction.Round[]"
+          },
+          "t_struct(Round)9338_storage": {
+            "label": "struct GamePrediction.Round",
+            "members": [
+              {
+                "label": "maxNumber",
+                "type": "t_uint128"
+              },
+              {
+                "label": "winNumber",
+                "type": "t_uint128"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "totalAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "accAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "token",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_uint128": {
+            "label": "uint128"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_array(t_struct(Order)9349_storage)dyn_storage": {
+            "label": "struct GamePrediction.Order[]"
+          },
+          "t_struct(Order)9349_storage": {
+            "label": "struct GamePrediction.Order",
+            "members": [
+              {
+                "label": "orderId",
+                "type": "t_uint128"
+              },
+              {
+                "label": "round",
+                "type": "t_uint128"
+              },
+              {
+                "label": "number",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "user",
+                "type": "t_address"
+              }
+            ]
+          },
+          "t_mapping(t_uint128,t_uint256)": {
+            "label": "mapping(uint128 => uint256)"
+          },
+          "t_mapping(t_uint128,t_mapping(t_address,t_bool))": {
+            "label": "mapping(uint128 => mapping(address => bool))"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_uint128,t_mapping(t_uint256,t_uint256))": {
+            "label": "mapping(uint128 => mapping(uint256 => uint256))"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)"
+          },
+          "t_mapping(t_uint128,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(uint128 => uint128[])"
+          },
+          "t_array(t_uint128)dyn_storage": {
+            "label": "uint128[]"
+          },
+          "t_mapping(t_address,t_array(t_uint128)dyn_storage)": {
+            "label": "mapping(address => uint128[])"
+          },
+          "t_mapping(t_address,t_mapping(t_uint128,t_array(t_uint128)dyn_storage))": {
+            "label": "mapping(address => mapping(uint128 => uint128[]))"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }
