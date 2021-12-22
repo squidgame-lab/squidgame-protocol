@@ -1,5 +1,14 @@
 {
-    "TestToken": {
+	"devWallet": {
+		"address": "0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
+		"constructorArgs": [],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
+	"TestToken": {
 		"address": "",
 		"constructorArgs": [],
 		"upgradeArgs": [],
@@ -232,7 +241,7 @@
 		"contractName": "GameNFT",
 		"address": "",
 		"constructorArgs": [
-		  "Squidgame Hat NFT",
+		  "Squidgame Hat",
 		  "SWNFT",
 		  "100",
 		  "https://squidgame.live/hatnft/",
@@ -249,13 +258,26 @@
 		"contractName": "GameNFT",
 		"address": "",
 		"constructorArgs": [
-		  "Squidgame WristBand NFT",
+		  "Squidgame WristBand",
 		  "SWBNFT",
 		  "400",
 		  "https://squidgame.live/wristbandnft/",
 		  ".png"
 		],
 		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": true,
+		"upgraded": true,
+		"verified": false
+	},
+	"GameNFTMarket": {
+		"onlyDeploy": false,
+		"contractName": "GameNFTMarket",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${devWallet.address}"
+		],
 		"upgradedAddress": "",
 		"deployed": true,
 		"upgraded": true,

@@ -376,5 +376,83 @@
         "args": [
             "${GameConfig.address}"
         ]
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket",
+        "functionName": "setWhiteLists",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            ["${GameNFTMarket.address}"],
+            [true]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFT1",
+        "functionName": "setupConfig",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFT1",
+        "functionName": "setWhiteLists",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            ["${GameNFTMarket.address}"],
+            [true]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFT2",
+        "functionName": "setupConfig",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFT2",
+        "functionName": "setWhiteLists",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            ["${GameNFTMarket.address}"],
+            [true]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFTMarket",
+        "functionName": "setupConfig",
+        "contractName": "GameNFTMarket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFTMarket",
+        "functionName": "batchSetMinerConf",
+        "contractName": "GameNFTMarket",
+        "contractAddr": "",
+        "args": [
+            ["${GameCompetitorTicket.address}", "${GameNFT1.address}",  "${GameNFT2.address}"],
+            ["${GameToken.address}", "0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"],
+            ["1000000000000000000", "100000000000000000", "100000000000000000"],
+            ["1640170638", "1640170638", "1640170638"],
+            ["1640793600", "1640793600", "1640793600"],
+            ["1000", "100", "400"]
+        ]
     }
 ]
