@@ -15,26 +15,28 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     string public imgSuffix;
 
     uint256 public maxTotal;
-    uint256 public total;
     uint256 public expiredTime; // block number
-    uint256 public maxGroupId;  // skip 0, start 1
 
-    struct Group {
-        uint256 id;
-        uint256 beginId;
-        uint256 endId;
-        uint256 beginTime;
-        uint256 endTime;
-    }
+    uint256 public claimBeginId;
+    uint256 public claimedId;
 
-    mapping(uint256 => Group) public groups;
-
-    function initialize(uint256 _maxTotal, uint256 _maxGroupId, string calldata _name, string calldata _symbol) external initializer {
-        maxTotal = maxTotal;
-        maxGroupId = _maxGroupId;
+    function initialize(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix, string calldata _name, string calldata _symbol) external initializer {
+        _configure(_maxTotal, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
         name = _name;
         symbol = _symbol;
         owner = msg.sender;
+    }
+
+    function _configure(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) internal {
+        maxTotal = maxTotal;
+        claimBeginId = _claimBeginId;
+        expiredTime = _expiredTime;
+        baseURI = _baseURI;
+        imgSuffix = _imgSuffix;
+    }
+
+    function configure(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) external onlyDev {
+        _configure(_maxTotal, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
     }
     
     function setWhiteList(address _addr, bool _value) external override onlyDev {
@@ -48,33 +50,6 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
         }
     }
 
-    function setUriInfo(string memory _baseURI, string memory _imgSuffix) external onlyDev {
-        baseURI = _baseURI;
-        imgSuffix = _imgSuffix;
-    }
-
-    function setGroup(Group memory _group) public onlyManager {
-        require(_group.id <= maxGroupId, 'GCT:: invalid id');
-        require(_group.beginTime > block.number && _group.beginTime<=_group.endTime, 'GCT:: invalid time');
-        groups[_group.id] = _group;
-    }
-
-    function setGroups(Group[] memory _groups) external onlyDev {
-        groups = _groups;
-    }
-
-    function getGroup(uint256 _id) external view returns (Group memory) {
-        require(_id <= maxGroupId, 'GCT:: invalid id');
-        return groups[_id];
-    }
-
-    function getGroups() external view returns (Group[] memory result) {
-        result = new Group[](maxGroupId+1);
-        for(uint256 i; i<=maxGroupId; i++) {
-            result[i] = groups[i];
-        }
-    }
-
     function imgURI(uint256 _tokenId) public view returns (string memory) {
         return string(abi.encodePacked(baseURI, toString(_tokenId), imgSuffix));
     }
@@ -84,10 +59,10 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
-    function _claim(address _to) internal returns (uint256) {
-        total++;
-        require(total <= maxTotal, 'GCT: over');
-        uint256 _tokenId = total;
+    function _claim(address _to, uint256 _tokenId) internal returns (uint256) {
+        require(_tokenId > 0, 'GCT: zero');
+        require(_tokenId <= maxTotal, 'GCT: over');
+        require(ownerOf(_tokenId) == address(0), 'GCT: claimed');
         _safeMint(_to, _tokenId);
         return _tokenId;
     }
@@ -117,5 +92,49 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
             value /= 10;
         }
         return string(buffer);
+    }
+
+    function mint(address _to) external onlyWhiteList returns (uint256) {
+        require(claimedId < maxTotal, 'GCT: done');
+        if(claimedId == 0)  {
+            claimedId = claimBeginId;
+        } else {
+            claimedId++;
+        }
+        
+        _claim(_to, claimedId); 
+        return claimedId;
+    }
+
+    function mint(address _to) external onlyWhiteList returns (uint256) {
+        require(claimedId < maxTotal, 'GCT: done');
+        if(claimedId == 0)  {
+            claimedId = claimBeginId;
+        } else {
+            claimedId++;
+        }
+        
+        _claim(_to, claimedId); 
+        return claimedId;
+    }
+
+    function mint(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
+        require(_tokenId < claimBeginId, 'GCT: must be >= claimBeginId');
+        _claim(_to, claimedId); 
+        return claimedId;
+    }
+
+    function mint(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
+        require(_beginId <= _endId, 'GCT: invalid param');
+        for(uint256 i=_beginId; i<=_endId; i++) {
+            mint(_to, i);
+        }
+    }
+
+    function mint(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList returns (uint256) {
+        require(_users.length == _tokenIds.length, 'GCT: invalid param');
+        for(uint256 i; i<_users.length; i++) {
+            mint(_users[i], _tokenIds[i]);
+        }
     }
 }
