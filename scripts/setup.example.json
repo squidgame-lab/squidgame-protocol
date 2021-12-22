@@ -366,5 +366,15 @@
             "1640064737",
             "${GameToken.address}"
         ]
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket",
+        "functionName": "setupConfig",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
     }
 ]

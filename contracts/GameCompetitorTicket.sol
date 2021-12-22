@@ -26,7 +26,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
     }
 
     function _configure(uint256 _maxSupply, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) internal {
-        maxSupply = maxSupply;
+        maxSupply = _maxSupply;
         claimBeginId = _claimBeginId;
         expiredTime = _expiredTime;
         baseURI = _baseURI;
@@ -53,7 +53,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
     }
 
     function tokenURI(uint256 _tokenId) override public view returns (string memory) {
-        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name, ' #', _tokenId.toString(), '", "description": "', symbol, '", "image": "', imgURI(_tokenId), '"}'))));
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', symbol, ' #', _tokenId.toString(), '", "description": "', name, '", "image": "', imgURI(_tokenId), '"}'))));
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
