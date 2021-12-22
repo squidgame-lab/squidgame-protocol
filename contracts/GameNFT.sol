@@ -1,113 +1,54 @@
-/**
- * @title Pancake Squad
- * @notice PancakeSwap NFT collection
- */
+// SPDX-License-Identifier: MIT
 
-import './ERC721/extensions/ERC721Enumerable.sol';
+pragma solidity >=0.6.12;
+
+import './interfaces/IERC20.sol';
 import './modules/Configable.sol';
-import './modules/Initializable.sol';
+import './modules/WhiteList.sol';
+import './libraries/SafeMath.sol';
+import './libraries/Strings.sol';
+import './libraries/TransferHelper.sol';
+import './ERC721/extensions/ERC721Enumerable.sol';
 
-contract GameNFT is ERC721Enumerable, Configable, Initializable {
-    using SafeERC20 for IERC20;
+contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     using Strings for uint256;
-
-    uint256 public immutable maxSupply;
+    using SafeMath for uint256;
 
     bool public isLocked;
     string public baseURI;
+    string public imgSuffix;
+    uint256 public immutable maxSupply;
 
     event Lock();
     event NonFungibleTokenRecovery(address indexed token, uint256 tokenId);
     event TokenRecovery(address indexed token, uint256 amount);
 
-    /**
-     * @notice Constructor
-     * @param _name: NFT name
-     * @param _symbol: NFT symbol
-     * @param _maxSupply: NFT max totalSupply
-     */
-    function initialize(
-        string memory _name,
-        string memory _symbol,
-        uint256 _maxSupply,
-        address _buyToken,
-        uint _price
-    ) external ERC721(_name, _symbol) initializer {
-        require(_buyToken != address(0), 'GameTicket: ZERO_ADDRESS');
+    constructor(string memory _name, string memory _symbol, uint256 _maxSupply) {
         owner = msg.sender;
+        name = _name;
+        symbol = _symbol;
         maxSupply = _maxSupply;
-        buyToken = _buyToken;
-        unit = _unit;
     }
 
-    /**
-     * @notice Allows the owner to lock the contract
-     * @dev Callable by owner
-     */
     function lock() external onlyOwner {
-        require(!isLocked, "Operations: Contract is locked");
+        require(!isLocked, "GameNFT: Contract is locked");
         isLocked = true;
         emit Lock();
     }
 
-    /**
-     * @notice Allows the owner to mint a token to a specific address
-     * @param _to: address to receive the token
-     * @param _tokenId: tokenId
-     * @dev Callable by owner
-     */
-    function mint(address _to, uint256 _tokenId) external onlyOwner {
-        require(totalSupply() < maxSupply, "NFT: Total supply reached");
+    function mint(address _to) external onlyWhiteList {
+        require(totalSupply() < maxSupply, "GameNFT: total supply reached");
+        uint256 _tokenId = totalSupply().add(1);
         _mint(_to, _tokenId);
     }
 
-    /**
-     * @notice Allows the owner to recover non-fungible tokens sent to the contract by mistake
-     * @param _token: NFT token address
-     * @param _tokenId: tokenId
-     * @dev Callable by owner
-     */
-    function recoverNonFungibleToken(address _token, uint256 _tokenId) external onlyOwner {
-        IERC721(_token).transferFrom(address(this), address(msg.sender), _tokenId);
-
-        emit NonFungibleTokenRecovery(_token, _tokenId);
+    function setUriInfo(string memory _baseURI, string memory _imgSuffix) external onlyOwner {
+        require(!isLocked, "GameNFT: Contract is locked");
+        baseURI = _baseURI;
+        imgSuffix = _imgSuffix;
     }
 
-    /**
-     * @notice Allows the owner to recover tokens sent to the contract by mistake
-     * @param _token: token address
-     * @dev Callable by owner
-     */
-    function recoverToken(address _token) external onlyOwner {
-        uint256 balance = IERC20(_token).balanceOf(address(this));
-        require(balance != 0, "Operations: Cannot recover zero balance");
-
-        IERC20(_token).safeTransfer(address(msg.sender), balance);
-
-        emit TokenRecovery(_token, balance);
-    }
-
-    /**
-     * @notice Allows the owner to set the base URI to be used for all token IDs
-     * @param _uri: base URI
-     * @dev Callable by owner
-     */
-    function setBaseURI(string memory _uri) external onlyOwner {
-        require(!isLocked, "Operations: Contract is locked");
-        baseURI = _uri;
-    }
-
-    /**
-     * @notice Returns a list of token IDs owned by `user` given a `cursor` and `size` of its token list
-     * @param user: address
-     * @param cursor: cursor
-     * @param size: size
-     */
-    function tokensOfOwnerBySize(
-        address user,
-        uint256 cursor,
-        uint256 size
-    ) external view returns (uint256[] memory, uint256) {
+    function tokensOfOwnerBySize(address user, uint256 cursor, uint256 size) external view returns (uint256[] memory, uint256) {
         uint256 length = size;
         if (length > balanceOf(user) - cursor) {
             length = balanceOf(user) - cursor;
@@ -121,13 +62,20 @@ contract GameNFT is ERC721Enumerable, Configable, Initializable {
         return (values, cursor + length);
     }
 
-    /**
-     * @notice Returns the Uniform Resource Identifier (URI) for a token ID
-     * @param tokenId: token ID
-     */
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+        require(_exists(_tokenId), "GameNFT: URI query for nonexistent token");
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _tokenId.toString(), imgSuffix)) : "";
+    }
 
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(), ".json")) : "";
+    function recoverNonFungibleToken(address _token, uint256 _tokenId) external onlyOwner {
+        IERC721(_token).transferFrom(address(this), address(msg.sender), _tokenId);
+        emit NonFungibleTokenRecovery(_token, _tokenId);
+    }
+
+    function recoverToken(address _token) external onlyOwner {
+        uint256 balance = IERC20(_token).balanceOf(address(this));
+        require(balance != 0, "Operations: Cannot recover zero balance");
+        TransferHelper.safeTransfer(_token, address(msg.sender), balance);
+        emit TokenRecovery(_token, balance);
     }
 }
