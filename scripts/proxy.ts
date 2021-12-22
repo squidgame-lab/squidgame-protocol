@@ -56,21 +56,25 @@ async function after() {
 }
 
 
-async function deployContract(contractName: string, value: any) {
-  if (data[contractName].deployed) {
-    console.log(`Deploy contract ${contractName} exits: "${data[contractName].address}",`)
+async function deployContract(name: string, value: any) {
+  if (data[name].deployed) {
+    console.log(`Deploy contract ${name} exits: "${data[name].address}",`)
     return;
+  }
+  let contractName = name;
+  if(data[name].hasOwnProperty('contractName')) {
+    contractName = data[name].contractName;
   }
   // console.log('Deploy contract...', contractName, value)
   const Factory = await ethers.getContractFactory(contractName);
   let ins = await Factory.deploy(...value.constructorArgs);
   await ins.deployed();
-  data[contractName].address = ins.address;
-  data[contractName].deployed = true;
-  data[contractName].upgraded = true;
-  data[contractName].verified = false;
-  console.log(`Deploy contract ${contractName} new: "${ins.address}",`)
-  updateConstructorArgs(contractName, ins.address);
+  data[name].address = ins.address;
+  data[name].deployed = true;
+  data[name].upgraded = true;
+  data[name].verified = false;
+  console.log(`Deploy contract ${name} new: "${ins.address}",`)
+  updateConstructorArgs(name, ins.address);
 }
 
 async function deployProxyContract(name: string, value: any) {

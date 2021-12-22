@@ -49,11 +49,11 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
     }
 
     function imgURI(uint256 _tokenId) public view returns (string memory) {
-        return string(abi.encodePacked(baseURI, toString(_tokenId), imgSuffix));
+        return string(abi.encodePacked(baseURI, _tokenId.toString(), imgSuffix));
     }
 
     function tokenURI(uint256 _tokenId) override public view returns (string memory) {
-        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name, ' #', toString(_tokenId), '", "description": "', symbol, '", "image": "', imgURI(_tokenId), '"}'))));
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name, ' #', _tokenId.toString(), '", "description": "', symbol, '", "image": "', imgURI(_tokenId), '"}'))));
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
@@ -70,28 +70,6 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
         _burn(_tokenId);
     }
 
-    function toString(uint256 value) public pure returns (string memory) {
-    // Inspired by OraclizeAPI's implementation - MIT license
-    // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-
-        if (value == 0) {
-            return "0";
-        }
-        uint256 temp = value;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        while (value != 0) {
-            digits -= 1;
-            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
-            value /= 10;
-        }
-        return string(buffer);
-    }
-
     function mint(address _to) external onlyWhiteList returns (uint256) {
         require(claimedId < maxSupply, 'GCT: done');
         if(claimedId == 0)  {
@@ -104,23 +82,23 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
         return claimedId;
     }
 
-    function mintWithId(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
+    function mint(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
         require(_tokenId < claimBeginId, 'GCT: must be < claimBeginId');
         _claim(_to, _tokenId); 
         return _tokenId;
     }
 
-    function mintWithRange(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
+    function mint(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
         require(_beginId <= _endId, 'GCT: invalid param');
         for(uint256 i=_beginId; i<=_endId; i++) {
-            mintWithId(_to, i);
+            mint(_to, i);
         }
     }
 
-    function mintWithIds(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList {
+    function mint(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList {
         require(_users.length == _tokenIds.length, 'GCT: invalid param');
         for(uint256 i; i<_users.length; i++) {
-            mintWithId(_users[i], _tokenIds[i]);
+            mint(_users[i], _tokenIds[i]);
         }
     }
 }
