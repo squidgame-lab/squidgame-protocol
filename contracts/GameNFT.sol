@@ -36,10 +36,11 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
         emit Lock();
     }
 
-    function mint(address _to) external onlyWhiteList {
+    function mint(address _to) external onlyWhiteList returns(uint256) {
         require(totalSupply() < maxSupply, "GameNFT: total supply reached");
-        uint256 _tokenId = totalSupply().add(1);
-        _mint(_to, _tokenId);
+        uint tokenId = totalSupply().add(1);
+        _mint(_to, tokenId);
+        return tokenId;
     }
 
     function setUriInfo(string memory _baseURI, string memory _imgSuffix) external onlyOwner {
