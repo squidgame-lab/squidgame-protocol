@@ -226,5 +226,39 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GameNFT1": {
+		"onlyDeploy": true,
+		"contractName": "GameNFT",
+		"address": "",
+		"constructorArgs": [
+		  "Squidgame Hat NFT",
+		  "SWNFT",
+		  "100",
+		  "https://squidgame.live/hatnft/",
+		  ".png"
+		],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": true,
+		"upgraded": true,
+		"verified": false
+	},
+	"GameNFT2": {
+		"onlyDeploy": true,
+		"contractName": "GameNFT",
+		"address": "",
+		"constructorArgs": [
+		  "Squidgame WristBand NFT",
+		  "SWBNFT",
+		  "400",
+		  "https://squidgame.live/wristbandnft/",
+		  ".png"
+		],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": true,
+		"upgraded": true,
+		"verified": false
 	}
 }
