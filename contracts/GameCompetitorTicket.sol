@@ -7,7 +7,6 @@ import "./libraries/Base64.sol";
 import "./ERC721/extensions/ERC721Enumerable.sol";
 import './modules/ReentrancyGuard.sol';
 import './modules/Initializable.sol';
-import './modules/GameHeroNotify.sol';
 import './modules/Configable.sol';
 import './modules/WhiteList.sol';
 
@@ -20,7 +19,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     uint256 public expiredTime; // block number
     uint256 public maxGroupId;  // skip 0, start 1
 
-    struc Group {
+    struct Group {
         uint256 id;
         uint256 beginId;
         uint256 endId;
