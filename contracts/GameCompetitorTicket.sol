@@ -14,7 +14,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     string public baseURI;
     string public imgSuffix;
 
-    uint256 public maxTotal;
+    uint256 public maxSupply;
     uint256 public expiredTime; // block number
 
     uint256 public claimBeginId;
@@ -28,7 +28,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     }
 
     function _configure(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) internal {
-        maxTotal = maxTotal;
+        maxSupply = maxSupply;
         claimBeginId = _claimBeginId;
         expiredTime = _expiredTime;
         baseURI = _baseURI;
@@ -61,7 +61,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
 
     function _claim(address _to, uint256 _tokenId) internal returns (uint256) {
         require(_tokenId > 0, 'GCT: zero');
-        require(_tokenId <= maxTotal, 'GCT: over');
+        require(_tokenId <= maxSupply, 'GCT: over');
         require(ownerOf(_tokenId) == address(0), 'GCT: claimed');
         _safeMint(_to, _tokenId);
         return _tokenId;
@@ -95,7 +95,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     }
 
     function mint(address _to) external onlyWhiteList returns (uint256) {
-        require(claimedId < maxTotal, 'GCT: done');
+        require(claimedId < maxSupply, 'GCT: done');
         if(claimedId == 0)  {
             claimedId = claimBeginId;
         } else {
