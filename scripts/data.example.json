@@ -205,5 +205,23 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GameCompetitorTicket": {
+		"contractName": "GameCompetitorTicket",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"456",
+			"257",
+			"25183704",
+			"https://squidgame.live/cometitorTicket/",
+			".png",
+			"SCTNFT",
+			"Squidgame Competitor Ticket NFT"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }
