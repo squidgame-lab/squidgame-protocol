@@ -107,7 +107,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     }
 
     function mint(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
-        require(_tokenId < claimBeginId, 'GCT: must be >= claimBeginId');
+        require(_tokenId < claimBeginId, 'GCT: must be < claimBeginId');
         _claim(_to, claimedId); 
         return claimedId;
     }
