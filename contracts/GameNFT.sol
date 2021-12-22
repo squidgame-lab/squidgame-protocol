@@ -22,12 +22,13 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     event NonFungibleTokenRecovery(address indexed token, uint256 tokenId);
     event TokenRecovery(address indexed token, uint256 amount);
 
-    constructor(string memory _name, string memory _symbol, uint256 _maxSupply) public {
+    constructor(string memory _name, string memory _symbol, uint256 _maxSupply, string memory _baseURI, string memory _imgSuffix) public {
         require(_maxSupply > 0, 'GameNFT: Invalid max supply');
         owner = msg.sender;
         name = _name;
         symbol = _symbol;
         maxSupply = _maxSupply;
+        _setUriInfo(_baseURI, _imgSuffix);
     }
 
     function setWhiteList(address _addr, bool _value) external override onlyDev {
@@ -41,9 +42,13 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
         }
     }
 
-    function setUriInfo(string memory _baseURI, string memory _imgSuffix) external onlyDev {
+    function _setUriInfo(string memory _baseURI, string memory _imgSuffix) internal {
         baseURI = _baseURI;
         imgSuffix = _imgSuffix;
+    } 
+
+    function setUriInfo(string memory _baseURI, string memory _imgSuffix) external onlyDev {
+        _setUriInfo(_baseURI, _imgSuffix);
     }
 
     function recoverNonFungibleToken(address _token, uint256 _tokenId) external onlyDev {
