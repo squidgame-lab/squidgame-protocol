@@ -1,4 +1,3 @@
-// Dependency file: contracts/interfaces/IBurgerSwapV2Pair.sol
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 // pragma solidity >=0.6.6;
@@ -40,8 +39,6 @@ interface IBurgerSwapV2Pair {
 }
 
 
-// Dependency file: contracts/interfaces/IBurgerSwapV2Factory.sol
-
 // pragma solidity >=0.6.6;
 
 interface IBurgerSwapV2Factory {
@@ -59,8 +56,6 @@ interface IBurgerSwapV2Factory {
     function feeToRate() external view returns (uint);
 }
 
-
-// Dependency file: contracts/libraries/SafeMath.sol
 
 // pragma solidity >=0.6.6;
 
@@ -81,12 +76,7 @@ library SafeMath {
 }
 
 
-// Dependency file: contracts/BurgerSwapV2ERC20.sol
-
 // pragma solidity >=0.6.6;
-
-// import 'contracts/interfaces/IBurgerSwapV2Factory.sol';
-// import 'contracts/libraries/SafeMath.sol';
 
 contract BurgerSwapV2ERC20 {
     using SafeMath for uint;
@@ -179,8 +169,6 @@ contract BurgerSwapV2ERC20 {
 }
 
 
-// Dependency file: contracts/libraries/Math.sol
-
 // pragma solidity >=0.6.6;
 
 // a library for performing various math operations
@@ -206,8 +194,6 @@ library Math {
 }
 
 
-// Dependency file: contracts/libraries/UQ112x112.sol
-
 // pragma solidity >=0.6.6;
 
 // a library for handling binary fixed point numbers (https://en.wikipedia.org/wiki/Q_(number_format))
@@ -230,8 +216,6 @@ library UQ112x112 {
 }
 
 
-// Dependency file: contracts/interfaces/IERC20.sol
-
 // pragma solidity >=0.6.6;
 
 interface IERC20 {
@@ -251,24 +235,11 @@ interface IERC20 {
 }
 
 
-// Dependency file: contracts/interfaces/IBurgerSwapV2Callee.sol
-
 // pragma solidity >=0.6.6;
 
 interface IBurgerSwapV2Callee {
     function uniswapV2Call(address sender, uint amount0, uint amount1, bytes calldata data) external;
 }
-
-
-// Dependency file: contracts/BurgerSwapV2Pair.sol
-
-// pragma solidity >=0.6.6;
-
-// import 'contracts/BurgerSwapV2ERC20.sol';
-// import 'contracts/libraries/Math.sol';
-// import 'contracts/libraries/UQ112x112.sol';
-// import 'contracts/interfaces/IERC20.sol';
-// import 'contracts/interfaces/IBurgerSwapV2Callee.sol';
 
 contract BurgerSwapV2Pair is BurgerSwapV2ERC20 {
     using SafeMath  for uint;
@@ -462,12 +433,8 @@ contract BurgerSwapV2Pair is BurgerSwapV2ERC20 {
 }
 
 
-// Root file: contracts/BurgerSwapV2Factory.sol
-
 pragma solidity >=0.6.6;
 
-// import 'contracts/interfaces/IBurgerSwapV2Pair.sol';
-// import 'contracts/BurgerSwapV2Pair.sol';
 
 contract BurgerSwapV2Factory {
     address public feeTo;

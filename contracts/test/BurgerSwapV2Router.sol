@@ -1,4 +1,3 @@
-// Dependency file: contracts/interfaces/IBurgerSwapV2Factory.sol
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 // pragma solidity >=0.6.6;
@@ -17,9 +16,6 @@ interface IBurgerSwapV2Factory {
     function setFeeToSetter(address) external;
     function feeToRate() external view returns (uint);
 }
-
-
-// Dependency file: contracts/libraries/TransferHelper.sol
 
 // pragma solidity >=0.6.6;
 
@@ -71,8 +67,6 @@ library TransferHelper {
     }
 }
 
-
-// Dependency file: contracts/interfaces/IBurgerSwapV2Router.sol
 
 // pragma solidity >=0.6.6;
 
@@ -210,8 +204,6 @@ interface IBurgerSwapV2Router {
 }
 
 
-// Dependency file: contracts/interfaces/IBurgerSwapV2Pair.sol
-
 // pragma solidity >=0.6.6;
 
 interface IBurgerSwapV2Pair {
@@ -251,8 +243,6 @@ interface IBurgerSwapV2Pair {
 }
 
 
-// Dependency file: contracts/libraries/SafeMath.sol
-
 // pragma solidity >=0.6.6;
 
 // a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)
@@ -271,14 +261,6 @@ library SafeMath {
     }
 }
 
-
-// Dependency file: contracts/libraries/BurgerSwapV2Library.sol
-
-// pragma solidity >=0.6.6;
-
-// import 'contracts/interfaces/IBurgerSwapV2Pair.sol';
-// import 'contracts/interfaces/IBurgerSwapV2Factory.sol';
-// import "contracts/libraries/SafeMath.sol";
 
 library BurgerSwapV2Library {
     using SafeMath for uint;
@@ -352,8 +334,6 @@ library BurgerSwapV2Library {
 }
 
 
-// Dependency file: contracts/interfaces/IERC20.sol
-
 // pragma solidity >=0.6.6;
 
 interface IERC20 {
@@ -373,8 +353,6 @@ interface IERC20 {
 }
 
 
-// Dependency file: contracts/interfaces/IWETH.sol
-
 // pragma solidity >=0.6.6;
 
 interface IWETH {
@@ -388,14 +366,6 @@ interface IWETH {
 
 pragma solidity >=0.6.6;
 
-// import 'contracts/interfaces/IBurgerSwapV2Factory.sol';
-// import 'contracts/libraries/TransferHelper.sol';
-
-// import 'contracts/interfaces/IBurgerSwapV2Router.sol';
-// import 'contracts/libraries/BurgerSwapV2Library.sol';
-// import 'contracts/libraries/SafeMath.sol';
-// import 'contracts/interfaces/IERC20.sol';
-// import 'contracts/interfaces/IWETH.sol';
 
 contract BurgerSwapV2Router is IBurgerSwapV2Router {
     using SafeMath for uint;

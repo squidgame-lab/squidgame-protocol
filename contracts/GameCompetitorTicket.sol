@@ -104,23 +104,23 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
         return claimedId;
     }
 
-    function mint(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
+    function mintWithId(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
         require(_tokenId < claimBeginId, 'GCT: must be < claimBeginId');
         _claim(_to, _tokenId); 
         return _tokenId;
     }
 
-    function mint(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
+    function mintWithRange(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
         require(_beginId <= _endId, 'GCT: invalid param');
         for(uint256 i=_beginId; i<=_endId; i++) {
-            mint(_to, i);
+            mintWithId(_to, i);
         }
     }
 
-    function mint(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList {
+    function mintWithIds(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList {
         require(_users.length == _tokenIds.length, 'GCT: invalid param');
         for(uint256 i; i<_users.length; i++) {
-            mint(_users[i], _tokenIds[i]);
+            mintWithId(_users[i], _tokenIds[i]);
         }
     }
 }
