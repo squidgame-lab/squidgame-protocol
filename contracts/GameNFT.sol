@@ -23,7 +23,7 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     event NonFungibleTokenRecovery(address indexed token, uint256 tokenId);
     event TokenRecovery(address indexed token, uint256 amount);
 
-    constructor(string memory _name, string memory _symbol, uint256 _maxSupply) {
+    constructor(string memory _name, string memory _symbol, uint256 _maxSupply) public {
         owner = msg.sender;
         name = _name;
         symbol = _symbol;
@@ -37,6 +37,7 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     }
 
     function mint(address _to) external onlyWhiteList returns(uint256) {
+        require(!isLocked, "GameNFT: Contract is locked");
         require(totalSupply() < maxSupply, "GameNFT: total supply reached");
         uint tokenId = totalSupply().add(1);
         _mint(_to, tokenId);
