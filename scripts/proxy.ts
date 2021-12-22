@@ -14,6 +14,18 @@ async function loadConfig() {
   console.log('filePath:', filePath);
 }
 
+
+function updateConstructorArgs(contractName: string, address: string) {
+  for (let k in data) {
+    for (let i in data[k].constructorArgs) {
+      let v = "${" + contractName + ".address}";
+      if (data[k].constructorArgs[i] == v) {
+        data[k].constructorArgs[i] = address;
+      }
+    }
+  }
+}
+
 function updateUpgradeArgsArgs(name: string, address: string) {
   for (let k in data) {
     for (let i in data[k].upgradeArgs) {
@@ -44,7 +56,24 @@ async function after() {
 }
 
 
-async function deployContract(name: string, value: any) {
+async function deployContract(contractName: string, value: any) {
+  if (data[contractName].deployed) {
+    console.log(`Deploy contract ${contractName} exits: "${data[contractName].address}",`)
+    return;
+  }
+  // console.log('Deploy contract...', contractName, value)
+  const Factory = await ethers.getContractFactory(contractName);
+  let ins = await Factory.deploy(...value.constructorArgs);
+  await ins.deployed();
+  data[contractName].address = ins.address;
+  data[contractName].deployed = true;
+  data[contractName].upgraded = true;
+  data[contractName].verified = false;
+  console.log(`Deploy contract ${contractName} new: "${ins.address}",`)
+  updateConstructorArgs(contractName, ins.address);
+}
+
+async function deployProxyContract(name: string, value: any) {
   // Deploying
   if (data[name].deployed) {
     console.log(`Deploy contract ${name} exits: "${data[name].address}",`)
@@ -90,7 +119,11 @@ async function deploy() {
   console.log("============Start to deploy project's contracts.============");
   for (let k in data) {
     try {
-      await deployContract(k, data[k])
+      if(data[k].hasOwnProperty('onlyDeploy') && data[k].onlyDeploy) {
+        await deployContract(k, data[k])
+      } else {
+        await deployProxyContract(k, data[k])
+      }
     } catch(e) {
       console.error('deployContract except', k, e)
     }

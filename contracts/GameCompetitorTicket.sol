@@ -5,12 +5,10 @@ pragma experimental ABIEncoderV2;
 import "./libraries/Base64.sol";
 
 import "./ERC721/extensions/ERC721Enumerable.sol";
-import './modules/ReentrancyGuard.sol';
-import './modules/Initializable.sol';
 import './modules/Configable.sol';
 import './modules/WhiteList.sol';
 
-contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, ReentrancyGuard, Initializable {
+contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable {
     string public baseURI;
     string public imgSuffix;
 
@@ -20,14 +18,14 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
     uint256 public claimBeginId;
     uint256 public claimedId;
 
-    function initialize(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix, string calldata _name, string calldata _symbol) external initializer {
-        _configure(_maxTotal, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
+    constructor(uint256 _maxSupply, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix, string memory _name, string memory _symbol) public {
+        _configure(_maxSupply, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
         name = _name;
         symbol = _symbol;
         owner = msg.sender;
     }
 
-    function _configure(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) internal {
+    function _configure(uint256 _maxSupply, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) internal {
         maxSupply = maxSupply;
         claimBeginId = _claimBeginId;
         expiredTime = _expiredTime;
@@ -35,8 +33,8 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
         imgSuffix = _imgSuffix;
     }
 
-    function configure(uint256 _maxTotal, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) external onlyDev {
-        _configure(_maxTotal, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
+    function configure(uint256 _maxSupply, uint256 _claimBeginId, uint256 _expiredTime, string memory _baseURI, string memory _imgSuffix) external onlyDev {
+        _configure(_maxSupply, _claimBeginId, _expiredTime, _baseURI, _imgSuffix);
     }
     
     function setWhiteList(address _addr, bool _value) external override onlyDev {
@@ -108,8 +106,8 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
 
     function mint(address _to, uint256 _tokenId) public onlyWhiteList returns (uint256) {
         require(_tokenId < claimBeginId, 'GCT: must be < claimBeginId');
-        _claim(_to, claimedId); 
-        return claimedId;
+        _claim(_to, _tokenId); 
+        return _tokenId;
     }
 
     function mint(address _to, uint256 _beginId, uint256 _endId) external onlyWhiteList {
@@ -119,7 +117,7 @@ contract GameCompetitorTicket is Configable, WhiteList, ERC721Enumerable, Reentr
         }
     }
 
-    function mint(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList returns (uint256) {
+    function mint(address[] calldata _users, uint256[] calldata _tokenIds) external onlyWhiteList {
         require(_users.length == _tokenIds.length, 'GCT: invalid param');
         for(uint256 i; i<_users.length; i++) {
             mint(_users[i], _tokenIds[i]);
