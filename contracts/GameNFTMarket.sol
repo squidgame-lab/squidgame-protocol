@@ -134,13 +134,13 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
         }
 
         tokenIds = new uint256[](amount);
-        for (uint i = 0; i < _amount; i++) {
-            uint256 tokenId = _getNumFromPool(_nft, _seed[i]);
+        for (uint i = 0; i < amount; i++) {
+            uint256 tokenId = _getNumFromPool(_nft, _seeds[i]);
             IGameBetTicket(_nft).mint(_to, tokenId);
             tokenIds[i] = tokenId;
         }
 
-        nft2balance[_nft] = nft2balance[_nft].sub(_amount);
+        nft2balance[_nft] = nft2balance[_nft].sub(amount);
 
         emit Buy(msg.sender, _nft, _to, tokenIds);
     }

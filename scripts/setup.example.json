@@ -411,7 +411,7 @@
     },
     {
         "call": true,
-        "name": "GameNFTWristBand",
+        "name": "GameNFTBracelet",
         "functionName": "setupConfig",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -421,7 +421,7 @@
     },
     {
         "call": true,
-        "name": "GameNFTWristBand",
+        "name": "GameNFTBracelet",
         "functionName": "setWhiteLists",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -472,7 +472,7 @@
                 ["${GameCompetitorTicket.address}", "${GameToken.address}", "1000000000000000000", "1640239212", "1640793600", "1000", "0", "0", false],
                 ["${GameNFTAvator.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "456", "1", "456", true],
                 ["${GameNFTHat.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "100", "0", "0", false],
-                ["${GameNFTWristBand.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "400", "0", "0", false]
+                ["${GameNFTBracelet.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "400", "0", "0", false]
             ]
         ]
     }
