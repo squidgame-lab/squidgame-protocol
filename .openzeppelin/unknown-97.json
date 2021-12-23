@@ -349,6 +349,11 @@
       "address": "0x6E27A5595B2C05f5dfAbA8b0E85B5e90509C1a9F",
       "txHash": "0xb2f9bbde0f2773be4cf9877f61a53ab7e04143e479d40bea7a0f133052e697d7",
       "kind": "transparent"
+    },
+    {
+      "address": "0x4430120E8409CEEFec3f8827EfF03fD41361b4Bb",
+      "txHash": "0x75b8aa8b48cc9a960d9b14721c3987f5bfad7e0138429bd71528def8fb498c83",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -13720,6 +13725,184 @@
           },
           "t_mapping(t_address,t_mapping(t_uint128,t_array(t_uint128)dyn_storage))": {
             "label": "mapping(address => mapping(uint128 => uint128[]))"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
+    },
+    "1c94fd4163f1274652a10286905831664b4a140253e9c0fb8f10db46dcd01b74": {
+      "address": "0x379D938017278b86717d0E85Bd8f938fa9F18199",
+      "txHash": "0x1a2c8bec22564cf018bd355a13e15f275d4ca41b3a89eab37e04dfc909029498",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Configable",
+            "label": "config",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:12"
+          },
+          {
+            "contract": "Configable",
+            "label": "owner",
+            "type": "t_address",
+            "src": "contracts/modules/Configable.sol:13"
+          },
+          {
+            "contract": "ReentrancyGuard",
+            "label": "_status",
+            "type": "t_uint256",
+            "src": "contracts/modules/ReentrancyGuard.sol:36"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initialized",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:23"
+          },
+          {
+            "contract": "Initializable",
+            "label": "initializing",
+            "type": "t_bool",
+            "src": "contracts/modules/Initializable.sol:28"
+          },
+          {
+            "contract": "Initializable",
+            "label": "______gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "contracts/modules/Initializable.sol:63"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "nft2conf",
+            "type": "t_mapping(t_address,t_struct(Conf)5062_storage)",
+            "src": "contracts/GameNFTMarket.sol:41"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "nft2exist",
+            "type": "t_mapping(t_address,t_bool)",
+            "src": "contracts/GameNFTMarket.sol:42"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "nft2balance",
+            "type": "t_mapping(t_address,t_uint256)",
+            "src": "contracts/GameNFTMarket.sol:43"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "nft2numPool",
+            "type": "t_mapping(t_address,t_struct(UintSet)22537_storage)",
+            "src": "contracts/GameNFTMarket.sol:44"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "treasury",
+            "type": "t_address",
+            "src": "contracts/GameNFTMarket.sol:46"
+          },
+          {
+            "contract": "GameNFTMarket",
+            "label": "signer",
+            "type": "t_address",
+            "src": "contracts/GameNFTMarket.sol:47"
+          }
+        ],
+        "types": {
+          "t_mapping(t_address,t_struct(Conf)5062_storage)": {
+            "label": "mapping(address => struct GameNFTMarket.Conf)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_struct(Conf)5062_storage": {
+            "label": "struct GameNFTMarket.Conf",
+            "members": [
+              {
+                "label": "nft",
+                "type": "t_address"
+              },
+              {
+                "label": "paymentToken",
+                "type": "t_address"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "total",
+                "type": "t_uint256"
+              },
+              {
+                "label": "minId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "maxId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isRand",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_mapping(t_address,t_struct(UintSet)22537_storage)": {
+            "label": "mapping(address => struct EnumerableSet.UintSet)"
+          },
+          "t_struct(UintSet)22537_storage": {
+            "label": "struct EnumerableSet.UintSet",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)22100_storage"
+              }
+            ]
+          },
+          "t_struct(Set)22100_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage"
+              },
+              {
+                "label": "_indexes",
+                "type": "t_mapping(t_bytes32,t_uint256)"
+              }
+            ]
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]"
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)"
           },
           "t_array(t_uint256)50_storage": {
             "label": "uint256[50]"

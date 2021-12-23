@@ -12,6 +12,8 @@ import "./modules/Configable.sol";
 import "./modules/Initializable.sol";
 import "./interfaces/IERC20.sol";
 
+import 'hardhat/console.sol';
+
 interface IGameNFT {
     function mint(address _to) external returns(uint256);
 }
@@ -42,6 +44,7 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     mapping(address => EnumerableSet.UintSet) nft2numPool;
 
     address public treasury;
+    address public signer;
 
     event SetConf(address user, address nft, address paymenToken, uint256 price, uint256 startTime, uint256 endTime, uint256 _total);
     event Buy(address user, address nft, address to, uint256[] tokenIds);
@@ -49,9 +52,20 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     receive() external payable {
     }
 
-    function initialize(address _treasury) external initializer {
+    function initialize(address _treasury, address _signer) external initializer {
+        require(_signer != address(0));
         owner = msg.sender;
         treasury = _treasury;
+        signer = _signer;
+    }
+
+    function setSigner(address _signer) external onlyDev {
+        require(_signer != signer, 'GNM: Same addr');
+
+    }
+
+    function setTreasury(address _treasury) external onlyDev {
+        require(_treasury != treasury, 'GNM: Same addr');
     }
 
     function getConf(address _nft) public view returns(Conf memory conf) {
@@ -68,7 +82,7 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
 
     function setConf(Conf memory _conf) public onlyDev {
         require(_conf.nft != address(0), 'GameNFTMarket: Invalid conf nft');
-        require(_conf.total > 0 && _conf.maxId.sub(_conf.minId) == _conf.total, 'GameNFTMarket: Invalid conf total');
+        require(_conf.total > 0, 'GameNFTMarket: Invalid conf total');
         require(_conf.startTime < _conf.endTime && _conf.endTime > block.timestamp, 'GameNFTMarket: Invalid conf time');
         
         if (!nft2exist[_conf.nft]) {
@@ -98,6 +112,7 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     function buy(address _nft, uint256 _amount, address _to) external payable returns(uint256[] memory tokenIds){
         require(nft2exist[_nft], 'GNM: Invalid nft addr');
         Conf memory conf = nft2conf[_nft];
+        require(!conf.isRand, 'GNM: NFT conf is rand');
         require(block.timestamp >= conf.startTime && block.timestamp < conf.endTime, 'GNM: Sell expired');
         require(_amount <= nft2balance[_nft] && _amount != 0, 'GNM: Invalid amount');
 
@@ -121,7 +136,9 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
 
     function buyRand(address _nft, address _to, uint256[] memory _seeds, bytes memory _signature) external payable returns(uint256[] memory tokenIds){
         require(nft2exist[_nft], 'GNM: Invalid nft addr');
+        require(verify(signer, _seeds, _signature));
         Conf memory conf = nft2conf[_nft];
+        require(conf.isRand, 'GNM: NFT conf is not rand');
         require(block.timestamp >= conf.startTime && block.timestamp < conf.endTime, 'GNM: Sell expired');
         uint256 amount = _seeds.length;
         require(amount <= nft2balance[_nft], 'GNM: Invalid amount');
@@ -153,6 +170,7 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     } 
 
     function _generateNumsPool(address _nft, uint256 _min, uint256 _max) internal {
+        require(_max > _min, 'GameNFTMarket: Pool size can not be zero');
         for (uint256 i = _min; i <= _max; i++) {
             nft2numPool[_nft].add(i);
         }

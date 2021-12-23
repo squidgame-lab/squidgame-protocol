@@ -92,7 +92,7 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     }
 
     function mint(address[] memory _users) external onlyWhiteList returns(uint256[] memory tokenIds){
-        require(_users.length > 0, "GameNFT: Invalid users");
+        require(_users.length > 0 && _users.length.add(totalSupply()) <= maxSupply, "GameNFT: Invalid users");
         tokenIds = new uint256[](_users.length);
         for(uint i = 0; i < _users.length; i++) {
             uint256 tokenId = mint(_users[i]);
@@ -101,7 +101,7 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     }
 
     function mint(address _user, uint256 _amount) external onlyWhiteList returns(uint256[] memory tokenIds){
-        require(_amount > 0, "GameNFT: Invalid amount");
+        require(_amount > 0 && _amount.add(totalSupply()) <= maxSupply, "GameNFT: Invalid amount");
         tokenIds = new uint256[](_amount);
         for(uint i = 0; i < _amount; i++) {
            uint256 tokenId = mint(_user);

@@ -4,8 +4,8 @@
 		"constructorArgs": [],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
+		"deployed": true,
+		"upgraded": true,
 		"verified": false
 	},
 	"TestToken": {
@@ -242,15 +242,15 @@
 		"address": "",
 		"constructorArgs": [
 		  "Hat",
-		  "SQTH",
+		  "STH",
 		  "100",
 		  "https://squidgame.live/hatnft/",
 		  ".png"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
+		"deployed": false,
+		"upgraded": false,
 		"verified": false
 	},
 	"GameNFTBracelet": {
@@ -259,15 +259,15 @@
 		"address": "",
 		"constructorArgs": [
 		  "Bracelet",
-		  "SQTB",
+		  "STB",
 		  "400",
 		  "https://squidgame.live/wristbandnft/",
 		  ".png"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
+		"deployed": false,
+		"upgraded": false,
 		"verified": false
 	},
 	"GameNFTAvator": {
@@ -276,16 +276,16 @@
 		"address": "",
 		"constructorArgs": [
 		  "Avator",
-		  "SQTA",
+		  "STAP1",
 		  "1",
 		  "456",
-		  "https://squidgame.live/avatornft/",
+		  "https://squidgame.live/avatornft1/",
 		  ".svg"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
+		"deployed": false,
+		"upgraded": false,
 		"verified": false
 	},
 	"GameNFTMarket": {
@@ -294,11 +294,12 @@
 		"address": "",
 		"constructorArgs": [],
 		"upgradeArgs": [
+			"${devWallet.address}",
 			"${devWallet.address}"
 		],
 		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
+		"deployed": false,
+		"upgraded": false,
 		"verified": false
 	}
 }

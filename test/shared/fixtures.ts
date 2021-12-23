@@ -1,5 +1,5 @@
 import { BigNumber, Wallet } from 'ethers'
-import { ethers } from 'hardhat'
+import { ethers, network } from 'hardhat'
 import { TestToken } from '../../typechain/TestToken'
 import { GameTicket } from '../../typechain/GameTicket'
 import { GameTicket2 } from '../../typechain/GameTicket2'
@@ -19,6 +19,10 @@ import { PancakeFactory } from '../../typechain/PancakeFactory'
 import { PancakeRouter } from '../../typechain/PancakeRouter'
 import { GameTicketExchange } from '../../typechain/GameTicketExchange'
 import { GamePrediction } from '../../typechain/GamePrediction'
+import { GameNFTMarket } from '../../typechain/GameNFTMarket'
+import { GameCompetitorTicket } from '../../typechain/GameCompetitorTicket'
+import { GameBetTicket } from '../../typechain/GameBetTicket'
+import { GameNFT } from '../../typechain/GameNFT'
 import { Fixture, deployMockContract, MockContract } from 'ethereum-waffle'
 import { abi as TimeLockABI } from '../../artifacts/contracts/interfaces/IGameTimeLock.sol/IGameTimeLock.json'
 export const bigNumber18 = BigNumber.from("1000000000000000000")  // 1e18
@@ -538,3 +542,110 @@ export const gamePredictionFixture: Fixture<GamePredictionFixture> = async funct
 
     return { sqt, gamePrediction }
 }
+
+interface GameNFTMarketFixture {
+    sqt: GameToken
+    competitorTicket: GameCompetitorTicket
+    betTicket: GameBetTicket
+    hat: GameNFT
+    market: GameNFTMarket
+}
+
+export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async function ([wallet]: Wallet[]): Promise<GameNFTMarketFixture> {
+    // deploy sqt
+    let gameTokenFactory = await ethers.getContractFactory('GameToken');
+    let sqt = (await gameTokenFactory.deploy()) as GameToken;
+    await sqt.initialize();
+    await sqt.increaseFund(wallet.address, bigNumber18.mul(100000000))
+    await sqt.mint(wallet.address, bigNumber18.mul(100000000));
+
+    // deploy competitor ticket
+    let competitorTicketFactory = await ethers.getContractFactory('GameCompetitorTicket')
+    let competitorTicket = (await competitorTicketFactory.deploy(
+        "456",
+        "257",
+        "25183704",
+        "https://squidgame.live/cometitorTicket/",
+        ".jpeg",
+        "Squidgame Competitor Ticket NFT",
+        "SCTNFT"
+    )) as GameCompetitorTicket
+    
+    // deploy bet ticket
+    let betTicketFactory = await ethers.getContractFactory('GameBetTicket')
+    let betTicket = (await betTicketFactory.deploy(
+        "Avator",
+        "SQTA",
+        "1",
+        "10",
+        "https://squidgame.live/avatornft/",
+        ".svg"
+    )) as GameBetTicket
+    
+    // deploy hat
+    let hatFactory = await ethers.getContractFactory('GameNFT')
+    let hat = (await hatFactory.deploy(
+        "Hat",
+        "SQTH",
+        "5",
+        "https://squidgame.live/hatnft/",
+        ".png"
+    )) as GameNFT
+    
+    // deploy market
+    let marketFactory = await ethers.getContractFactory('GameNFTMarket')
+    let market = (await marketFactory.deploy()) as GameNFTMarket
+    await market.initialize(wallet.address, wallet.address)
+
+    // set whiteList to wallet and market
+    await competitorTicket.setWhiteLists([wallet.address, market.address], [true, true])
+    await betTicket.setWhiteLists([wallet.address, market.address], [true, true])
+    await hat.setWhiteLists([wallet.address, market.address], [true, true])
+
+    // batch add sell nft conf
+    await market.batchSetConf([
+        {
+            nft: competitorTicket.address,
+            paymentToken: sqt.address,
+            price: bigNumber18,
+            startTime: (Date.now()/1000 - 86400).toFixed(0),
+            endTime: (Date.now()/1000 + 86400).toFixed(0),
+            total: BigNumber.from(100),
+            minId: BigNumber.from(0),
+            maxId: BigNumber.from(0),
+            isRand: false
+        },
+        {
+            nft: betTicket.address,
+            paymentToken: ethers.constants.AddressZero,
+            price: bigNumber18,
+            startTime: (Date.now()/1000 - 86400).toFixed(0),
+            endTime: (Date.now()/1000 + 86400).toFixed(0),
+            total: BigNumber.from(10),
+            minId: BigNumber.from(1),
+            maxId: BigNumber.from(10),
+            isRand: true
+        },
+        {
+            nft: hat.address,
+            paymentToken: ethers.constants.AddressZero,
+            price: bigNumber18,
+            startTime: (Date.now()/1000 - 86400).toFixed(0),
+            endTime: (Date.now()/1000 + 86400).toFixed(0),
+            total: BigNumber.from(5),
+            minId: BigNumber.from(0),
+            maxId: BigNumber.from(0),
+            isRand: false
+        }
+    ])
+
+    return {sqt, competitorTicket, betTicket, hat, market}
+}
+
+async function signRandom(wallet: Wallet, seeds: Array<string>, addr: string): Promise<string> {
+    let message = ethers.utils.solidityKeccak256(['uint256[]', 'address'], [seeds, addr])
+    let s = await network.provider.send('eth_sign', [wallet.address, message])
+    return s;
+}
+
+export { signRandom }

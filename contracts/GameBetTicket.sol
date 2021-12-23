@@ -22,8 +22,6 @@ contract GameBetTicket is ERC721Enumerable, Configable, WhiteList {
     uint256 public minId;
     uint256 public maxId;
 
-    EnumerableSet.UintSet numsPool;
-
     event NonFungibleTokenRecovery(address indexed token, uint256 tokenId);
     event TokenRecovery(address indexed token, uint256 amount);
 
