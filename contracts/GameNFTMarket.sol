@@ -29,11 +29,17 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     SellConf[] sellConfs;
     mapping(address => uint) nft2conf;
 
-    event SetSellConf(address user, address nft, address paymenToken, uint256 price, uint256 startTime, uint256 endTime, uint256 _total);
-    event Buy(address user, address miner, uint256 amount, uint256 price);
+    address public treasury;
 
-    function initialize() external initializer {
+    event SetSellConf(address user, address nft, address paymenToken, uint256 price, uint256 startTime, uint256 endTime, uint256 _total);
+    event Buy(address user, address nft, address to, uint256[] tokenIds);
+
+    receive() external payable {
+    }
+
+    function initialize(address _treasury) external initializer {
         owner = msg.sender;
+        treasury = _treasury;
         sellConfs.push(SellConf({nft: address(0), paymentToken: address(0), price: 0, startTime: 0, endTime: 0, total: 0, balance: 0}));
     }
 
@@ -89,19 +95,40 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
         uint256[] calldata _endTimes,
         uint256[] calldata _totals
     ) external onlyDev {
-        require(_nfts.length == _paymentTokens.length && _paymentTokens.length == _prices.length, 'GNM: INVALID_ARG_LENGTH');
+        require(
+            _nfts.length == _paymentTokens.length &&
+            _nfts.length == _prices.length &&
+            _nfts.length == _startTimes.length &&
+            _nfts.length == _endTimes.length &&
+            _nfts.length == _totals.length, 
+            'GNM: INVALID_ARG_LENGTH'
+        );
         for (uint256 i = 0; i < _nfts.length; i++) {
             setSellConf(_nfts[i], _paymentTokens[i], _prices[i], _startTimes[i], _endTimes[i], _totals[i]);
         }
     }
 
-    // function buy(address _nft, uint256 _amount) external returns(uint256){
-    //     require(nft2conf[_nft] != 0, 'GNM: INVALID_NFT_ADDR');
-    //     MinerConf memory conf = sellConfs[nft2conf[_nft]];
-    //     require(!conf.isPaused, 'GMM: SELL_PAUSED');
-    //     uint256 value = _amount.mul(conf.price);
-    //     TransferHelper.safeTransferFrom(conf.paymentToken, msg.sender, team(), value);
-    //     IGameMiner(conf.miner).mint(msg.sender, uint32(minerId), _amount);
-    //     emit BuyMiner(msg.sender, conf.miner, _amount, conf.price);
-    // }
+    function buy(address _nft, uint256 _amount, address _to) external payable returns(uint256[] memory tokenIds){
+        require(nft2conf[_nft] != 0, 'GNM: INVALID_NFT_ADDR');
+        SellConf storage conf = sellConfs[nft2conf[_nft]];
+        require(block.timestamp >= conf.startTime && block.timestamp < conf.endTime, 'GNM: SELL_EXPIRED');
+        require(_amount <= conf.balance, 'GNM: SELL_NOT_ENOUGH');
+
+        uint256 value = _amount.mul(conf.price);
+        if (conf.paymentToken == address(0)) {
+            TransferHelper.safeTransferETH(treasury, value);
+        } else {
+            TransferHelper.safeTransferFrom(conf.paymentToken, msg.sender, treasury, value);
+        }
+
+        tokenIds = new uint256[](_amount);
+        for (uint i = 0; i < _amount; i++) {
+            uint256 tokenId = IGameNFT(conf.nft).mint(_to);
+            tokenIds[i] = tokenId;
+        }
+
+        conf.balance = conf.balance.sub(_amount);
+
+        emit Buy(msg.sender, conf.nft, _to, tokenIds);
+    }
 }

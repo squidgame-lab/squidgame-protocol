@@ -91,10 +91,21 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
         return tokenId;
     }
 
-    function mint(address[] memory _users) external onlyWhiteList {
+    function mint(address[] memory _users) external onlyWhiteList returns(uint256[] memory tokenIds){
         require(_users.length > 0, "GameNFT: Invalid users");
+        tokenIds = new uint256[](_users.length);
         for(uint i = 0; i < _users.length; i++) {
-            mint(_users[i]);
+            uint256 tokenId = mint(_users[i]);
+            tokenIds[i] = tokenId;
+        }
+    }
+
+    function mint(address _user, uint256 _amount) external onlyWhiteList returns(uint256[] memory tokenIds){
+        require(_amount > 0, "GameNFT: Invalid amount");
+        tokenIds = new uint256[](_amount);
+        for(uint i = 0; i < _amount; i++) {
+           uint256 tokenId = mint(_user);
+            tokenIds[i] = tokenId;
         }
     }
 }
