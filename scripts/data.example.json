@@ -236,13 +236,13 @@
 		"upgraded": false,
 		"verified": false
 	},
-	"GameNFT1": {
+	"GameNFTHat": {
 		"onlyDeploy": true,
 		"contractName": "GameNFT",
 		"address": "",
 		"constructorArgs": [
 		  "Squidgame Hat",
-		  "SWNFT",
+		  "SHNFT",
 		  "100",
 		  "https://squidgame.live/hatnft/",
 		  ".png"
@@ -253,7 +253,7 @@
 		"upgraded": true,
 		"verified": false
 	},
-	"GameNFT2": {
+	"GameNFTWristBand": {
 		"onlyDeploy": true,
 		"contractName": "GameNFT",
 		"address": "",
@@ -263,6 +263,24 @@
 		  "400",
 		  "https://squidgame.live/wristbandnft/",
 		  ".png"
+		],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": true,
+		"upgraded": true,
+		"verified": false
+	},
+	"GameNFTAvator": {
+		"onlyDeploy": true,
+		"contractName": "GameBetTicket",
+		"address": "",
+		"constructorArgs": [
+		  "Squidgame Avator",
+		  "SA",
+		  "1",
+		  "456",
+		  "https://squidgame.live/avatornft/",
+		  ".svg"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",

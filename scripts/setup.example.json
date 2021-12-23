@@ -390,7 +390,7 @@
     },
     {
         "call": true,
-        "name": "GameNFT1",
+        "name": "GameNFTHat",
         "functionName": "setupConfig",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -400,7 +400,7 @@
     },
     {
         "call": true,
-        "name": "GameNFT1",
+        "name": "GameNFTHat",
         "functionName": "setWhiteLists",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -411,7 +411,7 @@
     },
     {
         "call": true,
-        "name": "GameNFT2",
+        "name": "GameNFTWristBand",
         "functionName": "setupConfig",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -421,7 +421,28 @@
     },
     {
         "call": true,
-        "name": "GameNFT2",
+        "name": "GameNFTWristBand",
+        "functionName": "setWhiteLists",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            ["${GameNFTMarket.address}"],
+            [true]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFTAvator",
+        "functionName": "setupConfig",
+        "contractName": "GameNFT",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFTAvator",
         "functionName": "setWhiteLists",
         "contractName": "GameNFT",
         "contractAddr": "",
@@ -443,16 +464,16 @@
     {
         "call": true,
         "name": "GameNFTMarket",
-        "functionName": "batchSetMinerConf",
+        "functionName": "batchSetConf",
         "contractName": "GameNFTMarket",
         "contractAddr": "",
         "args": [
-            ["${GameCompetitorTicket.address}", "${GameNFT1.address}",  "${GameNFT2.address}"],
-            ["${GameToken.address}", "0x0000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000"],
-            ["1000000000000000000", "100000000000000000", "100000000000000000"],
-            ["1640170638", "1640170638", "1640170638"],
-            ["1640793600", "1640793600", "1640793600"],
-            ["1000", "100", "400"]
+            [
+                ["${GameCompetitorTicket.address}", "${GameToken.address}", "1000000000000000000", "1640239212", "1640793600", "1000", "0", "0", false],
+                ["${GameNFTAvator.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "456", "1", "456", true],
+                ["${GameNFTHat.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "100", "0", "0", false],
+                ["${GameNFTWristBand.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "400", "0", "0", false]
+            ]
         ]
     }
 ]
