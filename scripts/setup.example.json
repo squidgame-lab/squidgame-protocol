@@ -475,5 +475,15 @@
                 ["${GameNFTBracelet.address}", "0x0000000000000000000000000000000000000000", "100000000000000000", "1640239212", "1640793600", "400", "0", "0", false]
             ]
         ]
+    },
+    {
+        "call": true,
+        "name": "GameCollection",
+        "functionName": "setupConfig",
+        "contractName": "GameCollection",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
     }
 ]

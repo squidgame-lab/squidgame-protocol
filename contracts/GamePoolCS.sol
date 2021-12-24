@@ -267,6 +267,9 @@ contract GamePoolCS is Configable, Pausable, ReentrancyGuard, Initializable {
 
         withdraw();
         currentRound.rewardTotal = uint128(getBalance());
+
+        require(currentRound.rewardTotal > 0 || currentRound.shareParticipationAmount > 0 || currentRound.shareTopAmount > 0, 'all zero');
+
         ticketTotal = 0;
         scoreTotal = 0;
         topScoreTotal = 0;

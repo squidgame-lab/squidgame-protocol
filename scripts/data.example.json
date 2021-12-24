@@ -301,5 +301,18 @@
 		"deployed": false,
 		"upgraded": false,
 		"verified": false
+	},
+	"GameCollection": {
+		"onlyDeploy": false,
+		"contractName": "GameCollection",
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [
+			"${TestToken.address}"
+		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
 	}
 }
