@@ -39,8 +39,8 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
     }
 
     mapping(address => Conf) nft2conf;
-    mapping(address => bool) nft2exist;
-    mapping(address => uint) nft2balance;
+    mapping(address => bool) public nft2exist;
+    mapping(address => uint) public nft2balance;
     mapping(address => EnumerableSet.UintSet) nft2numPool;
 
     address public treasury;
