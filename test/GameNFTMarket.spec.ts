@@ -96,7 +96,7 @@ describe('GameNFTMarket', async () => {
             })
 
             it('success', async () => {
-                await market.connect(user1).buy(hat.address, BigNumber.from(2), user1.address, {value: bigNumber18.mul(2)})
+                await market.connect(user1).buy(hat.address, BigNumber.from(2), user1.address, { value: bigNumber18.mul(2) })
                 expect(await hat.ownerOf(BigNumber.from(1))).to.eq(user1.address)
                 expect(await hat.ownerOf(BigNumber.from(2))).to.eq(user1.address)
             })
@@ -114,13 +114,13 @@ describe('GameNFTMarket', async () => {
             it('reverted for nft conf rand is true', async () => {
                 let seeds = ["123", "124", "125"]
                 let signature = await signRandom(wallet, seeds, market.address)
-                await expect(market.connect(user1).buyRand(hat.address, user1.address, seeds, signature, {value: bigNumber18.mul(3)})).to.revertedWith('GNM: NFT conf is not rand')
+                await expect(market.connect(user1).buyRand(hat.address, user1.address, seeds, signature, { value: bigNumber18.mul(3) })).to.revertedWith('GNM: NFT conf is not rand')
             })
 
             it('success for buy three', async () => {
                 let seeds = ["123", "124", "125"]
                 let signature = await signRandom(wallet, seeds, market.address)
-                await market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, {value: bigNumber18.mul(3)})
+                await market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, { value: bigNumber18.mul(3) })
                 let tokenId0 = await betTicket.tokenOfOwnerByIndex(user1.address, BigNumber.from(0))
                 let tokenId1 = await betTicket.tokenOfOwnerByIndex(user1.address, BigNumber.from(1))
                 let tokenId2 = await betTicket.tokenOfOwnerByIndex(user1.address, BigNumber.from(2))
@@ -138,7 +138,7 @@ describe('GameNFTMarket', async () => {
             it('success for buy all', async () => {
                 let seeds = ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"]
                 let signature = await signRandom(wallet, seeds, market.address)
-                await market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, {value: bigNumber18.mul(10)})
+                await market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, { value: bigNumber18.mul(10) })
                 let balance = await betTicket.balanceOf(user1.address)
                 expect(balance).to.eq(BigNumber.from(10))
                 let tokenIds = []
@@ -151,7 +151,65 @@ describe('GameNFTMarket', async () => {
             it('reverted for over amount', async () => {
                 let seeds = ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131"]
                 let signature = await signRandom(wallet, seeds, market.address)
-                await expect(market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, {value: bigNumber18.mul(11)})).to.revertedWith('GNM: Invalid amount')
+                await expect(market.connect(user1).buyRand(betTicket.address, user1.address, seeds, signature, { value: bigNumber18.mul(11) })).to.revertedWith('GNM: Invalid amount')
+            })
+        })
+
+        describe('#buyLottery', async () => {
+            it('reverted for nft conf lottery is false', async () => {
+                await expect(market.buyLottery(betTicket.address, BigNumber.from(1), user1.address)).to.revertedWith('GNM: NFT conf is not lottery')
+            })
+
+            it('reverted for balance not enough', async () => {
+                await expect(market.buyLottery(competitorTicket.address, BigNumber.from(11), user1.address)).to.revertedWith('GNM: Invalid amount')
+            })
+
+            it('success', async () => {
+                await market.connect(user1).buyLottery(competitorTicket.address, BigNumber.from(2), user1.address)
+                expect(await market.getLotteryBalance(competitorTicket.address, user1.address)).to.eq(BigNumber.from(2))
+            })
+        })
+
+        describe('#openLottery', async () => {
+            beforeEach('buyLottery', async () => {
+                await market.connect(user1).buyLottery(competitorTicket.address, BigNumber.from(10), user1.address)
+                expect(await market.getLotteryBalance(competitorTicket.address, user1.address)).to.eq(BigNumber.from(10))
+            })
+
+            it('reverted for not time', async () => {
+                let seeds = ["123", "124", "125", "126"]
+                let signature = await signRandom(wallet, seeds, market.address)
+                await expect(market.connect(user1).openLottery(competitorTicket.address, user1.address, seeds, signature)).to.revertedWith('GNM: Not time')
+            })
+
+            it('success for open parts', async () => {
+                let seeds = ["123", "124", "125", "126"]
+                let signature = await signRandom(wallet, seeds, market.address)
+                await network.provider.send('evm_increaseTime', [86400])
+                await network.provider.send('evm_mine')
+                await market.connect(user1).openLottery(competitorTicket.address, user1.address, seeds, signature)
+                expect(await market.getLotteryBalance(competitorTicket.address, user1.address)).to.eq(BigNumber.from(6))
+                let balance = await competitorTicket.balanceOf(user1.address)
+                let tokenIds = []
+                for (let i = 0; i < balance.toNumber(); i++) {
+                    tokenIds.push((await competitorTicket.tokenOfOwnerByIndex(user1.address, BigNumber.from(i))).toString())
+                }
+                console.log('tokenIds: ', tokenIds)
+            })
+
+            it('success for open all', async () => {
+                let seeds = ["123", "124", "125", "126", "127", "128", "129", "130", "131", "132"]
+                let signature = await signRandom(wallet, seeds, market.address)
+                await network.provider.send('evm_increaseTime', [86400])
+                await network.provider.send('evm_mine')
+                await market.connect(user1).openLottery(competitorTicket.address, user1.address, seeds, signature)
+                expect(await market.getLotteryBalance(competitorTicket.address, user1.address)).to.eq(BigNumber.from(0))
+                let balance = await competitorTicket.balanceOf(user1.address)
+                let tokenIds = []
+                for (let i = 0; i < balance.toNumber(); i++) {
+                    tokenIds.push((await competitorTicket.tokenOfOwnerByIndex(user1.address, BigNumber.from(i))).toString())
+                }
+                console.log('tokenIds: ', tokenIds)
             })
         })
     })

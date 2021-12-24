@@ -610,10 +610,11 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
             price: bigNumber18,
             startTime: (Date.now()/1000 - 86400).toFixed(0),
             endTime: (Date.now()/1000 + 86400).toFixed(0),
-            total: BigNumber.from(100),
-            minId: BigNumber.from(0),
-            maxId: BigNumber.from(0),
-            isRand: false
+            total: BigNumber.from(10),
+            minId: BigNumber.from(1),
+            maxId: BigNumber.from(5),
+            isRand: false,
+            isLottery: true
         },
         {
             nft: betTicket.address,
@@ -624,7 +625,8 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
             total: BigNumber.from(10),
             minId: BigNumber.from(1),
             maxId: BigNumber.from(10),
-            isRand: true
+            isRand: true,
+            isLottery: false
         },
         {
             nft: hat.address,
@@ -635,7 +637,8 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
             total: BigNumber.from(5),
             minId: BigNumber.from(0),
             maxId: BigNumber.from(0),
-            isRand: false
+            isRand: false,
+            isLottery: false
         }
     ])
 

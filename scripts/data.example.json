@@ -223,14 +223,12 @@
 			"456",
 			"257",
 			"25183704",
-			"https://squidgame.live/cometitorTicket/",
+			"https://file.squidgame.live/cometitorTicket/",
 			".jpeg",
 			"Squidgame Competitor Ticket NFT",
 			"SCTNFT"
 		],
-		"upgradeArgs": [
-			
-		],
+		"upgradeArgs": [],
 		"upgradedAddress": "",
 		"deployed": false,
 		"upgraded": false,
@@ -244,8 +242,8 @@
 		  "Hat",
 		  "STH",
 		  "100",
-		  "https://squidgame.live/hatnft/",
-		  ".png"
+		  "https://file.squidgame.live/hat/",
+		  ".svg"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
@@ -261,8 +259,8 @@
 		  "Bracelet",
 		  "STB",
 		  "400",
-		  "https://squidgame.live/wristbandnft/",
-		  ".png"
+		  "https://file.squidgame.live/bracelet/",
+		  ".svg"
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
@@ -279,7 +277,7 @@
 		  "STAP1",
 		  "1",
 		  "456",
-		  "https://squidgame.live/avatornft1/",
+		  "https://file.squidgame.live/role/",
 		  ".svg"
 		],
 		"upgradeArgs": [],
