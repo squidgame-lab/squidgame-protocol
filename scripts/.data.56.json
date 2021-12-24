@@ -69,14 +69,14 @@
     "verified": false
   },
   "GamePoolCS": {
-    "contractName": "GamePool",
+    "contractName": "GamePoolCS",
     "address": "0x7ab1Add1e7A2aDF08c49a9D9DfEe2381DA3388D8",
     "constructorArgs": [],
     "upgradeArgs": [],
-    "upgradedAddress": "0x023070b33a4f9f2365f0ecce7fbdf1427a1e37a8",
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTeam": {
     "contractName": "GameTeam",
@@ -379,6 +379,52 @@
     "upgraded": true,
     "verified": false
   },
+  "GameTicket6": {
+    "contractName": "GameTicket2",
+    "address": "0x2CE81Ff470dA99774ab60D5a0eFE7883213015E3",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "${TestToken.address}",
+      "${GameToken.address}",
+      "2000000000000000000",
+      "100000000000000000000",
+      "10000000000000000000000"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool61": {
+    "contractName": "GamePool",
+    "address": "0xEF6ce6525b5d25957063c339b1FCfBD6802D49Ac",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool67": {
+    "contractName": "GamePool",
+    "address": "0xA98d7757cbAc264b54ccBA576B274C498c93Bc11",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GamePool630": {
+    "contractName": "GamePool",
+    "address": "0xe2040A40e40D0202fDdEDf473DB99E6350E1AdFc",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
   "GameTicketExchange": {
     "contractName": "GameTicketExchange",
     "address": "0x9650C3fc088224b93B159A18a2470CEC6A70B390",
@@ -388,6 +434,19 @@
       "0x10ED43C718714eb63d5aA57B78B54704E256024E"
     ],
     "upgradedAddress": "0xDf818F97D64a8e693Cdf364F6162B07dCaa6a88A",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GameCollection": {
+    "onlyDeploy": false,
+    "contractName": "GameCollection",
+    "address": "0x9393C3Cb3ea0E2044a1b328958a740622480f0C9",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x55d398326f99059fF775485246999027B3197955"
+    ],
+    "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
     "verified": false

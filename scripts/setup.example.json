@@ -151,7 +151,7 @@
         "args": [
             "${GamePool7.address}",
             "${GameToken.address}",
-            "${GamePoolCS.address}",
+            "${GameCollection.address}",
             5000,
             2592000,
             864000,
@@ -484,6 +484,16 @@
         "contractAddr": "",
         "args": [
             "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameCollection",
+        "functionName": "setRewardSources",
+        "contractName": "GameCollection",
+        "contractAddr": "",
+        "args": [
+            ["${GamePool30.address}","${GamePool230.address}","${GamePool330.address}","${GamePool430.address}","${GamePool530.address}","${GamePool630.address}","${GamePoolActivity.address}"]
         ]
     }
 ]

@@ -103,7 +103,7 @@
         "args": [
             "${GamePool27.address}",
             "${GameToken.address}",
-            "${GamePoolCS.address}",
+            "${GameCollection.address}",
             5000,
             2592000,
             864000,

@@ -523,5 +523,18 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameCollection": {
+    "onlyDeploy": false,
+    "contractName": "GameCollection",
+    "address": "0xE1Dfdeb66E04dEa0d1A62B605fD1c63AD2F4AAa5",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
   }
 }
