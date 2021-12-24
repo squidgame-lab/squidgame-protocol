@@ -22,6 +22,7 @@ library Rand {
         if(result == 0) result = _max;
         return result;
     }
+    
     function randNumber(uint _seed, uint _max) internal view returns (uint){
         return randNumber(block.number - 1, _seed, _max);
     }

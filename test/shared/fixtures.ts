@@ -595,13 +595,12 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
     // deploy market
     let marketFactory = await ethers.getContractFactory('GameNFTMarket')
     let market = (await marketFactory.deploy()) as GameNFTMarket
-    await market.initialize(wallet.address, wallet.address)
+    await market.initialize(wallet.address, wallet.address, BigNumber.from(9999))
 
     // set whiteList to wallet and market
     await competitorTicket.setWhiteLists([wallet.address, market.address], [true, true])
     await betTicket.setWhiteLists([wallet.address, market.address], [true, true])
     await hat.setWhiteLists([wallet.address, market.address], [true, true])
-
     // batch add sell nft conf
     await market.batchSetConf([
         {
@@ -610,9 +609,9 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
             price: bigNumber18,
             startTime: (Date.now()/1000 - 86400).toFixed(0),
             endTime: (Date.now()/1000 + 86400).toFixed(0),
-            total: BigNumber.from(10),
+            total: BigNumber.from(1000),
             minId: BigNumber.from(1),
-            maxId: BigNumber.from(5),
+            maxId: BigNumber.from(200),
             isRand: false,
             isLottery: true
         },
@@ -641,7 +640,6 @@ export const gameNFTMarketFixture: Fixture<GameNFTMarketFixture> = async functio
             isLottery: false
         }
     ])
-
     return {sqt, competitorTicket, betTicket, hat, market}
 }
 
