@@ -89,7 +89,6 @@ contract GamePrediction is Configable, ReentrancyGuard, Initializable {
     function updateRound(uint128 _roundId, uint128 _maxNumber, uint _startTime, uint _endTime) external onlyAdmin {
         require(_roundId < rounds.length, 'GamePrediction: INVALID_ROUNDID');
         Round storage round = rounds[uint(_roundId)];
-        require(_maxNumber > round.maxNumber, 'GamePrediction: INVALID_MAX_NUM');
         require(block.timestamp < round.endTime, 'GamePrediction: ROUND_EXPIRED');
         round.maxNumber = _maxNumber;
         if (block.timestamp < round.startTime) {

@@ -428,7 +428,7 @@
   },
   "GamePrediction": {
     "contractName": "GamePrediction",
-    "address": "0x5A55E7D8194F5E7276884D6d49Def93242776a7a",
+    "address": "0x6E27A5595B2C05f5dfAbA8b0E85B5e90509C1a9F",
     "constructorArgs": [],
     "upgradeArgs": [
       "100000000000000000",
