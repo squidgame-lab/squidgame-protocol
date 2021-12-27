@@ -82,6 +82,7 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
 
     function setTreasury(address _treasury) external onlyDev {
         require(_treasury != treasury, 'GNM: Same addr');
+        treasury = _treasury;
     }
 
     function getConf(address _nft) public view returns(Conf memory conf) {
