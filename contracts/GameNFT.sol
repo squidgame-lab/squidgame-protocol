@@ -80,7 +80,7 @@ contract GameNFT is ERC721Enumerable, Configable, WhiteList {
     }
 
     function tokenURI(uint256 _tokenId) override public view returns (string memory) {
-        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name, ' #', _tokenId.toString(), '", "description": "', symbol, '", "image": "', imgURI(_tokenId), '"}'))));
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', symbol, ' #', _tokenId.toString(), '", "description": "', name, '", "image": "', imgURI(_tokenId), '"}'))));
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
