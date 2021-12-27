@@ -384,8 +384,8 @@
     "address": "0x2CE81Ff470dA99774ab60D5a0eFE7883213015E3",
     "constructorArgs": [],
     "upgradeArgs": [
-      "${TestToken.address}",
-      "${GameToken.address}",
+      "0x55d398326f99059fF775485246999027B3197955",
+      "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
       "2000000000000000000",
       "100000000000000000000",
       "10000000000000000000000"
@@ -473,7 +473,7 @@
 	"GameNFTHat": {
 		"onlyDeploy": true,
 		"contractName": "GameNFT",
-		"address": "",
+		"address": "0x4FF3A0ec3d6ccA1dd1f05C12Cb9C7956b19a74a3",
 		"constructorArgs": [
 		  "Hat",
 		  "STH",
@@ -483,14 +483,14 @@
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
+		"deployed": true,
+		"upgraded": true,
+		"verified": true
 	},
 	"GameNFTBracelet": {
 		"onlyDeploy": true,
 		"contractName": "GameNFT",
-		"address": "",
+		"address": "0x3aFC5b48a818907c33Ed71471B381Ba70eE30E2e",
 		"constructorArgs": [
 		  "Bracelet",
 		  "STB",
@@ -500,14 +500,14 @@
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
+		"deployed": true,
+		"upgraded": true,
+		"verified": true
 	},
 	"GameNFTAvator": {
 		"onlyDeploy": true,
 		"contractName": "GameBetTicket",
-		"address": "",
+		"address": "0x18f7a3862fbAEe5F010770D813839622cBc1F2D1",
 		"constructorArgs": [
 		  "Avator",
 		  "STAP1",
@@ -518,23 +518,23 @@
 		],
 		"upgradeArgs": [],
 		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
+		"deployed": true,
+		"upgraded": true,
+		"verified": true
 	},
-	"GameNFTMarket": {
-		"onlyDeploy": false,
-		"contractName": "GameNFTMarket",
-		"address": "",
-		"constructorArgs": [],
-		"upgradeArgs": [
-			"0xd8e6fcd9651E26c0f781A4F1B9DA9400CA8b32Aa",
-			"0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
-			"200"
-		],
-		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
-	}
+  "GameNFTMarket": {
+    "onlyDeploy": false,
+    "contractName": "GameNFTMarket",
+    "address": "0xF3dba14E8340375ceCE103E6e2361199D4A8Ba5D",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "0xd8e6fcd9651E26c0f781A4F1B9DA9400CA8b32Aa",
+      "0xde51312CdF679e042B41dC8dd5F00984d0f5bbE2",
+      "200"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  }
 }
