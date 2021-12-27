@@ -195,9 +195,9 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
 
         uint256 value = amount.mul(conf.price);
         if (conf.paymentToken == address(0)) {
-            TransferHelper.safeTransferETH(treasury, value);
+            TransferHelper.safeTransferETH(address(0), value);
         } else {
-            TransferHelper.safeTransferFrom(conf.paymentToken, msg.sender, treasury, value);
+            TransferHelper.safeTransferFrom(conf.paymentToken, msg.sender, address(0), value);
         }
 
         tokenIds = new uint256[](amount);
