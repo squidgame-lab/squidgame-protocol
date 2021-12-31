@@ -66,7 +66,7 @@
     "upgradedAddress": "0x17573F56eA46B55843f60912bAc1C67122bc734D",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePoolCS": {
     "contractName": "GamePoolCS",
@@ -76,7 +76,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTeam": {
     "contractName": "GameTeam",
@@ -104,7 +104,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool21": {
     "contractName": "GamePool",
@@ -114,7 +114,7 @@
     "upgradedAddress": "0xb05A1B436D989CD8f50fb9d4c6c94570266dcEBc",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool27": {
     "contractName": "GamePool",
@@ -245,7 +245,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool31": {
     "contractName": "GamePool",
@@ -255,7 +255,7 @@
     "upgradedAddress": "0x34C4555f771F60FF5584B31B149c1d437E8eB5D6",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool37": {
     "contractName": "GamePool",
@@ -265,7 +265,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool330": {
     "contractName": "GamePool",
@@ -275,7 +275,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePoolShareRule": {
     "contractName": "GamePoolShareRule",
@@ -285,7 +285,7 @@
     "upgradedAddress": "0x61CC174DD323498f163eB26d8212D07f1eA26991",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTicket4": {
     "contractName": "GameTicket2",
@@ -301,7 +301,7 @@
     "upgradedAddress": "0x30543dbeb3c7e0c5ec4e8ac39a5ea6ebfeb71e3f",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool41": {
     "contractName": "GamePool",
@@ -311,7 +311,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool47": {
     "contractName": "GamePool",
@@ -321,7 +321,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool430": {
     "contractName": "GamePool",
@@ -331,7 +331,7 @@
     "upgradedAddress": "0x34C4555f771F60FF5584B31B149c1d437E8eB5D6",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTicket5": {
     "contractName": "GameTicket2",
@@ -347,7 +347,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool51": {
     "contractName": "GamePool",
@@ -357,7 +357,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool57": {
     "contractName": "GamePool",
@@ -367,7 +367,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool530": {
     "contractName": "GamePool",
@@ -377,7 +377,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTicket6": {
     "contractName": "GameTicket2",
@@ -393,7 +393,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool61": {
     "contractName": "GamePool",
@@ -403,7 +403,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool67": {
     "contractName": "GamePool",
@@ -413,7 +413,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePool630": {
     "contractName": "GamePool",
@@ -423,7 +423,7 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameTicketExchange": {
     "contractName": "GameTicketExchange",
@@ -436,7 +436,7 @@
     "upgradedAddress": "0xDf818F97D64a8e693Cdf364F6162B07dCaa6a88A",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GameCollection": {
     "onlyDeploy": false,
@@ -449,79 +449,79 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
+    "verified": false
+  },
+  "GameCompetitorTicket": {
+    "onlyDeploy": true,
+    "contractName": "GameCompetitorTicket",
+    "address": "0xF097A6A1f78d20e22f415D095110AD1736eE7cA5",
+    "constructorArgs": [
+      "456",
+      "257",
+      "25183704",
+      "https://file.squidgame.live/cometitorTicket/",
+      ".jpeg",
+      "Squidgame Competitor Ticket NFT",
+      "SCTNFT"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
+  "GameNFTHat": {
+    "onlyDeploy": true,
+    "contractName": "GameNFT",
+    "address": "0x4FF3A0ec3d6ccA1dd1f05C12Cb9C7956b19a74a3",
+    "constructorArgs": [
+      "Hat",
+      "STH",
+      "100",
+      "https://file.squidgame.live/hat/",
+      ".svg"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
     "verified": true
   },
-	"GameCompetitorTicket": {
-		"onlyDeploy": true,
-		"contractName": "GameCompetitorTicket",
-		"address": "0xF097A6A1f78d20e22f415D095110AD1736eE7cA5",
-		"constructorArgs": [
-			"456",
-			"257",
-			"25183704",
-			"https://file.squidgame.live/cometitorTicket/",
-			".jpeg",
-			"Squidgame Competitor Ticket NFT",
-			"SCTNFT"
-		],
-		"upgradeArgs": [],
-		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
-		"verified": true
-	},
-	"GameNFTHat": {
-		"onlyDeploy": true,
-		"contractName": "GameNFT",
-		"address": "0x4FF3A0ec3d6ccA1dd1f05C12Cb9C7956b19a74a3",
-		"constructorArgs": [
-		  "Hat",
-		  "STH",
-		  "100",
-		  "https://file.squidgame.live/hat/",
-		  ".svg"
-		],
-		"upgradeArgs": [],
-		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
-		"verified": true
-	},
-	"GameNFTBracelet": {
-		"onlyDeploy": true,
-		"contractName": "GameNFT",
-		"address": "0x3aFC5b48a818907c33Ed71471B381Ba70eE30E2e",
-		"constructorArgs": [
-		  "Bracelet",
-		  "STB",
-		  "400",
-		  "https://file.squidgame.live/bracelet/",
-		  ".svg"
-		],
-		"upgradeArgs": [],
-		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
-		"verified": true
-	},
-	"GameNFTAvator": {
-		"onlyDeploy": true,
-		"contractName": "GameBetTicket",
-		"address": "0x18f7a3862fbAEe5F010770D813839622cBc1F2D1",
-		"constructorArgs": [
-		  "Avator",
-		  "STAP1",
-		  "1",
-		  "456",
-		  "https://file.squidgame.live/role/",
-		  ".svg"
-		],
-		"upgradeArgs": [],
-		"upgradedAddress": "",
-		"deployed": true,
-		"upgraded": true,
-		"verified": true
-	},
+  "GameNFTBracelet": {
+    "onlyDeploy": true,
+    "contractName": "GameNFT",
+    "address": "0x3aFC5b48a818907c33Ed71471B381Ba70eE30E2e",
+    "constructorArgs": [
+      "Bracelet",
+      "STB",
+      "400",
+      "https://file.squidgame.live/bracelet/",
+      ".svg"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
+  "GameNFTAvator": {
+    "onlyDeploy": true,
+    "contractName": "GameBetTicket",
+    "address": "0x18f7a3862fbAEe5F010770D813839622cBc1F2D1",
+    "constructorArgs": [
+      "Avator",
+      "STAP1",
+      "1",
+      "456",
+      "https://file.squidgame.live/role/",
+      ".svg"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
+  },
   "GameNFTMarket": {
     "onlyDeploy": false,
     "contractName": "GameNFTMarket",
@@ -535,19 +535,19 @@
     "upgradedAddress": "",
     "deployed": true,
     "upgraded": true,
-    "verified": true
+    "verified": false
   },
   "GamePrediction": {
-		"contractName": "GamePrediction",
-		"address": "0x438800D7432a120582E40fBE3394B8221F558D7C",
-		"constructorArgs": [],
-		"upgradeArgs": [
-			"100000000000000000",
-			"0x8ca152381Cecfdbc9FC3F11a7b5D2c6F3aD4fb37"
-		],
-		"upgradedAddress": "",
-		"deployed": false,
-		"upgraded": false,
-		"verified": false
-	}
+    "contractName": "GamePrediction",
+    "address": "0xCc6cbBDb4119D3b1ae9eD68c0F060Ad75ab9507E",
+    "constructorArgs": [],
+    "upgradeArgs": [
+      "100000000000000000",
+      "0x8ca152381Cecfdbc9FC3F11a7b5D2c6F3aD4fb37"
+    ],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  }
 }
