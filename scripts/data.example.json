@@ -223,7 +223,7 @@
 			"456",
 			"257",
 			"25183704",
-			"https://file.squidgame.live/cometitorTicket/",
+			"https://file.squidgame.live/competitorTicket/",
 			".jpeg",
 			"Squidgame Competitor Ticket NFT",
 			"SCTNFT"
@@ -309,6 +309,25 @@
 		"upgradeArgs": [
 			"${TestToken.address}"
 		],
+		"upgradedAddress": "",
+		"deployed": false,
+		"upgraded": false,
+		"verified": false
+	},
+	"GameCompetitorTicket2": {
+		"onlyDeploy": true,
+		"contractName": "GameCompetitorTicket",
+		"address": "",
+		"constructorArgs": [
+			"456",
+			"257",
+			"25183704",
+			"https://file.squidgame.live/competitorTicket2/",
+			".jpeg",
+			"SurvivalGameOnline Competitor S2 Ticket NFT",
+			"SCS2TNFT"
+		],
+		"upgradeArgs": [],
 		"upgradedAddress": "",
 		"deployed": false,
 		"upgraded": false,

@@ -537,5 +537,24 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameCompetitorTicket2": {
+    "contractName": "GameCompetitorTicket",
+    "onlyDeploy": true,
+    "address": "0x1a54a2DcF1070F2f1a895bcfC0a0A91D92060fE9",
+    "constructorArgs": [
+      "456",
+      "257",
+      "25183704",
+      "https://file.squidgame.live/competitorTicket2/",
+      ".jpeg",
+      "SurvivalGameOnline Competitor S2 Ticket NFT",
+      "SCS2TNFT"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
   }
 }

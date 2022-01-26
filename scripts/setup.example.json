@@ -495,5 +495,38 @@
         "args": [
             ["${GamePool30.address}","${GamePool230.address}","${GamePool330.address}","${GamePool430.address}","${GamePool530.address}","${GamePool630.address}","${GamePoolActivity.address}"]
         ]
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setupConfig",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setWhiteLists",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            ["${GameNFTMarket.address}"],
+            [true]
+        ]
+    },
+    {
+        "call": true,
+        "name": "GameNFTMarket",
+        "functionName": "batchSetConf",
+        "contractName": "GameNFTMarket",
+        "contractAddr": "",
+        "args": [
+            [
+                ["${GameCompetitorTicket2.address}", "${GameToken.address}", "456000000000000000000", "1640577600", "1669824000", "200", "1", "200", false, false]
+            ]
+        ]
     }
 ]
