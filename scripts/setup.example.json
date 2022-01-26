@@ -525,7 +525,7 @@
         "contractAddr": "",
         "args": [
             [
-                ["${GameCompetitorTicket2.address}", "${GameToken.address}", "456000000000000000000", "1640577600", "1669824000", "200", "1", "200", false, false]
+                ["${GameCompetitorTicket2.address}", "${Survival.address}", "456000000000000000000", "1640577600", "1669824000", "200", "1", "200", false, false]
             ]
         ]
     }

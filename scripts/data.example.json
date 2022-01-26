@@ -17,6 +17,15 @@
 		"upgraded": false,
 		"verified": false
 	},
+	"Survival": {
+		"address": "",
+		"constructorArgs": [],
+		"upgradeArgs": [],
+		"upgradedAddress": "",
+		"deployed": true,
+		"upgraded": true,
+		"verified": false
+	},
 	"GameToken": {
 		"address": "",
 		"constructorArgs": [],
