@@ -2,11 +2,23 @@ import fs from "fs";
 import path from "path";
 let hre = require("hardhat");
 
-const filePath = path.dirname(process.argv.slice(1)[0]) + "/.data.json";
+let chainId = 0;
+let filePath = path.join(__dirname, `.data.json`);
+
+async function loadConfig() {
+  chainId = await hre.network.provider.send("eth_chainId");
+  chainId = Number(chainId);
+  let _filePath = path.join(__dirname, `.data.${chainId}.json`);
+  if (fs.existsSync(_filePath)) {
+    filePath = _filePath;
+  }
+  console.log('filePath:', filePath);
+}
+
 
 async function main() {
     console.log("============Start verify contract.============");
-
+    await loadConfig();
     // get deploy data from .data.json
     let rawdata = fs.readFileSync(filePath);
     let data = JSON.parse(rawdata.toString());

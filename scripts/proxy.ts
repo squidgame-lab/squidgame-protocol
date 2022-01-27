@@ -2,12 +2,15 @@ const { ethers, upgrades, network } = require("hardhat");
 import {sleep} from "sleep-ts";
 import fs from "fs";
 import path from "path";
+let chainId = 0;
 let filePath = path.join(__dirname, `.data.json`);
 let data: any = {
 };
 
 async function loadConfig() {
-  let _filePath = path.join(__dirname, `.data.json`);
+  chainId = await network.provider.send("eth_chainId");
+  chainId = Number(chainId);
+  let _filePath = path.join(__dirname, `.data.${chainId}.json`);
   if (fs.existsSync(_filePath)) {
     filePath = _filePath;
   }

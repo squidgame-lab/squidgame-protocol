@@ -8,6 +8,15 @@
     "upgraded": true,
     "verified": true
   },
+  "Survival": {
+    "address": "0x1180C484f55024C5Ce1765101f4efaC1e7A3F6d4",
+    "constructorArgs": [],
+    "upgradeArgs": [],
+    "upgradedAddress": "",
+    "deployed": true,
+    "upgraded": true,
+    "verified": false
+  },
   "GameToken": {
     "address": "0xD9124604B5dC6EEC0e75d5B02f1610C7bA734cC1",
     "constructorArgs": [],
@@ -549,5 +558,24 @@
     "deployed": true,
     "upgraded": true,
     "verified": false
+  },
+  "GameCompetitorTicket2": {
+    "onlyDeploy": true,
+    "contractName": "GameCompetitorTicket",
+    "address": "0x145425197a9bA04CFd5E1BF3Ef230AC825cC5C25",
+    "constructorArgs": [
+      "456",
+      "257",
+      "25183704",
+      "https://file.squidgame.live/competitorTicket2/",
+      ".jpeg",
+      "SurvivalGameOnline Competitor S2 Ticket NFT",
+      "SCS2TNFT"
+    ],
+    "upgradeArgs": [],
+    "upgradedAddress": "0x145425197a9bA04CFd5E1BF3Ef230AC825cC5C25",
+    "deployed": true,
+    "upgraded": true,
+    "verified": true
   }
 }

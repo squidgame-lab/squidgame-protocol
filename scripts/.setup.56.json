@@ -1,0 +1,53 @@
+[
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setupConfig",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ],
+        "called": true
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setWhiteLists",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            [
+                "${GameNFTMarket.address}"
+            ],
+            [
+                true
+            ]
+        ],
+        "called": true
+    },
+    {
+        "call": true,
+        "name": "GameNFTMarket",
+        "functionName": "batchSetConf",
+        "contractName": "GameNFTMarket",
+        "contractAddr": "",
+        "args": [
+            [
+                [
+                    "${GameCompetitorTicket2.address}",
+                    "${Survival.address}",
+                    "456000000000000000000",
+                    "1643194774",
+                    "1669824000",
+                    "200",
+                    "1",
+                    "200",
+                    false,
+                    false
+                ]
+            ]
+        ],
+        "called": true
+    }
+]

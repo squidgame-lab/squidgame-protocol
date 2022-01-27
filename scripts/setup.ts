@@ -8,15 +8,18 @@ let setupPath = path.join(__dirname, `.setup.json`);
 let data: any = [
 ]
 
+let origdata: any = [
+]
+
 
 async function loadConfig() {
   chainId = await network.provider.send("eth_chainId");
   chainId = Number(chainId);
-  let _dataPath = path.join(__dirname, `.data.json`);
+  let _dataPath = path.join(__dirname, `.data.${chainId}.json`);
   if (fs.existsSync(_dataPath)) {
     dataPath = _dataPath;
   }
-  let _setupPath = path.join(__dirname, `.setup.json`);
+  let _setupPath = path.join(__dirname, `.setup.${chainId}.json`);
   if (fs.existsSync(_setupPath)) {
     setupPath = _setupPath;
   }
@@ -28,9 +31,9 @@ async function waitForMint(tx:any) {
   let result = null
   do {
     result = await ethers.provider.getTransactionReceipt(tx)
-    await sleep(1000)
+    await sleep(500)
   } while (result === null)
-  await sleep(1000)
+  await sleep(500)
 }
 
 function replaceData(search:any, src:any, target:any) {
@@ -71,7 +74,10 @@ async function updateArgsFromData() {
 
 async function call() {
   for (let k in data) {
-    if (data[k].call && data[k].contractAddr != "" && data[k].name != "") {
+    let called = false;
+    if(data[k].hasOwnProperty('called')) called = data[k].called;
+
+    if (data[k].call && !called && data[k].contractAddr != "" && data[k].name != "") {
       console.log(` =============== Call ${data[k].name}.${data[k].functionName} ...`)
       await sleep(100)
       let contractName = data[k].name;
@@ -81,6 +87,7 @@ async function call() {
       let ins = await ethers.getContractAt(contractName, data[k].contractAddr)
       let tx = await ins[data[k].functionName](...data[k].args)
       await waitForMint(tx.hash)
+      origdata[k].called = true;
       console.log(` =============== Call ${data[k].name}.${data[k].functionName} txhash: `, tx.hash)
     }
   }
@@ -91,13 +98,24 @@ async function before() {
   if (fs.existsSync(setupPath)) {
     let rawData = fs.readFileSync(setupPath)
     data = JSON.parse(rawData.toString())
+    origdata = JSON.parse(rawData.toString())
     await updateArgsFromData()
   }
 }
 
+async function after() {
+  let content = JSON.stringify(origdata, null, 4);
+  fs.writeFileSync(setupPath, content);
+}
+
 async function main() {
   await before();
-  await call();
+  try {
+    await call();
+  } catch(e) {
+    console.error('call exception:', e);
+  }
+  await after();
 }
 
 main()
