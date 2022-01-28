@@ -107,7 +107,6 @@ contract GameNFTMarket is Configable, ReentrancyGuard, Initializable {
             nft2exist[_conf.nft] = true;
         } else {
             Conf memory conf = nft2conf[_conf.nft];
-            require(conf.startTime > block.timestamp, 'GameNFTMarket: NFT is selling');
             nft2conf[_conf.nft] = _conf;
         }
 

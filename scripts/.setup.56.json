@@ -35,18 +35,32 @@
         "args": [
             [
                 [
-                    "${GameCompetitorTicket2.address}",
-                    "${Survival.address}",
-                    "456000000000000000000",
-                    "1643194774",
-                    "1669824000",
-                    "200",
+                    "${GameNFTAvator.address}",
+                    "0x0000000000000000000000000000000000000000",
+                    "1000000000000000000",
+                    "1640656800",
+                    "1958727574",
+                    "456",
                     "1",
-                    "200",
-                    false,
+                    "456",
+                    true,
                     false
                 ]
             ]
+        ],
+        "called": true
+    },
+    {
+        "call": true,
+        "name": "GamePrediction",
+        "functionName": "addRound",
+        "contractName": "GamePrediction",
+        "contractAddr": "",
+        "args": [
+            "456",
+            "1643339554",
+            "1644231600",
+            "${Survival.address}"
         ],
         "called": true
     }
