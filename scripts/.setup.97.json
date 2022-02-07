@@ -1,0 +1,59 @@
+[
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setupConfig",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            "${GameConfig.address}"
+        ],
+        "called": true
+    },
+    {
+        "call": true,
+        "name": "GameCompetitorTicket2",
+        "functionName": "setWhiteLists",
+        "contractName": "GameCompetitorTicket",
+        "contractAddr": "",
+        "args": [
+            [
+                "${GameNFTMarket.address}"
+            ],
+            [
+                true
+            ]
+        ],
+        "called": true
+    },
+    {
+        "call": true,
+        "name": "GameNFTMarket",
+        "functionName": "batchSetConf",
+        "contractName": "GameNFTMarket",
+        "contractAddr": "",
+        "args": [
+            [
+                ["${GameCompetitorTicket.address}", "${GameToken.address}", "456000000000000000000", "1640577600", "1958727574", "10000", "1", "200", false, true],
+                ["${GameNFTAvator.address}", "0x0000000000000000000000000000000000000000", "1000000000000000000", "1640656800", "1958727574", "456", "1", "456", true, false],
+                ["${GameNFTHat.address}", "0x0000000000000000000000000000000000000000", "200000000000000000", "1640656800", "1958727574", "100", "0", "0", false, false],
+                ["${GameNFTBracelet.address}", "0x0000000000000000000000000000000000000000", "80000000000000000", "1640656800", "1958727574", "400", "0", "0", false, false]
+            ]
+        ],
+        "called": false
+    },
+    {
+        "call": true,
+        "name": "GamePrediction",
+        "functionName": "addRound",
+        "contractName": "GamePrediction",
+        "contractAddr": "",
+        "args": [
+            "456",
+            "1643339554",
+            "1644231600",
+            "${Survival.address}"
+        ],
+        "called": true
+    }
+]

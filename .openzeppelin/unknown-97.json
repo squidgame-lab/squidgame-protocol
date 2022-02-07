@@ -14784,7 +14784,7 @@
           {
             "contract": "GameNFTMarket",
             "label": "nft2numPool",
-            "type": "t_mapping(t_address,t_struct(UintSet)23204_storage)",
+            "type": "t_mapping(t_address,t_struct(UintSet)23196_storage)",
             "src": "contracts/GameNFTMarket.sol:50"
           },
           {
@@ -14876,19 +14876,19 @@
           "t_mapping(t_address,t_uint256)": {
             "label": "mapping(address => uint256)"
           },
-          "t_mapping(t_address,t_struct(UintSet)23204_storage)": {
+          "t_mapping(t_address,t_struct(UintSet)23196_storage)": {
             "label": "mapping(address => struct EnumerableSet.UintSet)"
           },
-          "t_struct(UintSet)23204_storage": {
+          "t_struct(UintSet)23196_storage": {
             "label": "struct EnumerableSet.UintSet",
             "members": [
               {
                 "label": "_inner",
-                "type": "t_struct(Set)22767_storage"
+                "type": "t_struct(Set)22759_storage"
               }
             ]
           },
-          "t_struct(Set)22767_storage": {
+          "t_struct(Set)22759_storage": {
             "label": "struct EnumerableSet.Set",
             "members": [
               {
