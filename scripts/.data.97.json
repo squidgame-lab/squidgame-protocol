@@ -531,7 +531,7 @@
     ],
     "upgradedAddress": "",
     "deployed": true,
-    "upgraded": false,
+    "upgraded": true,
     "verified": false
   },
   "GameCollection": {
